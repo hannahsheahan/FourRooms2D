@@ -47,6 +47,9 @@ TagManager:
   - name: Floors
     uniqueID: 386262427
     locked: 0
+  - name: Rewards
+    uniqueID: 61644851
+    locked: 0
   - name: Character
     uniqueID: 421367653
     locked: 0
