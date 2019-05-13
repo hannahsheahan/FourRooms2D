@@ -5,7 +5,40 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
+    path: Assets/Scenes/Persistent.unity
+    guid: be0b32caa244a4d91a625b1be9b6e042
+  - enabled: 1
+    path: Assets/Scenes/InformationScreen.unity
+    guid: ff48071f59538483ebb65021fb0611c7
+  - enabled: 1
+    path: Assets/Scenes/ConsentScreen.unity
+    guid: 33e3246ecaa364b2eb1024c9f250bf08
+  - enabled: 1
+    path: Assets/Scenes/BeforeStartingScreen.unity
+    guid: 0e8f01772fec140b5a533b5ea9c17bd1
+  - enabled: 1
+    path: Assets/Scenes/InstructionsScreen.unity
+    guid: 14b3f12ffaf5348349162bc89922d4cb
+  - enabled: 1
+    path: Assets/Scenes/StartScreen.unity
+    guid: f81bb51ccde83418f9ef27e4a1a01e63
+  - enabled: 1
+    path: Assets/Scenes/GetReady.unity
+    guid: 54e741d273d5d436dbf05f1884bd9ea7
+  - enabled: 1
+    path: Assets/Scenes/FourRooms_wine.unity
+    guid: 78ee5c809a5b543b382a96b4fee19bbd
+  - enabled: 1
+    path: Assets/Scenes/FourRooms_cheese.unity
+    guid: e9cb875c649a34f86bbe59c25b619876
+  - enabled: 1
+    path: Assets/Scenes/RestBreak.unity
+    guid: 127d00453e8d144728db204b33f39c57
+  - enabled: 1
+    path: Assets/Scenes/Exit.unity
+    guid: 3c1070ac5047c476b902a1f9acc7addb
   m_configObjects: {}

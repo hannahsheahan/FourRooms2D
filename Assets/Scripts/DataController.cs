@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
-using UnityStandardAssets.Characters.FirstPerson;
+//using UnityStandardAssets.Characters.FirstPerson;
 using System;
 using System.Globalization;
 using System.Collections;
@@ -20,7 +20,7 @@ public class DataController : MonoBehaviour {
 
     public GameData gameData;          // data for the entire game, including all trials
     public ExperimentConfig config;   // experiment details, trial sequence, randomisation etc
-    private GameObject PlayerFPS;
+    private GameObject Player;
 
     public int currentTrialNumber = 0;
     public bool participantIDSet = false;
@@ -71,19 +71,19 @@ public class DataController : MonoBehaviour {
 
     void Start()
     {
-        PlayerFPS = GameObject.Find("FPSController");     // This will yield null but its on purpose :)
+        Player = GameObject.Find("PlayerController");     // This will yield null but its on purpose :)
     }
 
     // ********************************************************************** //
 
     private void Update()
     {
-        // If we've moved past the StartScreen, we should have generated a FPS Player
+        // If we've moved past the StartScreen, we should have generated a Player
         if (GameController.control.GetCurrentMapIndex() > (SceneManager.GetSceneByName("StartScreen").buildIndex-2))
         {
-            if (PlayerFPS == null)
+            if (Player == null)
             {
-                PlayerFPS = GameObject.Find("FPSController");
+                Player = GameObject.Find("PlayerController");
             }
         }
     }
@@ -302,7 +302,7 @@ public class DataController : MonoBehaviour {
         gameData.allTrialData[currentTrialNumber].trialScore = GameController.control.trialScore;
 
         // Add in the frame-by-frame data (these should be synchronized)
-        if (PlayerFPS != null)
+        if (Player != null)
         {
             // Add in the state transition data
             List<string> trackedStateData = new List<string>(); // We stop collecting data here, just it case it keeps incrementing with another timestep
@@ -327,7 +327,7 @@ public class DataController : MonoBehaviour {
 
             // Add in the player tracking data
             List<string> trackedTrialData = new List<string>(); // We stop collecting data here, just it case it keeps incrementing with another timestep
-            trackedTrialData = PlayerFPS.GetComponent<TrackingScript>().getCoords();
+            trackedTrialData = Player.GetComponent<TrackingScript>().getCoords();
             stringLength = trackedTrialData.Count;
             Debug.Log("There were this many tracked navigation timesteps: " + stringLength);
 
