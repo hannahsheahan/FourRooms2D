@@ -148,6 +148,8 @@ public class GameController : MonoBehaviour
     public int previousState;     // Note that this currently is not thoroughly used - currently only used for transitioning back from the STATE_HALLFREEZE to the previous gameplay
     public List<string> stateTransitions = new List<string>();   // recorded state transitions (in sync with the player data)
 
+    public bool playersTurn;      // for moving in discrete steps on a 2D grid
+
     public int[] giftWrapState;
     public List<string> giftWrapStateTransitions = new List<string>();   // recorded state of the giftboxes (in sync with the player data)
 
