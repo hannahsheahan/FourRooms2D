@@ -27,7 +27,7 @@ public class GameController : MonoBehaviour
     private FramesPerSecond frameRateMonitor;
 
     // Game data
-    private GameObject PlayerFPS;
+    private GameObject Player;
     private GameData currentGameData;
     private string filepath;
 
@@ -285,7 +285,7 @@ public class GameController : MonoBehaviour
                 // Wait until the goal/target cue appears (will take a TR here)
                 if (stateTimer.ElapsedSeconds() >= preDisplayCueTime)
                 {
-                    PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
+                    Player.GetComponent<PlayerController>().enabled = false;
                     StateNext(STATE_GOALAPPEAR);
                 }
                 break;
@@ -320,7 +320,7 @@ public class GameController : MonoBehaviour
             case STATE_GO:
 
                 // Enable the controller
-                PlayerFPS.GetComponent<FirstPersonController>().enabled = true;
+                Player.GetComponent<PlayerController>().enabled = true;
 
                 // Make a 'beep' go sound and start the trial timer
                 movementTimer.Reset();
@@ -357,7 +357,7 @@ public class GameController : MonoBehaviour
 
                 // disable the player control and reset the starFound trigger ready to collect the next star
                 starFound = false;
-                PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
+                Player.GetComponent<PlayerController>().enabled = false;
 
                 if (!freeForage) 
                 {
@@ -374,7 +374,7 @@ public class GameController : MonoBehaviour
                     rewardsRemaining = rewardsRemaining - 1;
                     Debug.Log("Rewards remaining: " + rewardsRemaining);
 
-                    PlayerFPS.GetComponent<FirstPersonController>().enabled = true; // let the player move again
+                    Player.GetComponent<PlayerController>().enabled = true; // let the player move again
                     StateNext(STATE_MOVING2);
                 }
                 break;
@@ -408,7 +408,7 @@ public class GameController : MonoBehaviour
 
                 // This is the state when the FINAL reward to be collected is found (in the case of 2 or multiple rewards)
 
-                PlayerFPS.GetComponent<FirstPersonController>().enabled = false; // disable controller
+                Player.GetComponent<PlayerController>().enabled = false; // disable controller
                 displayTimeLeft = false;             // freeze the visible countdown
                 CongratulatePlayer();                // display a big congratulatory message
 
@@ -511,28 +511,28 @@ public class GameController : MonoBehaviour
                 // pause the countdown timer display and disable the player controls
                 // Note that the FPSPlayer and FSM will continue to track position and timestamp, so we know how long it was 'paused' for.
                 pauseClock = true;
-                if (PlayerFPS != null)
+                if (Player != null)
                 {
-                    PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
+                    Player.GetComponent<PlayerController>().enabled = false;
                 }
                 else 
                 {
-                    PlayerFPS = GameObject.Find("FPSController");
-                    if (PlayerFPS != null)
+                    Player = GameObject.Find("FPSController");
+                    if (Player != null)
                     {
-                        PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
+                        Player.GetComponent<PlayerController>().enabled = false;
                     }
                 }
                 break;
 
             case STATE_HALLFREEZE:
 
-                PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
+                Player.GetComponent<PlayerController>().enabled = false;
                 currentFrozenTime = currentMovementTime - firstFrozenTime;
 
                 if (stateTimer.ElapsedSeconds() > hallwayFreezeTime)
                 {
-                    PlayerFPS.GetComponent<FirstPersonController>().enabled = true;
+                    Player.GetComponent<PlayerController>().enabled = true;
                     displayMessage = "noMessage";
                     StateNext(previousState);
                 }
@@ -659,16 +659,16 @@ public class GameController : MonoBehaviour
     public void StartRecording()
     {
         // Make sure we're found the player and make sure they cant move (and start recording player and FSM data)
-        if (PlayerFPS != null)
+        if (Player != null)
         {
-            if (PlayerFPS.GetComponent<FirstPersonController>().enabled)
+            if (Player.GetComponent<PlayerController>().enabled)
             {
-                PlayerFPS.GetComponent<FirstPersonController>().enabled = false;
+                Player.GetComponent<PlayerController>().enabled = false;
             }
         }
         else
         {   // Track the state-transitions at the same update frequency as the FPSPlayer (and putting it here should sync them too)
-            PlayerFPS = GameObject.Find("FPSController");
+            Player = GameObject.Find("PlayerAvatar");
             stateTransitions.Clear();                      // restart the state tracker ready for the new trial
             stateTransitions.Add("Game State");
 

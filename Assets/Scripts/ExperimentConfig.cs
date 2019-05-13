@@ -126,7 +126,7 @@ public class ExperimentConfig
 
             case "micro_debug":            // ----Mini debugging test experiment-----
                 practiceTrials = 0 + getReadyTrial;
-                nExecutedTrials = 1;                                         // note that this is only used for the micro_debug version
+                nExecutedTrials = 2;                                         // note that this is only used for the micro_debug version
                 totalTrials = nExecutedTrials + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 2 + restbreakOffset;                            // Take a rest after this many normal trials
                 restbreakDuration = 5.0f;                                       // how long are the imposed rest breaks?
@@ -727,7 +727,7 @@ public class ExperimentConfig
     {
         // Add a 16 trial training block to the trial list. Trials are randomised within each context, but not between contexts 
 
-        nextTrial = DoubleRewardBlock_micro(nextTrial, "cheese", numberOfTrials);
+        nextTrial = DoubleRewardBlock_micro(nextTrial, "wine", numberOfTrials);
 
         return nextTrial;
     }
