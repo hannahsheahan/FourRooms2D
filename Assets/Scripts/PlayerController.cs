@@ -14,6 +14,7 @@ public class PlayerController : MovingObject
     private bool playersTurn = true;
     private Timer playerControllerTimer;     // use this to discretize movement input
     private float timeBetweenMoves;
+    private string animateLeftOrRight;
 
     //Start overrides the Start function of MovingObject
     protected override void Start()
@@ -44,23 +45,25 @@ public class PlayerController : MovingObject
         { 
             vertical = 0;
         }
-        //if (vertical != 0) 
-        //{ 
-        //    horizontal = 0;
-        //}
-
 
         // if we are attempting to move, check that we can actually move there
         if ((horizontal != 0) || (vertical != 0)) 
         {
-            Debug.Log("playerControllerTime: " + playerControllerTimer.ElapsedSeconds());
             if (playerControllerTimer.ElapsedSeconds() >= timeBetweenMoves)
             {
+                //animateLeftOrRight = (horizontal <= 0_) ? "left" : "right";
+                if (Mathf.Approximately(horizontal+1, 0f))
+                {
+                    animateLeftOrRight = "left"; 
+                }
+                else
+                {
+                    animateLeftOrRight = "right";
+                }
+
                 AttemptMove<Wall>(horizontal, vertical);
             }
         }
-
-
     }
 
     protected override void AttemptMove <T> (int xDir, int yDir) 
@@ -71,12 +74,22 @@ public class PlayerController : MovingObject
         RaycastHit2D hit;
 
         //If Move returns true, meaning Player was able to move into an empty space.
+        switch (animateLeftOrRight) 
+        {
+            case "left":
+                animator.SetTrigger("playerStepLeft");
+                break;
+            case "right":
+                animator.SetTrigger("playerStepRight");
+                break;
+        
+        }
+
         if (Move(xDir, yDir, out hit))
         {
              //Call RandomizeSfx of SoundManager to play the move sound, passing in two audio clips to choose from.
         }
 
-        //playersTurn = false;  // will eventually be GameController.control.playersTurn = false
         playerControllerTimer.Reset();
 
     }
