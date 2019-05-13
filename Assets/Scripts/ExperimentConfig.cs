@@ -32,8 +32,8 @@ public class ExperimentConfig
     private string[] possibleMazes;                // the existing mazes/scenes that can be selected from
     private int sceneCount;
     private int roomSize;
-    private float playerYposition;
-    private float rewardYposition;
+    private float playerZposition;
+    private float rewardZposition;
     private float deltaSquarePosition;
     public bool[][] bridgeStates;                   // whether the 4 different bridges are ON (active) or OFF (a hole in the floor)
 
@@ -106,20 +106,11 @@ public class ExperimentConfig
     {
         // Experiments with training blocked by context
 
-        experimentVersion = "mturk_cheesewine";
-        //experimentVersion = "mturk_cheesewine_wackycolours";
-        //experimentVersion = "mturk_learnwithprepost";
-        //experimentVersion = "mturk_peanutmartini";
-        //experimentVersion = "micro_debug"; 
-        //experimentVersion = "singleblock_labpilot";
+        //experimentVersion = "mturk_cheesewine";
+        experimentVersion = "micro_debug"; 
+
 
         // ------------------------------------------
-
-        // Experiments with training randomly intermingled across contexts
-
-        //experimentVersion = "mturk_interm_cheesewine_wackycolours";
-        //experimentVersion = "mturk_interm_peanutmartini";
-
 
         // Set these variables to define your experiment:
         switch (experimentVersion)
@@ -132,65 +123,6 @@ public class ExperimentConfig
                 transferCounterbalance = false;                                     // this does nothing
                 break;
 
-            case "mturk_cheesewine_wackycolours":       // ----Full 4 block learning experiment-----
-                practiceTrials = 2 + getReadyTrial;
-                totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
-                restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
-                restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
-                transferCounterbalance = false;                                     // this does nothing
-                wackyColours = true;                                                // use different colours to the peanut/martini case
-                break;
-
-            case "mturk_interm_cheesewine_wackycolours":       // ----Full 4 block learning experiment with intermingled trial structure-----
-                practiceTrials = 2 + getReadyTrial;
-                totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
-                restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
-                restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
-                transferCounterbalance = false;                                     // this does nothing
-                wackyColours = true;                                                // use different colours to the peanut/martini case
-                intermingledTrials = true;
-                break;
-
-            case "mturk_learnwithprepost":
-                practiceTrials = 2 + getReadyTrial;
-                totalTrials = 16 * 6 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
-                restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
-                restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
-                transferCounterbalance = false;
-                break;
-
-            case "mturk_learnwithprepost_partial":
-                practiceTrials = 0 + getReadyTrial;
-                totalTrials = 16 * 2 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
-                restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
-                restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
-                transferCounterbalance = false;
-                break;
-
-            case "mturk_peanutmartini":       // ----Full 4 block learning experiment-----
-                practiceTrials = 2 + getReadyTrial;
-                totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
-                restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
-                restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
-                transferCounterbalance = false;                                      // this is important
-                break;
-
-            case "mturk_interm_peanutmartini":
-                practiceTrials = 2 + getReadyTrial;
-                totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
-                restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
-                restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
-                transferCounterbalance = false;                                     // this is important
-                intermingledTrials = true;
-                break;
-
-            case "singleblock_labpilot":   // ----Mini 1 block test experiment-----
-                practiceTrials = 1 + getReadyTrial;
-                totalTrials = 16  + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
-                restFrequency = 20   + restbreakOffset;                          // Take a rest after this many normal trials
-                restbreakDuration = 5.0f;                                        // how long are the imposed rest breaks?
-                transferCounterbalance = false;
-                break;
 
             case "micro_debug":            // ----Mini debugging test experiment-----
                 practiceTrials = 0 + getReadyTrial;
@@ -229,9 +161,11 @@ public class ExperimentConfig
 
         // These variables define the environment (are less likely to be played with)
         roomSize        = 4;              // rooms are each 4x4 grids. If this changes, you will need to change this code
-        playerYposition = 72.5f;
-        rewardYposition   = 74.5f;
-        mazeCentre      = new Vector3(145.0f, playerYposition, 145.0f);
+
+        // ***HRS to test these
+        playerZposition = 0f;      
+        rewardZposition   = 0f;
+        mazeCentre      = new Vector3(0f, 0f, playerZposition);
 
 
         // Define a maze, start and goal positions, and reward type for each trial
@@ -292,102 +226,6 @@ public class ExperimentConfig
 
                 break;
 
-            case "mturk_interm_cheesewine_wackycolours":      // ----Full 4 block learning experiment with intermingled contexts-----
-                //---- training block 1
-                nextTrial = AddIntermTrainingBlock(nextTrial);
-                nextTrial = RestBreakHere(nextTrial);
-
-                //---- training block 2
-                nextTrial = AddIntermTrainingBlock(nextTrial);
-                nextTrial = RestBreakHere(nextTrial);
-
-                //---- training block 3
-                nextTrial = AddIntermTrainingBlock(nextTrial);
-                nextTrial = RestBreakHere(nextTrial);
-
-                //---- training block 4
-                nextTrial = AddIntermTrainingBlock(nextTrial);
-
-                break;
-
-            case "mturk_learnwithprepost":    // ----Full 4 block learning experiment with pre/post free-foraging tests-----
-
-                //---- pre-training free foraging block
-                nextTrial = AddFreeForageBlock(nextTrial, "cheeseandwine");
-                nextTrial = RestBreakHere(nextTrial);
-
-                //---- training block 1
-                nextTrial = AddTrainingBlock(nextTrial);
-                nextTrial = RestBreakHere(nextTrial);
-
-                //---- training block 2
-                nextTrial = AddTrainingBlock(nextTrial);
-                nextTrial = RestBreakHere(nextTrial);
-
-                //---- training block 3
-                nextTrial = AddTrainingBlock(nextTrial);
-                nextTrial = RestBreakHere(nextTrial);
-
-                //---- training block 4
-                nextTrial = AddTrainingBlock(nextTrial);
-                nextTrial = RestBreakHere(nextTrial);
-
-                //---- post-training free foraging block 
-                nextTrial = AddFreeForageBlock(nextTrial, "cheeseandwine");
-
-                break;
-
-            case "mturk_learnwithprepost_partial":
-
-                // ... to fill in for partially completed subjects
-
-                break;
-
-            case "mturk_peanutmartini":  // ----To be performed day after learning experiment: 4 block transfer experiment (1hr)-----
-
-                //---- transfer block 1
-                nextTrial = AddTransferBlock(nextTrial);
-                nextTrial = RestBreakHere(nextTrial);
-
-                //---- transfer block 2
-                nextTrial = AddTransferBlock(nextTrial);
-                nextTrial = RestBreakHere(nextTrial);
-
-                //---- transfer block 3
-                nextTrial = AddTransferBlock(nextTrial);
-                nextTrial = RestBreakHere(nextTrial);
-
-                //---- transfer block 4
-                nextTrial = AddTransferBlock(nextTrial);
-
-                break;
-
-            case "mturk_interm_peanutmartini":   // ----To be performed day after learning experiment: 4 block transfer experiment (1hr) with intermingled trial structure-----
-
-                //---- transfer block 1
-                nextTrial = AddIntermTransferBlock(nextTrial);
-                nextTrial = RestBreakHere(nextTrial);
-
-                //---- transfer block 2
-                nextTrial = AddIntermTransferBlock(nextTrial);
-                nextTrial = RestBreakHere(nextTrial);
-
-                //---- transfer block 3
-                nextTrial = AddIntermTransferBlock(nextTrial);
-                nextTrial = RestBreakHere(nextTrial);
-
-                //---- transfer block 4
-                nextTrial = AddIntermTransferBlock(nextTrial);
-
-                break;
-
-
-            case "singleblock_labpilot":   // ----Mini 1 block test experiment-----
-
-                //---- training block 1
-                nextTrial = AddTrainingBlock(nextTrial);
-                break;
-
            
             case "micro_debug":            // ----Mini debugging test experiment-----
 
@@ -400,7 +238,7 @@ public class ExperimentConfig
         }
 
         // For debugging: print out the final trial sequence in readable text to check it looks ok
-        //PrintTrialSequence();
+        PrintTrialSequence();
 
     }
 
@@ -624,32 +462,6 @@ public class ExperimentConfig
         yellowPresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length + redPresentPositions.Length);
         bluePresentPositions.CopyTo(presentPositions[trial], greenPresentPositions.Length + redPresentPositions.Length + yellowPresentPositions.Length);
 
-         
-
-        //--- alternative version
-
-        // Spawn the presents in the opposite corners of the room
-        /*
-        int nPresentsPerRoom = 2;   // two presents per room
-        presentPositions = new Vector3[nPresentsPerRoom*4];  
-
-        // ORDER:  green; red; yellow; blue
-        float[] xpositions = { 156f, 190f, 156f, 190f, 105.1f, 139.1f, 105.1f, 139.1f };
-        float[] zpositions = { 144.3f, 178.3f, 127.3f, 93.3f, 178.3f, 144.3f, 93.3f, 127.3f };
-        float yposition = 74.3f;
-
-        for (int i = 0; i < presentPositions.Length; i++)
-        {
-            presentPositions[i] = new Vector3(xpositions[i], yposition, zpositions[i]);
-        }
-
-        // specify present positions by coloured room 
-        greenPresentPositions = new Vector3[] { new Vector3(xpositions[0], yposition, zpositions[0]), new Vector3(xpositions[1], yposition, zpositions[1]) };
-        redPresentPositions = new Vector3[] { new Vector3(xpositions[2], yposition, zpositions[2]), new Vector3(xpositions[3], yposition, zpositions[3]) };
-        yellowPresentPositions = new Vector3[] { new Vector3(xpositions[4], yposition, zpositions[4]), new Vector3(xpositions[5], yposition, zpositions[5]) };
-        bluePresentPositions = new Vector3[] { new Vector3(xpositions[6], yposition, zpositions[6]), new Vector3(xpositions[7], yposition, zpositions[7]) };
-        */
-        //-----
     }
 
     // ********************************************************************** //
@@ -664,55 +476,9 @@ public class ExperimentConfig
         yellowRoomPositions = new Vector3[roomSize * roomSize];
         greenRoomPositions = new Vector3[roomSize * roomSize];
 
-        // Version 1.0 larger room positions:
-        //int[] XPositionsblue = { 95, 105, 115, 125, 135 };
-        //int[] ZPositionsblue = { 95, 105, 115, 125, 135 };
-        //int[] XPositionsred = { 155, 165, 175, 185, 195 };
-        //int[] ZPositionsred = { 95, 105, 115, 125, 135 };
-        //int[] XPositionsgreen = { 155, 165, 175, 185, 195 };
-        //int[] ZPositionsgreen = { 155, 165, 175, 185, 195 };
-        //int[] XPositionsyellow = { 95, 105, 115, 125, 135 };
-        //int[] ZPositionsyellow = { 155, 165, 175, 185, 195 };
 
-        // Version 2.0 smaller room positions
+        // Version 3D 4x4 room positions
         /*
-        // Blue room
-        int startind = 0;
-        deltaSquarePosition = 8.5f; // ***HRS later should really use this to create loop for specifying positions
-        float[] XPositionsblue = { 105.1f, 113.6f, 122.1f, 130.6f, 139.1f };
-        float[] ZPositionsblue = { 93.3f, 101.8f, 110.3f, 118.8f, 127.3f };
-
-        AddPossibleLocations(possiblePlayerPositions, startind, XPositionsblue, playerYposition, ZPositionsblue);
-        AddPossibleLocations(possibleRewardPositions, startind, XPositionsblue, rewardYposition, ZPositionsblue);
-        startind = startind + roomSize * roomSize;
-
-        // Red room
-        float[] XPositionsred = { 156f, 164.5f, 173f, 181.5f, 190f };
-        float[] ZPositionsred = { 93.3f, 101.8f, 110.3f, 118.8f, 127.3f };
-
-        AddPossibleLocations(possiblePlayerPositions, startind, XPositionsred, playerYposition, ZPositionsred);
-        AddPossibleLocations(possibleRewardPositions, startind, XPositionsred, rewardYposition, ZPositionsred);
-        startind = startind + roomSize * roomSize;
-
-        // Green room
-        float[] XPositionsgreen = { 156f, 164.5f, 173f, 181.5f, 190f };
-        float[] ZPositionsgreen = { 144.3f, 152.8f, 161.3f, 169.8f, 178.3f };
-
-        AddPossibleLocations(possiblePlayerPositions, startind, XPositionsgreen, playerYposition, ZPositionsgreen);
-        AddPossibleLocations(possibleRewardPositions, startind, XPositionsgreen, rewardYposition, ZPositionsgreen);
-        startind = startind + roomSize * roomSize;
-
-        // Yellow room
-        float[] XPositionsyellow = { 105.1f, 113.6f, 122.1f, 130.6f, 139.1f };
-        float[] ZPositionsyellow = { 144.3f, 152.8f, 161.3f, 169.8f, 178.3f };
-
-        AddPossibleLocations(possiblePlayerPositions, startind, XPositionsyellow, playerYposition, ZPositionsyellow);
-        AddPossibleLocations(possibleRewardPositions, startind, XPositionsyellow, rewardYposition, ZPositionsyellow);
-        */
-
-
-        // Version 3.0 4x4 room positions
-
         // Blue room
         int startind = 0;
         deltaSquarePosition = 8.5f; // ***HRS later should really use this to create loop for specifying positions
@@ -745,13 +511,51 @@ public class ExperimentConfig
 
         AddPossibleLocations(possiblePlayerPositions, startind, XPositionsyellow, playerYposition, ZPositionsyellow);
         AddPossibleLocations(possibleRewardPositions, startind, XPositionsyellow, rewardYposition, ZPositionsyellow);
+        */
+
+
+        // Version 2D 4x4 room positions
+
+        // Blue room
+        int startind = 0;
+        deltaSquarePosition = 8.5f; 
+        float[] XPositionsblue = { 1f, 2f, 3f, 4f };
+        float[] YPositionsblue = { 1f, 2f, 3f, 4f };
+
+        AddPossibleLocations(possiblePlayerPositions, startind, XPositionsblue, YPositionsblue, rewardZposition);
+        AddPossibleLocations(possibleRewardPositions, startind, XPositionsblue, YPositionsblue, rewardZposition);
+        startind = startind + roomSize * roomSize;
+
+        // Red room
+        float[] XPositionsred = { 1f, 2f, 3f, 4f };
+        float[] YPositionsred = { -1f, -2f, -3f, -4f };
+
+        AddPossibleLocations(possiblePlayerPositions, startind, XPositionsred,  YPositionsred, rewardZposition);
+        AddPossibleLocations(possibleRewardPositions, startind, XPositionsred, YPositionsred, rewardZposition);
+        startind = startind + roomSize * roomSize;
+
+        // Green room
+        float[] XPositionsgreen = { -1f, -2f, -3f, -4f };
+        float[] YPositionsgreen = { -1f, -2f, -3f, -4f };
+
+        AddPossibleLocations(possiblePlayerPositions, startind, XPositionsgreen,  YPositionsgreen, rewardZposition);
+        AddPossibleLocations(possibleRewardPositions, startind, XPositionsgreen,  YPositionsgreen, rewardZposition);
+        startind = startind + roomSize * roomSize;
+
+        // Yellow room
+        float[] XPositionsyellow = { -1f, -2f, -3f, -4f };
+        float[] YPositionsyellow = { 1f, 2f, 3f, 4f };
+
+        AddPossibleLocations(possiblePlayerPositions, startind, XPositionsyellow, YPositionsyellow, rewardZposition);
+        AddPossibleLocations(possibleRewardPositions, startind, XPositionsyellow, YPositionsyellow, rewardZposition);
+
 
         // Add position arrays for locations in particular rooms
         startind = 0;
-        AddPossibleLocations(blueRoomPositions, startind, XPositionsblue, rewardYposition, ZPositionsblue);
-        AddPossibleLocations(redRoomPositions, startind, XPositionsred, rewardYposition, ZPositionsred);
-        AddPossibleLocations(greenRoomPositions, startind, XPositionsgreen, rewardYposition, ZPositionsgreen);
-        AddPossibleLocations(yellowRoomPositions, startind, XPositionsyellow, rewardYposition, ZPositionsyellow);
+        AddPossibleLocations(blueRoomPositions, startind, XPositionsblue, YPositionsblue, rewardZposition);
+        AddPossibleLocations(redRoomPositions, startind, XPositionsred, YPositionsred, rewardZposition);
+        AddPossibleLocations(greenRoomPositions, startind, XPositionsgreen, YPositionsgreen, rewardZposition);
+        AddPossibleLocations(yellowRoomPositions, startind, XPositionsyellow, YPositionsyellow, rewardZposition);
 
         // Get all the possible mazes/scenes in the build that we can work with
         sceneCount = SceneManager.sceneCountInBuildSettings;
@@ -762,19 +566,19 @@ public class ExperimentConfig
         }
 
         // Possible reward types
-        possibleRewardTypes = new string[] { "wine", "cheese", "banana", "watermelon" };
+        possibleRewardTypes = new string[] { "wine", "cheese", "banana", "watermelon" };  // ***HRS dont think this gets used
     }
 
     // ********************************************************************** //
 
-    void AddPossibleLocations(Vector3[] locationVar, int startind, float[] xpositions, float yposition, float[] zpositions)
+    void AddPossibleLocations(Vector3[] locationVar, int startind, float[] xpositions, float[] ypositions, float zposition)
     {
         int ind = startind;
         for (int i = 0; i < roomSize; i++)
         {
             for (int j = 0; j < roomSize; j++)
             {
-                locationVar[ind] = new Vector3(xpositions[i], yposition, zpositions[j]);
+                locationVar[ind] = new Vector3(xpositions[i], ypositions[j], zposition);
                 ind++;
             }
         }
@@ -783,6 +587,7 @@ public class ExperimentConfig
     // ********************************************************************** //
 
     private Vector3 findStartOrientation(Vector3 position)     {
+        /*
         // Generate a starting orientation that always makes the player look towards the centre of the environment
         Vector3 lookVector = new Vector3();         lookVector = mazeCentre - position; 
         float angle = (float)Math.Atan2(lookVector.z, lookVector.x);   // angle of the vector connecting centre and spawn location         angle = 90 - angle * (float)(180 / Math.PI);                   // correct for where angles are measured from 
@@ -790,7 +595,8 @@ public class ExperimentConfig
         {
             angle = 360 + angle;
         }
-        spawnOrientation = new Vector3(0.0f, angle, 0.0f);          return spawnOrientation;     } 
+        spawnOrientation = new Vector3(0.0f, angle, 0.0f);         */
+        spawnOrientation = new Vector3(0f, 0f, 0f);  // ***HRS not currently used and will probs not be used for 2D version         return spawnOrientation;     } 
     // ********************************************************************** //
 
     private int RestBreakHere(int firstTrial)
@@ -810,11 +616,11 @@ public class ExperimentConfig
 
         if (rand.Next(2) == 0)   // randomise whether the wine or cheese sub-block happens first
         {
+            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine", freeForageFLAG); //***HRS watch out for this - will be cheese v wine eventually
             nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine", freeForageFLAG);
-            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "cheese", freeForageFLAG);
         } else
         {
-            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "cheese", freeForageFLAG);
+            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine", freeForageFLAG); //***HRS watch out for this - will be cheese v wine eventually
             nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine", freeForageFLAG);
         }
         return nextTrial;
@@ -827,8 +633,8 @@ public class ExperimentConfig
         // Add a 16 trial training block to the trial list. Trials are randomised within each context, but not between contexts 
         int firstTrial = nextTrial;
         bool freeForageFLAG = false;
-        nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine", freeForageFLAG);
         nextTrial = SingleContextDoubleRewardBlock(nextTrial, "cheese", freeForageFLAG);
+        nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine", freeForageFLAG);
 
         // reshuffle the trial ordering so they are intermingled but preserve the previous arrangement of things
         ReshuffleTrialOrder(firstTrial, nextTrial-firstTrial );
@@ -912,21 +718,7 @@ public class ExperimentConfig
                 nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine", freeForageFLAG);
             }
         }
-        /*  // ***HRS debugging
-        else if (rewardSet == "bananaandwatermelon") 
-        {
-            if (rand.Next(2) == 0)   // randomise whether the banana or watermelon sub-block happens first
-            {
-                nextTrial = SingleContextDoubleRewardBlock(nextTrial, "banana", freeForageFLAG);
-                nextTrial = SingleContextDoubleRewardBlock(nextTrial, "watermelon", freeForageFLAG);
-            }
-            else
-            {
-                nextTrial = SingleContextDoubleRewardBlock(nextTrial, "watermelon", freeForageFLAG);
-                nextTrial = SingleContextDoubleRewardBlock(nextTrial, "banana", freeForageFLAG);
-            }
-        }
-        */
+
         return nextTrial;
     }
     // ********************************************************************** //
@@ -1411,24 +1203,7 @@ public class ExperimentConfig
                     {
                         collisionInSpawnLocations = true;   // respawn the player location
                     }
-                    /*// This check was to stop spawning adjacent to a present box, but for several present arrangements this is impossible and results in an infinite while loop
-                    float[] deltaXPositions = { rewardLoc.x - deltaSquarePosition, rewardLoc.x, rewardLoc.x + deltaSquarePosition };
-                    float[] deltaZPositions = { rewardLoc.z - deltaSquarePosition, rewardLoc.z, rewardLoc.z + deltaSquarePosition };
-
-                    // check all 8 positions adjacent to the box, and the box position itself
-                    for (int i = 0; i < 3; i++)
-                    {
-                        for (int j = 0; j < 3; j++)
-                        {
-                            adjacentRewardPosition = new Vector3(deltaXPositions[i], rewardLoc.y, deltaZPositions[j]);
-
-                            if (playerStartPositions[trial] == adjacentRewardPosition)
-                            {
-                                collisionInSpawnLocations = true;   // respawn the player location
-                            }
-                        }
-                    }
-                    */
+                    // Note: at one point there was an attempt here to stop spawning adjacent to a present box, but for several present arrangements this is impossible and results in an infinite while loop
                 }
                 // implement a catchment check for the while loop
                 if (iterationCounter > 40) 
@@ -1436,7 +1211,6 @@ public class ExperimentConfig
                     Debug.Log("There was a while loop error: C");
                     break;
                 }
-
             }
             // orient player towards the centre of the environment (will be maximally informative of location in environment)
             playerStartOrientations[trial] = findStartOrientation(playerStartPositions[trial]); 
