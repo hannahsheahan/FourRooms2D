@@ -58,11 +58,12 @@ public abstract class MovingObject : MonoBehaviour
                 //Return true to say that Move was successful
                 return true;
             }
-            else 
-
-        //If something was hit, return false, Move was unsuccesful.
-        return false;
-        }
+            else
+            { 
+                //If something was hit, return false, Move was unsuccesful.
+                return false;
+            }
+    }
         
         
         //Co-routine for moving units from one space to next, takes a parameter end to specify where to move to.
@@ -119,10 +120,12 @@ public abstract class MovingObject : MonoBehaviour
             //Call the OnCantMove function and pass it hitComponent as a parameter.
             OnCantMove(hitComponent);
         }
-        else 
+        else if (!canMove)
         {
-            Debug.Log("We moved ok.");
+            Debug.Log("cannot move");
+
         }
+
     }
 
 

@@ -14,7 +14,7 @@ public class PlayerController : MovingObject
     private bool playersTurn = true;
     private Timer playerControllerTimer;     // use this to discretize movement input
     private float timeBetweenMoves;
-    private string animateLeftOrRight;
+    private string animateHow;
 
     //Start overrides the Start function of MovingObject
     protected override void Start()
@@ -22,7 +22,7 @@ public class PlayerController : MovingObject
         animator = GetComponent<Animator>();
         playerControllerTimer = new Timer();
         playerControllerTimer.Reset();
-        timeBetweenMoves = 0.2f;         // ***HRS later we will read this in from GameController.cs
+        timeBetweenMoves = 0.3f;         // ***HRS later we will read this in from GameController.cs
 
         base.Start(); // trigger the Start function from the MovingObject parent class
     }
@@ -34,10 +34,11 @@ public class PlayerController : MovingObject
 
         int horizontal = 0;
         int vertical = 0;
+        int jump = 0;
 
         horizontal = (int) (Input.GetAxisRaw("Horizontal"));
         vertical = (int) (Input.GetAxisRaw("Vertical"));
-        //Debug.Log("Rawvertical: " + vertical + " Rawhorizontal: " + horizontal);
+        jump = (int)(Input.GetAxisRaw("Jump"));
 
 
         // prevent player from moving diagonally
@@ -46,23 +47,57 @@ public class PlayerController : MovingObject
             vertical = 0;
         }
 
+        //prevent player from jumping at same time as moving
+        if (jump != 0) 
+        {
+            horizontal = 0;
+            vertical = 0;
+
+            if (playerControllerTimer.ElapsedSeconds() >= timeBetweenMoves)
+            {
+                animateHow = "jump";
+                AnimateNow();
+                playerControllerTimer.Reset();
+                //AttemptMove<Wall>(horizontal, vertical);
+            }
+        }
+
+
         // if we are attempting to move, check that we can actually move there
         if ((horizontal != 0) || (vertical != 0)) 
         {
             if (playerControllerTimer.ElapsedSeconds() >= timeBetweenMoves)
             {
-                //animateLeftOrRight = (horizontal <= 0_) ? "left" : "right";
+                //animateHow = (horizontal <= 0_) ? "left" : "right";
                 if (Mathf.Approximately(horizontal+1, 0f))
                 {
-                    animateLeftOrRight = "left"; 
+                    animateHow = "left"; 
                 }
                 else
                 {
-                    animateLeftOrRight = "right";
+                    animateHow = "right";
                 }
 
+                AnimateNow();
                 AttemptMove<Wall>(horizontal, vertical);
             }
+        }
+    }
+
+    private void AnimateNow() 
+    {
+        // Start the appropriate player animation
+        switch (animateHow)
+        {
+            case "jump":
+                animator.SetTrigger("playerJump");
+                break;
+            case "left":
+                animator.SetTrigger("playerStepLeft");
+                break;
+            case "right":
+                animator.SetTrigger("playerStepRight");
+                break;
         }
     }
 
@@ -73,17 +108,6 @@ public class PlayerController : MovingObject
         //base.AttemptMove (xDir, yDir);
         RaycastHit2D hit;
 
-        //If Move returns true, meaning Player was able to move into an empty space.
-        switch (animateLeftOrRight) 
-        {
-            case "left":
-                animator.SetTrigger("playerStepLeft");
-                break;
-            case "right":
-                animator.SetTrigger("playerStepRight");
-                break;
-        
-        }
 
         if (Move(xDir, yDir, out hit))
         {
@@ -114,6 +138,10 @@ public class PlayerController : MovingObject
         else if (other.tag == "reward") 
         {
             Debug.Log("You just hit a reward! Yay!");
+        }
+        else if (other.tag == "bridge") 
+        {
+            Debug.Log("Passing over a bridge. Woohoo!");
         }
         else 
         {
