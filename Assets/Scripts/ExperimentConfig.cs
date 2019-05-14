@@ -126,7 +126,7 @@ public class ExperimentConfig
 
             case "micro_debug":            // ----Mini debugging test experiment-----
                 practiceTrials = 0 + getReadyTrial;
-                nExecutedTrials = 2;                                         // note that this is only used for the micro_debug version
+                nExecutedTrials = 4;                                         // note that this is only used for the micro_debug version
                 totalTrials = nExecutedTrials + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 2 + restbreakOffset;                            // Take a rest after this many normal trials
                 restbreakDuration = 5.0f;                                       // how long are the imposed rest breaks?
@@ -144,7 +144,7 @@ public class ExperimentConfig
        
         // Timer variables (measured in seconds) - these can later be changed to be different per trial for jitter etc
         dataRecordFrequency = 0.06f;
-        getReadyDuration = 5.0f;    // how long do we have to 'get ready' after the practice, before main experiment begins?
+        getReadyDuration = 3.0f;    // how long do we have to 'get ready' after the practice, before main experiment begins?
 
         // Note that when used, jitters ADD to these values - hence they are minimums
         //maxMovementTime        = 60.0f;   // changed to be a function of trial number. Time allowed to collect both rewards, incl. wait after hitting first one

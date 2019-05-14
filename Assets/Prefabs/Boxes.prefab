@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6219392713695014252}
   - component: {fileID: 6219392713695014227}
   - component: {fileID: 9192728049889504425}
+  - component: {fileID: 3501078222836690727}
   m_Layer: 0
   m_Name: box (1)
   m_TagString: boulder
@@ -68,7 +69,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 61644851
   m_SortingLayer: 3
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 13af95a1dca0fa44c8abd54d2eb48cb7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -96,6 +97,20 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.4
+--- !u!114 &3501078222836690727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6219392713695014253}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d18a631b17d2c47e89eacd747aea5a56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  present: {fileID: 6219392713695014253}
+  presentIndex: 1
 --- !u!1 &6219392713850760283
 GameObject:
   m_ObjectHideFlags: 0
@@ -141,6 +156,7 @@ GameObject:
   - component: {fileID: 6219392714018042087}
   - component: {fileID: 6219392714018042086}
   - component: {fileID: 9207939135245018663}
+  - component: {fileID: 358368939404466241}
   m_Layer: 0
   m_Name: box (2)
   m_TagString: boulder
@@ -198,7 +214,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 61644851
   m_SortingLayer: 3
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 13af95a1dca0fa44c8abd54d2eb48cb7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -226,6 +242,20 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.4
+--- !u!114 &358368939404466241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6219392714018042080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d18a631b17d2c47e89eacd747aea5a56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  present: {fileID: 6219392714018042080}
+  presentIndex: 2
 --- !u!1 &6219392714118139809
 GameObject:
   m_ObjectHideFlags: 0
@@ -237,6 +267,7 @@ GameObject:
   - component: {fileID: 6219392714118139808}
   - component: {fileID: 6219392714118139815}
   - component: {fileID: 6133984546397096717}
+  - component: {fileID: 8645731679334100521}
   m_Layer: 0
   m_Name: box (3)
   m_TagString: boulder
@@ -294,7 +325,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 61644851
   m_SortingLayer: 3
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 13af95a1dca0fa44c8abd54d2eb48cb7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -322,6 +353,20 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.4
+--- !u!114 &8645731679334100521
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6219392714118139809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d18a631b17d2c47e89eacd747aea5a56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  present: {fileID: 6219392714118139809}
+  presentIndex: 3
 --- !u!1 &6219392714650829066
 GameObject:
   m_ObjectHideFlags: 0
@@ -333,6 +378,7 @@ GameObject:
   - component: {fileID: 6219392714650829065}
   - component: {fileID: 6219392714650829064}
   - component: {fileID: 7984797346426661138}
+  - component: {fileID: 8120102747300485704}
   m_Layer: 0
   m_Name: box
   m_TagString: boulder
@@ -390,7 +436,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 61644851
   m_SortingLayer: 3
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 13af95a1dca0fa44c8abd54d2eb48cb7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -418,3 +464,17 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.4
+--- !u!114 &8120102747300485704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6219392714650829066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d18a631b17d2c47e89eacd747aea5a56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  present: {fileID: 6219392714650829066}
+  presentIndex: 0

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Linq;
 
+// Updated for 2D collision detection by HRS (14/05/2019)
 
 public class RewardHitScript : MonoBehaviour
 {
@@ -23,10 +24,13 @@ public class RewardHitScript : MonoBehaviour
 
     // ********************************************************************** //
 
-    void OnTriggerEnter(Collider other)
+    void OnTriggerEnter2D(Collider2D other)
     {
+        Debug.Log("Something just hit me! I'm a reward.");
         if (other.tag == "Player") 
-        { 
+        {
+            Debug.Log("The player just hit me! I'm a reward.");
+
             starTimer.Reset(); // record entry time
             starHit = true;
         }
@@ -34,7 +38,7 @@ public class RewardHitScript : MonoBehaviour
 
     // ********************************************************************** //
 
-    void OnTriggerExit(Collider other)
+    void OnTriggerExit2D(Collider2D other)
     {
         if (other.tag == "Player")
         {
