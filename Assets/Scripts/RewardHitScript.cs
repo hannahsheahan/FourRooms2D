@@ -25,15 +25,21 @@ public class RewardHitScript : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        starTimer.Reset(); // record entry time
-        starHit = true;
+        if (other.tag == "Player") 
+        { 
+            starTimer.Reset(); // record entry time
+            starHit = true;
+        }
     }
 
     // ********************************************************************** //
 
     void OnTriggerExit(Collider other)
     {
-        starHit = false;
+        if (other.tag == "Player")
+        {
+            starHit = false;
+        }
     }
 
     // ********************************************************************** //
