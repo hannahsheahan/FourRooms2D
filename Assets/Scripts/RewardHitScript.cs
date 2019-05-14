@@ -43,32 +43,39 @@ public class RewardHitScript : MonoBehaviour
     {
         if (other.tag == "Player") 
         {   
-            rewardTimer.Reset(); // record entry time
-            rewardHit = true;
+            //rewardTimer.Reset(); // record entry time
+            //rewardHit = true;
         }
     }
 
     // ********************************************************************** //
-
+    /*
     void OnTriggerExit2D(Collider2D other)
     {
         if (other.tag == "Player")
         {
-            rewardHit = false;
-        }
-        else 
-        {
-            Debug.Log("boulder removal detected!");
+            //rewardHit = false;
         }
     }
-
+    */
     // ********************************************************************** //
 
     void Update()
     {
-        rewardUncovered = (GameController.control.giftWrapState[presentCoveringIndex] == 0) ? true : false;  // has the covering boulder been removed?
 
-        if ((rewardTimer.ElapsedSeconds() > GameController.control.minDwellAtReward) && (rewardHit && rewardUncovered))
+        if (!rewardUncovered) // start the counter once reward uncovered, so that we dont provide the nice ding sound too early
+        {
+            rewardUncovered = (GameController.control.giftWrapState[presentCoveringIndex] == 0) ? true : false;  // has the covering boulder been removed?
+
+            if (rewardUncovered) 
+            {
+                Debug.Log("starting to count now");
+                rewardTimer.Reset(); // record entry time
+                rewardHit = true;
+            }
+        }
+
+        if ((rewardTimer.ElapsedSeconds() > GameController.control.minDwellAtReward) && (rewardHit))
         {
             GameController.control.StarFound();
             rewardHit = false;

@@ -78,6 +78,7 @@ public class ExperimentConfig
     private string[] possibleRewardTypes; 
     private string[] rewardTypes;             // diamond or gold? (martini or beer)
     public int numberPresentsPerRoom;
+    
 
     // Timer variables (public since fewer things go wrong if these are changed externally, since this will be tracked in the data, but please don't...)
     public float[] maxMovementTime;
@@ -92,6 +93,7 @@ public class ExperimentConfig
     public float restbreakDuration;
     public float getReadyDuration;
     public float hallwayFreezeTime;
+    public float preFreezeTime;
     private float dataRecordFrequency;       // NOTE: this frequency is referred to in TrackingScript.cs for player data and here for state data
     public float oneSquareMoveTime;
     public float minTimeBetweenMoves;
@@ -155,17 +157,16 @@ public class ExperimentConfig
         goCueDelay             = 1.5f;    // will take a TR during this period
         goalHitPauseTime       = 1.0f;    // we will take a TR during this period
         finalGoalHitPauseTime  = 2.0f;    // we will take a TR during this period (but should be independent of first goal hit time in case we want to jitter)
-        minDwellAtReward       = 0.1f;      
+        minDwellAtReward       = 0.3f;      
         displayMessageTime     = 1.5f;     
         errorDwellTime         = 1.5f;    // Note: should be at least as long as displayMessageTime
         hallwayFreezeTime      = 5.0f;    // amount of time player is stuck in place with each hallway traversal
+        preFreezeTime          = 0.3f;    // should be about the same, maybe slightly longer than oneSquareMoveTime
         numberPresentsPerRoom  = 4;
 
         // physical movement times
         oneSquareMoveTime = 0.2f;                 // Time it will take player to move from one square to next (sec)
-        minTimeBetweenMoves = 0.3f;         // how much time in-between each allowable move (from movement trigger) (sec)
-
-
+        minTimeBetweenMoves = 0.3f;               // How much time between each allowable move (from movement trigger) (sec)
 
         // These variables define the environment (are less likely to be played with)
         roomSize = 4;              // rooms are each 4x4 grids. If this changes, you will need to change this code

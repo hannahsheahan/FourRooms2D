@@ -18,7 +18,7 @@ public class PresentRevealScript : MonoBehaviour {
     /// </summary>
 
     public GameObject present;
-    public int presentIndex;
+    public int presentIndex;    // note that this is accessed from the PlayerController() script to disable the right boulder on trigger
 
     // ********************************************************************** //
 
@@ -30,38 +30,4 @@ public class PresentRevealScript : MonoBehaviour {
 
     // ********************************************************************** //
 
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.tag == "Player")
-        {
-            GameController.control.OpenBoxQuestion(true);
-        }
-    }
-
-    // ********************************************************************** //
-
-    private void OnTriggerStay2D(Collider2D other)
-    {
-        if (other.tag == "Player")
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                GameController.control.OpenBox();
-                GameController.control.OpenBoxQuestion(false);
-                present.SetActive(false);
-                GameController.control.giftWrapState[presentIndex] = 0; // effectively a bool, but shorter to write as string to file 
-                GameController.control.RecordGiftStates();              // save a timestamp and the gift states
-            }
-        }
-    }
-
-    // ********************************************************************** //
-
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.tag == "Player")
-        {
-            GameController.control.OpenBoxQuestion(false);
-        }
-    }
 }

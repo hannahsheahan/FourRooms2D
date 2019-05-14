@@ -9,13 +9,20 @@ using UnityEngine;
 public class PlayerController : MovingObject
 {
 
-
     private Animator animator;
     private bool playersTurn = true;
     private Timer playerControllerTimer;     // use this to discretize movement input
     private float minTimeBetweenMoves;
     private string animateHow;
+    private bool jumpingNow = false;
 
+    // control input values
+    private int horizontal = 0;
+    private int vertical = 0;
+    private int jump = 0;
+    private int jumpingValue = 10;
+
+    // ********************************************************************** //
     //Start overrides the Start function of MovingObject
     protected override void Start()
     {
@@ -27,19 +34,17 @@ public class PlayerController : MovingObject
         base.Start(); // trigger the Start function from the MovingObject parent class
     }
 
-    // Update is called once per frame
+    // ********************************************************************** //
+
     void Update()
     {
-        //if (!playersTurn) return; // will eventually be (!GameController.control.playersTurn)
-
-        int horizontal = 0;
-        int vertical = 0;
-        int jump = 0;
+        //horizontal = 0;
+        //vertical = 0;
+        //jump = 0;
 
         horizontal = (int) (Input.GetAxisRaw("Horizontal"));
         vertical = (int) (Input.GetAxisRaw("Vertical"));
         jump = (int)(Input.GetAxisRaw("Jump"));
-
 
         // prevent player from moving diagonally
         if (horizontal != 0) 
@@ -55,20 +60,20 @@ public class PlayerController : MovingObject
 
             if (playerControllerTimer.ElapsedSeconds() >= minTimeBetweenMoves)
             {
+                jumpingNow = true;  // we do this because otherwise jump is updated too quick for the OnTriggerStay2D function and we could miss the boulder lifting action
                 animateHow = "jump";
                 AnimateNow();
                 playerControllerTimer.Reset();
-                //AttemptMove<Wall>(horizontal, vertical);
             }
         }
-
 
         // if we are attempting to move, check that we can actually move there
         if ((horizontal != 0) || (vertical != 0)) 
         {
             if (playerControllerTimer.ElapsedSeconds() >= minTimeBetweenMoves)
             {
-                //animateHow = (horizontal <= 0_) ? "left" : "right";
+                jumpingNow = false;
+                //animateHow = (horizontal <= 0) ? "left" : "right";
                 if (Mathf.Approximately(horizontal+1, 0f))
                 {
                     animateHow = "left"; 
@@ -77,12 +82,13 @@ public class PlayerController : MovingObject
                 {
                     animateHow = "right";
                 }
-
                 AnimateNow();
                 AttemptMove<Wall>(horizontal, vertical);
             }
         }
     }
+
+    // ********************************************************************** //
 
     private void AnimateNow() 
     {
@@ -91,6 +97,7 @@ public class PlayerController : MovingObject
         {
             case "jump":
                 animator.SetTrigger("playerJump");
+                GameController.control.OpenBox();
                 break;
             case "left":
                 animator.SetTrigger("playerStepLeft");
@@ -101,6 +108,8 @@ public class PlayerController : MovingObject
         }
     }
 
+    // ********************************************************************** //
+
     protected override void AttemptMove <T> (int xDir, int yDir) 
     //protected override void AttemptMove (int xDir, int yDir)
     {
@@ -108,18 +117,15 @@ public class PlayerController : MovingObject
         //base.AttemptMove (xDir, yDir);
         RaycastHit2D hit;
 
-
         if (Move(xDir, yDir, out hit))
         {
              //Call RandomizeSfx of SoundManager to play the move sound, passing in two audio clips to choose from.
         }
-
         playerControllerTimer.Reset();
-
     }
 
-
-    // this currently doesnt do anything and I dont think we care. We just dont want to move off the grid
+    // ********************************************************************** //
+    // OnCantMove currently doesnt do anything and I dont think we care but its a good placeholder. We just dont want to move off the grid
     protected override void OnCantMove <T> (T component) 
     {
         Wall hitWall = component as Wall; // cast component that we hit as a Wall
@@ -127,13 +133,14 @@ public class PlayerController : MovingObject
         Debug.Log("Placeholder: Not sure what OnCantMove should do yet.");
     }
 
+    // ********************************************************************** //
 
-        
     private void OnTriggerEnter2D (Collider2D other) 
     { 
         if (other.tag == "boulder") 
         {
             //Debug.Log("You just hit a boulder! Yay!");
+            GameController.control.OpenBoxQuestion(true);
         }
         else if (other.tag == "reward") 
         {
@@ -149,4 +156,31 @@ public class PlayerController : MovingObject
         }
     }
 
+    // ********************************************************************** //
+
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if (other.tag == "boulder")
+        {
+            if (jumpingNow) 
+            {
+                GameController.control.OpenBoxQuestion(false);
+                GameController.control.giftWrapState[other.gameObject.GetComponent<PresentRevealScript>().presentIndex] = 0; // effectively a bool, but shorter to write as string to file 
+                GameController.control.RecordGiftStates();              // save a timestamp and the gift states
+                other.gameObject.SetActive(false);
+            }
+        }
+    }
+
+    // ********************************************************************** //
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.tag == "boulder")
+        {
+            GameController.control.OpenBoxQuestion(false);
+        }
+    }
+
+    // ********************************************************************** //
 }

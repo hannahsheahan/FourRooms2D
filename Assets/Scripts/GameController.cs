@@ -61,7 +61,7 @@ public class GameController : MonoBehaviour
     private AudioSource source;
 
     // Messages to the screen
-    private string displayMessage = "noMessage";
+    public string displayMessage = "noMessage";
     public string textMessage = "";
     public bool displayCue;
     public string rewardType;
@@ -89,6 +89,7 @@ public class GameController : MonoBehaviour
     public float totalExperimentTime;
     public float currentMovementTime;
     public float hallwayFreezeTime;
+    public float preFreezeTime;
     public float currentFrozenTime;
     public bool displayTimeLeft;
     public float firstFrozenTime;
@@ -412,7 +413,11 @@ public class GameController : MonoBehaviour
 
                 Player.GetComponent<PlayerController>().enabled = false; // disable controller
                 displayTimeLeft = false;             // freeze the visible countdown
-                CongratulatePlayer();                // display a big congratulatory message
+
+                if (stateTimer.ElapsedSeconds() > goalHitPauseTime)
+                {
+                    CongratulatePlayer();                // display a big congratulatory message
+                }
 
                 if (stateTimer.ElapsedSeconds() > beforeScoreUpdateTime)
                 {
@@ -530,7 +535,12 @@ public class GameController : MonoBehaviour
             case STATE_HALLFREEZE:
 
                 Player.GetComponent<PlayerController>().enabled = false;
-                currentFrozenTime = currentMovementTime - firstFrozenTime;
+                currentFrozenTime = currentMovementTime - firstFrozenTime; // dont think this is being used for anything (HRS 14/05/2019)
+
+                if ( (stateTimer.ElapsedSeconds() > preFreezeTime) && (stateTimer.ElapsedSeconds() <= hallwayFreezeTime) )
+                {
+                    displayMessage = "traversingHallway";
+                }
 
                 if (stateTimer.ElapsedSeconds() > hallwayFreezeTime)
                 {
@@ -637,6 +647,7 @@ public class GameController : MonoBehaviour
         errorDwellTime = currentTrialData.errorDwellTime;
         rewardType = currentTrialData.rewardType;
         hallwayFreezeTime = currentTrialData.hallwayFreezeTime;
+        preFreezeTime = currentTrialData.preFreezeTime;
         minTimeBetweenMoves = currentTrialData.minTimeBetweenMoves;
         oneSquareMoveTime = currentTrialData.oneSquareMoveTime;
 
@@ -875,14 +886,6 @@ public class GameController : MonoBehaviour
                 }
                 break;
 
-            case "lavaDeathMessage":   // obsolete
-                textMessage = "Aaaaaaaaaaaaaaaahhhh!";
-                if (messageTimer.ElapsedSeconds() > displayMessageTime)
-                {
-                    displayMessage = "noMessage"; // reset the message
-                }
-                break;
-
             case "restartTrialMessage":
                 textMessage = "Restarting trial";
                 if (messageTimer.ElapsedSeconds() > displayMessageTime)
@@ -954,7 +957,6 @@ public class GameController : MonoBehaviour
 
     public void HallwayFreeze()
     {   // Display a message, and track the hallway traversal in the FSM and in the saved data
-        displayMessage = "traversingHallway";
         previousState = State;
         firstFrozenTime = totalMovementTime;
         StateNext(STATE_HALLFREEZE);

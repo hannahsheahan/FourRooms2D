@@ -25,21 +25,20 @@ public class TrialCountdownScript : MonoBehaviour {
         }
 
         // display the frozen countdown
-        if (GameController.control.State == GameController.STATE_HALLFREEZE)
+        //if (GameController.control.State == GameController.STATE_HALLFREEZE)
+        if (GameController.control.displayMessage == "traversingHallway")
         {
             frozenSecondsLeft = secondsLeft - subtractTime;
             // make sure it freezes for AT LEAST hallwayFreezeTime
             if ((frozenSecondsLeft >= 0) && (frozenSecondsLeft <= GameController.control.hallwayFreezeTime-1))
             {
                 FrozenCountdownTime.text = (frozenSecondsLeft).ToString();
-                //FrozenCountdownTime.color = Color.white;
+
             }
             else
             {
                 FrozenCountdownTime.text = ((int)Mathf.Round(GameController.control.hallwayFreezeTime)).ToString();
-                //FrozenCountdownTime.color = Color.white;
             }
-
         }
         else
         {
