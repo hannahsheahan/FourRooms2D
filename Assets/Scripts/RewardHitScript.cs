@@ -10,29 +10,41 @@ using System.Linq;
 
 public class RewardHitScript : MonoBehaviour
 {
-    private Timer starTimer;
-    private bool starHit = false;
+    private Timer rewardTimer;
+    private bool rewardHit = false;
+    private bool rewardUncovered = false;
     public int rewardIndex;
+    private Vector3 rewardPosition;
+    private Vector3[] presentPositions;
+    private int presentCoveringIndex = 0;
 
     // ********************************************************************** //
 
     void Start()
     {
-        starTimer = new Timer();
-        starTimer.Reset();
+        rewardTimer = new Timer();
+        rewardTimer.Reset();
+        rewardPosition = GameController.control.rewardSpawnLocations[rewardIndex];
+        presentPositions = GameController.control.presentPositions;
+
+        for (int i=0; i < presentPositions.Length; i++) 
+        { 
+            if (presentPositions[i] == rewardPosition) 
+            {
+                presentCoveringIndex = i;
+            }
+        }
+        Debug.Log("the present covering reward " + rewardIndex + "is present no. " + presentCoveringIndex);
     }
 
     // ********************************************************************** //
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("Something just hit me! I'm a reward.");
         if (other.tag == "Player") 
-        {
-            Debug.Log("The player just hit me! I'm a reward.");
-
-            starTimer.Reset(); // record entry time
-            starHit = true;
+        {   
+            rewardTimer.Reset(); // record entry time
+            rewardHit = true;
         }
     }
 
@@ -42,7 +54,11 @@ public class RewardHitScript : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            starHit = false;
+            rewardHit = false;
+        }
+        else 
+        {
+            Debug.Log("boulder removal detected!");
         }
     }
 
@@ -50,10 +66,12 @@ public class RewardHitScript : MonoBehaviour
 
     void Update()
     {
-        if ((starTimer.ElapsedSeconds() > GameController.control.minDwellAtReward) && (starHit))
+        rewardUncovered = (GameController.control.giftWrapState[presentCoveringIndex] == 0) ? true : false;  // has the covering boulder been removed?
+
+        if ((rewardTimer.ElapsedSeconds() > GameController.control.minDwellAtReward) && (rewardHit && rewardUncovered))
         {
             GameController.control.StarFound();
-            starHit = false;
+            rewardHit = false;
             GameController.control.DisableRewardByIndex(rewardIndex);
         }
     }

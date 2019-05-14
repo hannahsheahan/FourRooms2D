@@ -13,7 +13,7 @@ public class PlayerController : MovingObject
     private Animator animator;
     private bool playersTurn = true;
     private Timer playerControllerTimer;     // use this to discretize movement input
-    private float timeBetweenMoves;
+    private float minTimeBetweenMoves;
     private string animateHow;
 
     //Start overrides the Start function of MovingObject
@@ -22,7 +22,7 @@ public class PlayerController : MovingObject
         animator = GetComponent<Animator>();
         playerControllerTimer = new Timer();
         playerControllerTimer.Reset();
-        timeBetweenMoves = 0.3f;         // ***HRS later we will read this in from GameController.cs
+        minTimeBetweenMoves = GameController.control.minTimeBetweenMoves; 
 
         base.Start(); // trigger the Start function from the MovingObject parent class
     }
@@ -53,7 +53,7 @@ public class PlayerController : MovingObject
             horizontal = 0;
             vertical = 0;
 
-            if (playerControllerTimer.ElapsedSeconds() >= timeBetweenMoves)
+            if (playerControllerTimer.ElapsedSeconds() >= minTimeBetweenMoves)
             {
                 animateHow = "jump";
                 AnimateNow();
@@ -66,7 +66,7 @@ public class PlayerController : MovingObject
         // if we are attempting to move, check that we can actually move there
         if ((horizontal != 0) || (vertical != 0)) 
         {
-            if (playerControllerTimer.ElapsedSeconds() >= timeBetweenMoves)
+            if (playerControllerTimer.ElapsedSeconds() >= minTimeBetweenMoves)
             {
                 //animateHow = (horizontal <= 0_) ? "left" : "right";
                 if (Mathf.Approximately(horizontal+1, 0f))
@@ -133,11 +133,11 @@ public class PlayerController : MovingObject
     { 
         if (other.tag == "boulder") 
         {
-            Debug.Log("You just hit a boulder! Yay!");
+            //Debug.Log("You just hit a boulder! Yay!");
         }
         else if (other.tag == "reward") 
         {
-            Debug.Log("You just hit a reward! Yay!");
+            //Debug.Log("You just hit a reward! Yay!");
         }
         else if (other.tag == "bridge") 
         {
@@ -147,8 +147,6 @@ public class PlayerController : MovingObject
         {
             Debug.Log("You just hit a mystery object");
         }
-
     }
-
 
 }

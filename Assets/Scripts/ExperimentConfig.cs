@@ -93,6 +93,8 @@ public class ExperimentConfig
     public float getReadyDuration;
     public float hallwayFreezeTime;
     private float dataRecordFrequency;       // NOTE: this frequency is referred to in TrackingScript.cs for player data and here for state data
+    public float oneSquareMoveTime;
+    public float minTimeBetweenMoves;
 
     // Randomisation of trial sequence
     public System.Random rand = new System.Random();
@@ -159,8 +161,14 @@ public class ExperimentConfig
         hallwayFreezeTime      = 5.0f;    // amount of time player is stuck in place with each hallway traversal
         numberPresentsPerRoom  = 4;
 
+        // physical movement times
+        oneSquareMoveTime = 0.2f;                 // Time it will take player to move from one square to next (sec)
+        minTimeBetweenMoves = 0.3f;         // how much time in-between each allowable move (from movement trigger) (sec)
+
+
+
         // These variables define the environment (are less likely to be played with)
-        roomSize        = 4;              // rooms are each 4x4 grids. If this changes, you will need to change this code
+        roomSize = 4;              // rooms are each 4x4 grids. If this changes, you will need to change this code
 
         // ***HRS to test these
         playerZposition = 0f;      

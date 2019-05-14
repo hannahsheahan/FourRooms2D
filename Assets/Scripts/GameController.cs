@@ -106,6 +106,8 @@ public class GameController : MonoBehaviour
     public float elapsedRestbreakTime;
     public float getReadyTime;
     public float getReadyDuration;
+    public float oneSquareMoveTime;
+    public float minTimeBetweenMoves;
 
     public float dataRecordFrequency;           // NOTE: this frequency is referred to in TrackingScript.cs for player data and here for state data
     public float timeRemaining;
@@ -206,7 +208,7 @@ public class GameController : MonoBehaviour
 
         // Ensure cue images are off
         displayCue = false;
-        rewardsVisible = new bool[maxNRewards]; //default
+        rewardsVisible = new bool[maxNRewards];   //default
 
         StartExperiment();
 
@@ -618,7 +620,6 @@ public class GameController : MonoBehaviour
             }
         }
 
-        //rewardsVisible = new bool[rewardsRemaining];
         for (int i = 0; i < rewardsVisible.Length; i++)
         {
             rewardsVisible[i] = false;
@@ -636,6 +637,8 @@ public class GameController : MonoBehaviour
         errorDwellTime = currentTrialData.errorDwellTime;
         rewardType = currentTrialData.rewardType;
         hallwayFreezeTime = currentTrialData.hallwayFreezeTime;
+        minTimeBetweenMoves = currentTrialData.minTimeBetweenMoves;
+        oneSquareMoveTime = currentTrialData.oneSquareMoveTime;
 
         // Start the next scene/trial
         Debug.Log("Upcoming scene: " + nextScene);
@@ -914,7 +917,7 @@ public class GameController : MonoBehaviour
                 break;
 
             case "openBoxQuestion":
-                textMessage = "Press space-bar to open the gift box";
+                textMessage = "Press space-bar to remove the boulder";
                 break;
 
         }
@@ -931,16 +934,19 @@ public class GameController : MonoBehaviour
 
     public void OpenBoxQuestion(bool visible)
     {
-        if (displayMessage == "noMessage")    // don't get rid of any other important messages e.g. the data writing error or restarting trial
+        if (currentTrialData.mapName == "Practice")  // only provide this info on the practice trials
         {
-            if (visible)
+            if (displayMessage == "noMessage")    // don't get rid of any other important messages e.g. the data writing error or restarting trial
             {
-                displayMessage = "openBoxQuestion";
+                if (visible)
+                {
+                    displayMessage = "openBoxQuestion";
+                }
             }
-        }
-        if (!visible)
-        {
-            displayMessage = "noMessage";
+            if (!visible)
+            {
+                displayMessage = "noMessage";
+            }
         }
     }
 

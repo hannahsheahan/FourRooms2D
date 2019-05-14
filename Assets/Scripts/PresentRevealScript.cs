@@ -13,9 +13,9 @@ public class PresentRevealScript : MonoBehaviour {
     /// If the presents needed to be turned on, then this script could not be attached
     /// directly to the present object because it would never be activated/ran 
     /// (hence for the rewards, we use an empty parent gameobject to run HideOrDisplayReward.cs)
-
+    /// 
+    /// Edit: updated for 2D environment by HRS (14/05/2019)
     /// </summary>
-
 
     public GameObject present;
     public int presentIndex;
@@ -30,30 +30,38 @@ public class PresentRevealScript : MonoBehaviour {
 
     // ********************************************************************** //
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        GameController.control.OpenBoxQuestion(true);
-    }
-
-    // ********************************************************************** //
-
-    private void OnTriggerStay(Collider other)
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (other.tag == "Player")
         {
-            GameController.control.OpenBox();
-            GameController.control.OpenBoxQuestion(false);
-            present.SetActive(false);
-            GameController.control.giftWrapState[presentIndex] = 0; // effectively a bool, but shorter to write as string to file 
-            GameController.control.RecordGiftStates();              // save a timestamp and the gift states
+            GameController.control.OpenBoxQuestion(true);
         }
     }
 
     // ********************************************************************** //
 
-    private void OnTriggerExit(Collider other)
+    private void OnTriggerStay2D(Collider2D other)
     {
-        GameController.control.OpenBoxQuestion(false);
+        if (other.tag == "Player")
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                GameController.control.OpenBox();
+                GameController.control.OpenBoxQuestion(false);
+                present.SetActive(false);
+                GameController.control.giftWrapState[presentIndex] = 0; // effectively a bool, but shorter to write as string to file 
+                GameController.control.RecordGiftStates();              // save a timestamp and the gift states
+            }
+        }
     }
 
+    // ********************************************************************** //
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.tag == "Player")
+        {
+            GameController.control.OpenBoxQuestion(false);
+        }
+    }
 }
