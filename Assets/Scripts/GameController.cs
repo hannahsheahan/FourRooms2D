@@ -76,6 +76,7 @@ public class GameController : MonoBehaviour
     public bool flashCongratulations = false;
     public bool congratulated = false;
     private float beforeScoreUpdateTime = 1.2f;  // this is just for display
+    public float blankTime; 
 
     // Timer variables
     private Timer experimentTimer;
@@ -123,30 +124,33 @@ public class GameController : MonoBehaviour
     public bool FLAG_frameRateError;
     public bool FLAG_cliffFallError;
 
+    public bool blankScreen = false;            // flag for indicating whether showing a between-trial blank screen
+
     // Game-play state machine states
     public const int STATE_STARTSCREEN = 0;
     public const int STATE_SETUP = 1;
-    public const int STATE_STARTTRIAL = 2;
-    public const int STATE_GOALAPPEAR = 3;
-    public const int STATE_DELAY = 4;
-    public const int STATE_GO = 5;
-    public const int STATE_MOVING1 = 6;
-    public const int STATE_STAR1FOUND = 7;
-    public const int STATE_MOVING2 = 8;
-    public const int STATE_STAR2FOUND = 9;
-    public const int STATE_FINISH = 10;
-    public const int STATE_NEXTTRIAL = 11;
-    public const int STATE_INTERTRIAL = 12;
-    public const int STATE_TIMEOUT = 13;
-    public const int STATE_ERROR = 14;
-    public const int STATE_REST = 15;
-    public const int STATE_GETREADY = 16;
-    public const int STATE_PAUSE = 17;
-    public const int STATE_HALLFREEZE = 18;
-    public const int STATE_EXIT = 19;
-    public const int STATE_MAX = 20;
+    public const int STATE_BLANKSCREEN = 2;
+    public const int STATE_STARTTRIAL = 3;
+    public const int STATE_GOALAPPEAR = 4;
+    public const int STATE_DELAY = 5;
+    public const int STATE_GO = 6;
+    public const int STATE_MOVING1 = 7;
+    public const int STATE_STAR1FOUND = 8;
+    public const int STATE_MOVING2 = 9;
+    public const int STATE_STAR2FOUND = 10;
+    public const int STATE_FINISH = 11;
+    public const int STATE_NEXTTRIAL = 12;
+    public const int STATE_INTERTRIAL = 13;
+    public const int STATE_TIMEOUT = 14;
+    public const int STATE_ERROR = 15;
+    public const int STATE_REST = 16;
+    public const int STATE_GETREADY = 17;
+    public const int STATE_PAUSE = 18;
+    public const int STATE_HALLFREEZE = 19;
+    public const int STATE_EXIT = 20;
+    public const int STATE_MAX = 21;
 
-    private string[] stateText = new string[] { "StartScreen", "Setup", "StartTrial", "GoalAppear", "Delay", "Go", "Moving1", "FirstGoalHit", "Moving2", "FinalGoalHit", "Finish", "NextTrial", "InterTrial", "Timeout", "Error", "Rest", "GetReady", "Pause", "HallwayFreeze", "Exit", "Max" };
+    private string[] stateText = new string[] { "StartScreen", "Setup", "BlankScreen", "StartTrial", "GoalAppear", "Delay", "Go", "Moving1", "FirstGoalHit", "Moving2", "FinalGoalHit", "Finish", "NextTrial", "InterTrial", "Timeout", "Error", "Rest", "GetReady", "Pause", "HallwayFreeze", "Exit", "Max" };
     public int State;
     public int previousState;     // Note that this currently is not thoroughly used - currently only used for transitioning back from the STATE_HALLFREEZE to the previous gameplay
     public List<string> stateTransitions = new List<string>();   // recorded state transitions (in sync with the player data)
@@ -254,7 +258,7 @@ public class GameController : MonoBehaviour
                             {
                                 rewardsVisible[i] = false;
                             }
-                            StateNext(STATE_STARTTRIAL);
+                            StateNext(STATE_BLANKSCREEN);
 
                             break;
                         case "Menus":
@@ -281,9 +285,21 @@ public class GameController : MonoBehaviour
                 }
                 break;
 
-            case STATE_STARTTRIAL:
 
+            case STATE_BLANKSCREEN:
+
+                // display a blank screen at the start of each trial, for N seconds while things get set up, and to jitter time between trials for fMRI
+                blankScreen = true;
                 StartRecording();
+
+                if (stateTimer.ElapsedSeconds() > blankTime) // Note: this can be a different blankTime per trial etc once we jitter in ExperimentConfig
+                {
+                    blankScreen = false;
+                    StateNext(STATE_STARTTRIAL);
+                }
+                break;
+
+            case STATE_STARTTRIAL:
 
                 // Wait until the goal/target cue appears (will take a TR here)
                 if (stateTimer.ElapsedSeconds() >= preDisplayCueTime)
@@ -438,7 +454,7 @@ public class GameController : MonoBehaviour
 
                 // end the trial, save the data
                 NextScene();
-                StateNext(STATE_SETUP);
+                StateNext(STATE_SETUP);  // be careful with how the data /duration of this blankscreen state is saved - we want to know how long it was.
                 break;
 
             case STATE_TIMEOUT:
@@ -590,6 +606,7 @@ public class GameController : MonoBehaviour
     public string TrialSetup()
     {
         // Start the trial with a clean-slate
+        blankScreen = false; 
         FLAG_trialError = false;
         FLAG_trialTimeout = false;
         FLAG_fullScreenModeError = false;
@@ -650,6 +667,7 @@ public class GameController : MonoBehaviour
         preFreezeTime = currentTrialData.preFreezeTime;
         minTimeBetweenMoves = currentTrialData.minTimeBetweenMoves;
         oneSquareMoveTime = currentTrialData.oneSquareMoveTime;
+        blankTime = currentTrialData.blankTime;
 
         // Start the next scene/trial
         Debug.Log("Upcoming scene: " + nextScene);

@@ -201,6 +201,7 @@ public class DataController : MonoBehaviour {
             gameData.allTrialData[trial].errorDwellTime  = config.errorDwellTime;
             gameData.allTrialData[trial].hallwayFreezeTime = config.hallwayFreezeTime;
             gameData.allTrialData[trial].preFreezeTime = config.preFreezeTime;
+            gameData.allTrialData[trial].blankTime = config.blankTime;
             gameData.allTrialData[trial].oneSquareMoveTime = config.oneSquareMoveTime;
             gameData.allTrialData[trial].minTimeBetweenMoves = config.minTimeBetweenMoves;
         }

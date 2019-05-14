@@ -49,16 +49,6 @@ public class RewardHitScript : MonoBehaviour
     }
 
     // ********************************************************************** //
-    /*
-    void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.tag == "Player")
-        {
-            //rewardHit = false;
-        }
-    }
-    */
-    // ********************************************************************** //
 
     void Update()
     {

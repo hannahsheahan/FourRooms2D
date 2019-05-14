@@ -97,6 +97,7 @@ public class ExperimentConfig
     private float dataRecordFrequency;       // NOTE: this frequency is referred to in TrackingScript.cs for player data and here for state data
     public float oneSquareMoveTime;
     public float minTimeBetweenMoves;
+    public float blankTime;
 
     // Randomisation of trial sequence
     public System.Random rand = new System.Random();
@@ -162,6 +163,7 @@ public class ExperimentConfig
         errorDwellTime         = 1.5f;    // Note: should be at least as long as displayMessageTime
         hallwayFreezeTime      = 5.0f;    // amount of time player is stuck in place with each hallway traversal
         preFreezeTime          = 0.3f;    // should be about the same, maybe slightly longer than oneSquareMoveTime
+        blankTime              = 1.0f;    // Note: ***HRS should be jittered (blank screen time prior to trial starting)
         numberPresentsPerRoom  = 4;
 
         // physical movement times
