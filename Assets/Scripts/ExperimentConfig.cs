@@ -131,7 +131,7 @@ public class ExperimentConfig
 
 
             case "micro_debug":            // ----Mini debugging test experiment-----
-                practiceTrials = 0 + getReadyTrial;
+                practiceTrials = 1 + getReadyTrial;
                 nExecutedTrials = 4;                                         // note that this is only used for the micro_debug version
                 totalTrials = nExecutedTrials + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 2 + restbreakOffset;                            // Take a rest after this many normal trials
@@ -164,7 +164,7 @@ public class ExperimentConfig
         errorDwellTime         = 1.5f;    // Note: should be at least as long as displayMessageTime
         hallwayFreezeTime      = 5.0f;    // amount of time player is stuck in place with each hallway traversal
         preFreezeTime          = 0.3f;    // should be about the same, maybe slightly longer than oneSquareMoveTime
-        blankTime              = 1.0f;    // Note: ***HRS should be jittered (blank screen time prior to trial starting)
+        blankTime              = 2.0f;    // Note: ***HRS should be jittered (blank screen time prior to trial starting)
         animationTime          = 1.0f;    // how long the reward grows for when it appears (mainly for visuals)
         numberPresentsPerRoom  = 4;
 
@@ -175,7 +175,6 @@ public class ExperimentConfig
         // These variables define the environment (are less likely to be played with)
         roomSize = 4;              // rooms are each 4x4 grids. If this changes, you will need to change this code
 
-        // ***HRS to test these
         playerZposition = 0f;      
         rewardZposition   = 0f;
         mazeCentre      = new Vector3(0f, 0f, playerZposition);
@@ -282,11 +281,11 @@ public class ExperimentConfig
             // just make the rewards on each side of the hallway/bridge
             if ( trial % 2 == 0 )
             {
-                SetDoubleRewardTrial(trial, trialInBlock, "cheese", "blue", "red", "yellow", contextSide, freeForageFLAG);  
+                SetDoubleRewardTrial(trial, trialInBlock, "pineapple", "blue", "red", "yellow", contextSide, freeForageFLAG);  
             }
             else
             {
-                SetDoubleRewardTrial(trial, trialInBlock, "cheese", "red", "green", "blue", contextSide, freeForageFLAG);
+                SetDoubleRewardTrial(trial, trialInBlock, "pineapple", "red", "green", "blue", contextSide, freeForageFLAG);
             }
             trialMazes[trial] = "Practice";   // reset the maze for a practice trial
         }
@@ -490,44 +489,7 @@ public class ExperimentConfig
         greenRoomPositions = new Vector3[roomSize * roomSize];
 
 
-        // Version 3D 4x4 room positions
-        /*
-        // Blue room
-        int startind = 0;
-        deltaSquarePosition = 8.5f; // ***HRS later should really use this to create loop for specifying positions
-        float[] XPositionsblue = { 113.6f, 122.1f, 130.6f, 139.1f };
-        float[] ZPositionsblue = { 101.8f, 110.3f, 118.8f, 127.3f };
-
-        AddPossibleLocations(possiblePlayerPositions, startind, XPositionsblue, playerYposition, ZPositionsblue);
-        AddPossibleLocations(possibleRewardPositions, startind, XPositionsblue, rewardYposition, ZPositionsblue);
-        startind = startind + roomSize * roomSize;
-
-        // Red room
-        float[] XPositionsred = { 156f, 164.5f, 173f, 181.5f };
-        float[] ZPositionsred = { 101.8f, 110.3f, 118.8f, 127.3f };
-
-        AddPossibleLocations(possiblePlayerPositions, startind, XPositionsred, playerYposition, ZPositionsred);
-        AddPossibleLocations(possibleRewardPositions, startind, XPositionsred, rewardYposition, ZPositionsred);
-        startind = startind + roomSize * roomSize;
-
-        // Green room
-        float[] XPositionsgreen = { 156f, 164.5f, 173f, 181.5f };
-        float[] ZPositionsgreen = { 144.3f, 152.8f, 161.3f, 169.8f };
-
-        AddPossibleLocations(possiblePlayerPositions, startind, XPositionsgreen, playerYposition, ZPositionsgreen);
-        AddPossibleLocations(possibleRewardPositions, startind, XPositionsgreen, rewardYposition, ZPositionsgreen);
-        startind = startind + roomSize * roomSize;
-
-        // Yellow room
-        float[] XPositionsyellow = { 113.6f, 122.1f, 130.6f, 139.1f };
-        float[] ZPositionsyellow = { 144.3f, 152.8f, 161.3f, 169.8f };
-
-        AddPossibleLocations(possiblePlayerPositions, startind, XPositionsyellow, playerYposition, ZPositionsyellow);
-        AddPossibleLocations(possibleRewardPositions, startind, XPositionsyellow, rewardYposition, ZPositionsyellow);
-        */
-
-
-        // Version 2D 4x4 room positions
+        // Version 2D 4x4 room positions  ***HRS later should really use this to create loop for specifying positions
 
         // Blue room
         int startind = 0;
@@ -629,11 +591,11 @@ public class ExperimentConfig
 
         if (rand.Next(2) == 0)   // randomise whether the wine or cheese sub-block happens first
         {
-            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine", freeForageFLAG); //***HRS watch out for this - will be cheese v wine eventually
-            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine", freeForageFLAG);
+            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine", freeForageFLAG); 
+            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "cheese", freeForageFLAG);
         } else
         {
-            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine", freeForageFLAG); //***HRS watch out for this - will be cheese v wine eventually
+            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "cheese", freeForageFLAG);
             nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine", freeForageFLAG);
         }
         return nextTrial;
@@ -740,7 +702,7 @@ public class ExperimentConfig
     {
         // Add a 16 trial training block to the trial list. Trials are randomised within each context, but not between contexts 
 
-        nextTrial = DoubleRewardBlock_micro(nextTrial, "wine", numberOfTrials);
+        nextTrial = DoubleRewardBlock_micro(nextTrial, "peanut", numberOfTrials);
 
         return nextTrial;
     }
@@ -874,81 +836,6 @@ public class ExperimentConfig
 
         return firstTrial + blockLength;
     }
-    // ********************************************************************** //
-
-    private void TwoContextDoubleRewardBlock(int firstTrial)
-    {
-        // NOTE: Not currently used
-        // ***HRS to write this more efficiently using SingleContextDoubleRewardBlock() later
-
-
-        // This function specifies the required trials in the block, then randomises the trial order and sets it.
-        // NOTE: Use this function if you want to randomise over cheese/wine ordering too
-
-        // This is for a 16 trial block, consisting of 8 double-reward trials in 
-        // each context, each split over 2 reward positions (L/L vs R/R), and 
-        // across 4 different start locations. 
-
-        string startRoom;
-        string context;
-        int contextSide;
-        int blockLength = 16; // Specify the next 16 trials
-
-        string[] arrayContexts = new string[blockLength];
-        string[] arrayStartRooms = new string[blockLength];
-        int[] arrayContextSides = new int[blockLength];
-        
-        for (int i = 0; i < blockLength; i++)
-        {
-            // separate the trials into two different sub-blocks
-            if (i < 8)
-            {
-                context = "wine";
-            }else
-            {
-                context = "cheese";
-            }
-
-            // use a different start location for each trial
-            switch (i % 4)
-            {
-                case 0:
-                    startRoom = "yellow";
-                    break;
-                case 1:
-                    startRoom = "green";
-                    break;
-                case 2:
-                    startRoom = "red";
-                    break;
-                case 3:
-                    startRoom = "blue";
-                    break;
-                default:
-                    startRoom = "error";
-                    Debug.Log("Start room specified incorrectly");
-                    break;
-            }
-
-            // switch the side of the room the rewards are located on for each context
-            if ( (i < 4) || (i > 11))
-            {
-                contextSide = 1;
-            } else
-            {
-                contextSide = 2;
-            }
-
-            // Store trial setup in array, for later randomisation
-            arrayContexts[i] = context;
-            arrayStartRooms[i] = startRoom;
-            arrayContextSides[i] = contextSide;
-        }
-
-        // Randomise the trial order and save it
-        ShuffleTrialOrderAndStoreBlock(firstTrial, blockLength, arrayContexts, arrayStartRooms, arrayContextSides, false);
-    }
-
 
     // ********************************************************************** //
 
@@ -1331,8 +1218,6 @@ public class ExperimentConfig
     {
         // This function reshuffles the set prospective trials from firstTrial to firstTrial+blockLength and stores them.
         // Bit ugly but ok for now (***HRS could have a function with a different or flexible return type that does this for each var)
-
-        // ***HRS this def needs checking to see if it actually does the right thing
 
         int n = blockLength;
         // Perform the Fisher-Yates algorithm for shuffling array elements in place 

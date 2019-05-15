@@ -5,9 +5,6 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
   - enabled: 1
     path: Assets/Scenes/Persistent.unity
     guid: be0b32caa244a4d91a625b1be9b6e042
@@ -30,11 +27,23 @@ EditorBuildSettings:
     path: Assets/Scenes/GetReady.unity
     guid: 54e741d273d5d436dbf05f1884bd9ea7
   - enabled: 1
+    path: Assets/Scenes/Practice.unity
+    guid: 9af8eefdbb5c84508a1de30fd35303be
+  - enabled: 1
     path: Assets/Scenes/FourRooms_wine.unity
     guid: 78ee5c809a5b543b382a96b4fee19bbd
   - enabled: 1
     path: Assets/Scenes/FourRooms_cheese.unity
-    guid: e9cb875c649a34f86bbe59c25b619876
+    guid: 18325913efdc94db9b23e622969310b3
+  - enabled: 1
+    path: Assets/Scenes/FourRooms_martini.unity
+    guid: c1e26c296480a4070839cce4b207bcec
+  - enabled: 1
+    path: Assets/Scenes/FourRooms_peanut.unity
+    guid: 662d317fe08c7488a9fa8ac1f6fc0d03
+  - enabled: 1
+    path: Assets/Scenes/FourRooms_pineapple.unity
+    guid: 9a2ed96ca5ad54556a5bafc10e3f7382
   - enabled: 1
     path: Assets/Scenes/RestBreak.unity
     guid: 127d00453e8d144728db204b33f39c57

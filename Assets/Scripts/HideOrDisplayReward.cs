@@ -9,9 +9,15 @@ using System.Linq;
 public class HideOrDisplayReward : MonoBehaviour {
 
 	public GameObject reward;
-    public int rewardIndex;
-   
-	private void Update()
+    private int rewardIndex;
+
+    private void Start()
+    {
+        rewardIndex = reward.GetComponent<SpawnRewardLocation>().rewardIndex;
+    }
+
+
+    private void Update()
     {
         //Debug.Log("rewardsVisible length is " + GameController.control.rewardsVisible.Length);
         reward.SetActive(GameController.control.rewardsVisible[rewardIndex]); 

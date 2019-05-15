@@ -3,7 +3,7 @@ using System.Collections;
 
 public class RewardAnimationScript : MonoBehaviour {
 
-    public int rewardIndex;
+    private int rewardIndex;
     private SpriteRenderer spriteRenderer;
     public bool isAnimated = false;
     public bool isRotating = false;

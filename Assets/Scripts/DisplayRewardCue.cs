@@ -14,6 +14,7 @@ public class DisplayRewardCue : MonoBehaviour
     public Sprite bananaImage;
     public Sprite watermelonImage;
     public Sprite peanutImage;
+    public Sprite pineappleImage;
     private string cue;
 
     // ********************************************************************** //
@@ -51,6 +52,9 @@ public class DisplayRewardCue : MonoBehaviour
                     break;
                 case "peanut":
                     rewardImage.sprite = peanutImage;
+                    break;
+                case "pineapple":
+                    rewardImage.sprite = pineappleImage;
                     break;
             }
             rewardImage.enabled = true;

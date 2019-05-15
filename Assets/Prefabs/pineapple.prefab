@@ -136,7 +136,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ff967b7ed48f2441bcf509edf6b889a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rewardIndex: 0
   isAnimated: 1
   isRotating: 0
   isFloating: 0
@@ -147,6 +146,6 @@ MonoBehaviour:
   floatSpeed: 0
   floatRate: 0
   startScale: {x: 0.1, y: 0.1, z: 1}
-  endScale: {x: 2.2, y: 2.2, z: 1}
+  endScale: {x: 2, y: 2, z: 1}
   scaleSpeed: 8
   scaleRate: 0.6

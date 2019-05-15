@@ -937,7 +937,7 @@ public class GameController : MonoBehaviour
                 break;
 
             case "keepSearchingMessage":
-                textMessage = "Well done! \n There is one more cheese to find.";
+                textMessage = "Well done! \n There is one more pineapple to find.";
                 if (messageTimer.ElapsedSeconds() > displayMessageTime)
                 {
                     displayMessage = "noMessage"; // reset the message
