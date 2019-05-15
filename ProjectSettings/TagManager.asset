@@ -56,3 +56,6 @@ TagManager:
   - name: Character
     uniqueID: 421367653
     locked: 0
+  - name: ExplodingReward
+    uniqueID: 3121485245
+    locked: 0

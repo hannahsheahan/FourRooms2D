@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2792722533879230914}
   - component: {fileID: 2792722533879230912}
   - component: {fileID: 2792722533879230913}
+  - component: {fileID: 5677791693938289440}
   m_Layer: 0
   m_Name: pineapple
   m_TagString: reward
@@ -110,7 +111,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15baae9b61099420782699443fc3cd9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rewardIndex: 0
 --- !u!114 &2792722533879230913
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124,3 +124,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rewardIndex: 0
+--- !u!114 &5677791693938289440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2792722533879230941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ff967b7ed48f2441bcf509edf6b889a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rewardIndex: 0
+  isAnimated: 1
+  isRotating: 0
+  isFloating: 0
+  isScaling: 0
+  scaleUpOnly: 0
+  rotationAngle: {x: 0, y: 0, z: 0}
+  rotationSpeed: 0
+  floatSpeed: 0
+  floatRate: 0
+  startScale: {x: 0.7, y: 0.7, z: 1}
+  endScale: {x: 2.5, y: 2.5, z: 1}
+  scaleSpeed: 4
+  scaleRate: 2

@@ -98,6 +98,7 @@ public class ExperimentConfig
     public float oneSquareMoveTime;
     public float minTimeBetweenMoves;
     public float blankTime;
+    public float animationTime;
 
     // Randomisation of trial sequence
     public System.Random rand = new System.Random();
@@ -158,17 +159,18 @@ public class ExperimentConfig
         goCueDelay             = 1.5f;    // will take a TR during this period
         goalHitPauseTime       = 1.0f;    // we will take a TR during this period
         finalGoalHitPauseTime  = 2.0f;    // we will take a TR during this period (but should be independent of first goal hit time in case we want to jitter)
-        minDwellAtReward       = 0.3f;      
+        minDwellAtReward       = 0.2f;      
         displayMessageTime     = 1.5f;     
         errorDwellTime         = 1.5f;    // Note: should be at least as long as displayMessageTime
         hallwayFreezeTime      = 5.0f;    // amount of time player is stuck in place with each hallway traversal
         preFreezeTime          = 0.3f;    // should be about the same, maybe slightly longer than oneSquareMoveTime
         blankTime              = 1.0f;    // Note: ***HRS should be jittered (blank screen time prior to trial starting)
+        animationTime          = 1.0f;    // how long the reward grows for when it appears (mainly for visuals)
         numberPresentsPerRoom  = 4;
 
         // physical movement times
         oneSquareMoveTime = 0.2f;                 // Time it will take player to move from one square to next (sec)
-        minTimeBetweenMoves = 0.3f;               // How much time between each allowable move (from movement trigger) (sec)
+        minTimeBetweenMoves = 0.35f;               // How much time between each allowable move (from movement trigger) (sec)
 
         // These variables define the environment (are less likely to be played with)
         roomSize = 4;              // rooms are each 4x4 grids. If this changes, you will need to change this code

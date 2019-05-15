@@ -58,6 +58,7 @@ public class GameController : MonoBehaviour
     public AudioClip errorSound;
     public AudioClip fallSound;
     public AudioClip openBoxSound;
+    public AudioClip movementSound;
     private AudioSource source;
 
     // Messages to the screen
@@ -75,8 +76,10 @@ public class GameController : MonoBehaviour
     public bool pauseClock = false;
     public bool flashCongratulations = false;
     public bool congratulated = false;
-    private float beforeScoreUpdateTime = 1.2f;  // this is just for display
-    public float blankTime; 
+    private float beforeScoreUpdateTime = 1.2f;  // this is just for display (but maybe relevant for fMRI?)  ***HRS
+    public float animationTime;         
+    public float blankTime;
+    public bool[] scaleUpReward;
 
     // Timer variables
     private Timer experimentTimer;
@@ -214,6 +217,7 @@ public class GameController : MonoBehaviour
         // Ensure cue images are off
         displayCue = false;
         rewardsVisible = new bool[maxNRewards];   //default
+        scaleUpReward = new bool[maxNRewards];
 
         StartExperiment();
 
@@ -377,6 +381,7 @@ public class GameController : MonoBehaviour
                 // disable the player control and reset the starFound trigger ready to collect the next star
                 starFound = false;
                 Player.GetComponent<PlayerController>().enabled = false;
+                //Debug.Log("disabling player controls now");
 
                 if (!freeForage) 
                 {
@@ -393,6 +398,7 @@ public class GameController : MonoBehaviour
                     rewardsRemaining = rewardsRemaining - 1;
                     Debug.Log("Rewards remaining: " + rewardsRemaining);
 
+                    //Debug.Log("re-enabling player controls now");
                     Player.GetComponent<PlayerController>().enabled = true; // let the player move again
                     StateNext(STATE_MOVING2);
                 }
@@ -620,6 +626,11 @@ public class GameController : MonoBehaviour
         pauseClock = false;
         trialScore = 0;
 
+        for (int i = 0; i < scaleUpReward.Length; i++)
+        {
+            scaleUpReward[i] = false;
+        }
+
         // Load in the trial data
         currentTrialData = dataController.GetCurrentTrialData();
         nextScene = currentTrialData.mapName;
@@ -668,6 +679,7 @@ public class GameController : MonoBehaviour
         minTimeBetweenMoves = currentTrialData.minTimeBetweenMoves;
         oneSquareMoveTime = currentTrialData.oneSquareMoveTime;
         blankTime = currentTrialData.blankTime;
+        animationTime = currentTrialData.animationTime;
 
         // Start the next scene/trial
         Debug.Log("Upcoming scene: " + nextScene);
@@ -942,6 +954,20 @@ public class GameController : MonoBehaviour
                 break;
 
         }
+    }
+
+    // ********************************************************************** //
+
+    public void PlayMovementSound()
+    {
+        source.PlayOneShot(movementSound, 1F);
+    }
+
+    // ********************************************************************** //
+
+    public void AnimateRewardOnHit(int rewardIndex) 
+    {
+        scaleUpReward[rewardIndex] = true;
     }
 
     // ********************************************************************** //

@@ -13,7 +13,7 @@ public class RewardHitScript : MonoBehaviour
     private Timer rewardTimer;
     private bool rewardHit = false;
     private bool rewardUncovered = false;
-    public int rewardIndex;
+    private int rewardIndex;
     private Vector3 rewardPosition;
     private Vector3[] presentPositions;
     private int presentCoveringIndex = 0;
@@ -22,6 +22,8 @@ public class RewardHitScript : MonoBehaviour
 
     void Start()
     {
+        rewardIndex = GetComponent<SpawnRewardLocation>().rewardIndex;
+
         rewardTimer = new Timer();
         rewardTimer.Reset();
         rewardPosition = GameController.control.rewardSpawnLocations[rewardIndex];
@@ -59,17 +61,23 @@ public class RewardHitScript : MonoBehaviour
 
             if (rewardUncovered) 
             {
-                Debug.Log("starting to count now");
-                rewardTimer.Reset(); // record entry time
+                rewardTimer.Reset();   // record entry time
                 rewardHit = true;
             }
         }
 
         if ((rewardTimer.ElapsedSeconds() > GameController.control.minDwellAtReward) && (rewardHit))
         {
+            GameController.control.AnimateRewardOnHit(rewardIndex);
             GameController.control.StarFound();
-            rewardHit = false;
-            GameController.control.DisableRewardByIndex(rewardIndex);
+            //Debug.Log("growing reward now");
+            if ( (rewardTimer.ElapsedSeconds() > (GameController.control.minDwellAtReward + GameController.control.animationTime)) && (rewardHit) ) 
+            {
+                //Debug.Log("disabling reward now");
+                rewardHit = false;   // Note: be careful that the reward doesnt grow in a way that causes it to trigger as two collected rewards prior to it disabling.
+                GameController.control.DisableRewardByIndex(rewardIndex);
+            }
+
         }
     }
     // ********************************************************************** //

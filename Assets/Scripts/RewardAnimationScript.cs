@@ -3,11 +3,14 @@ using System.Collections;
 
 public class RewardAnimationScript : MonoBehaviour {
 
+    public int rewardIndex;
+    private SpriteRenderer spriteRenderer;
     public bool isAnimated = false;
-
     public bool isRotating = false;
     public bool isFloating = false;
     public bool isScaling = false;
+
+    public bool scaleUpOnly = false;
 
     public Vector3 rotationAngle;
     public float rotationSpeed;
@@ -26,16 +29,20 @@ public class RewardAnimationScript : MonoBehaviour {
     private float scaleTimer;
 
 	// Use this for initialization
-	void Start () {
-	
+	void Start () 
+    {
+        rewardIndex = GetComponent<SpawnRewardLocation>().rewardIndex;
+        spriteRenderer = GetComponent<SpriteRenderer>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
-       
-        
-        if(isAnimated)
+        //scaleUpOnly = GameController.control.scaleUpReward[rewardIndex];
+        isScaling = GameController.control.scaleUpReward[rewardIndex];
+
+
+        if (isAnimated)
         {
             if(isRotating)
             {
@@ -66,6 +73,7 @@ public class RewardAnimationScript : MonoBehaviour {
             if(isScaling)
             {
                 scaleTimer += Time.deltaTime;
+                spriteRenderer.sortingLayerName = "ExplodingReward";
 
                 if (scalingUp)
                 {
@@ -83,6 +91,19 @@ public class RewardAnimationScript : MonoBehaviour {
                     scaleTimer = 0;
                 }
             }
+            /*
+            if (scaleUpOnly)
+            {
+                // move the reward to the front layer
+                spriteRenderer.sortingLayerName = "ExplodingReward";
+                Debug.Log("sprite should be scaling up now");
+
+                // make the reward scale up to be big on the canvas
+                scaleTimer += Time.deltaTime;
+
+                transform.localScale = Vector3.Lerp(transform.localScale, endScale, scaleSpeed * Time.deltaTime);
+            }
+            */           
         }
 	}
 }

@@ -49,6 +49,7 @@ public class TrialData
     public float oneSquareMoveTime; 
     public float minTimeBetweenMoves;
     public float blankTime;
+    public float animationTime;
 
     // trial error flags
     public List<bool> FLAG_cliffFallError = new List<bool>();

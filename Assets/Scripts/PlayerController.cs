@@ -101,9 +101,11 @@ public class PlayerController : MovingObject
                 break;
             case "left":
                 animator.SetTrigger("playerStepLeft");
+                GameController.control.PlayMovementSound();
                 break;
             case "right":
                 animator.SetTrigger("playerStepRight");
+                GameController.control.PlayMovementSound();
                 break;
         }
     }
@@ -148,7 +150,7 @@ public class PlayerController : MovingObject
         }
         else if (other.tag == "bridge") 
         {
-            Debug.Log("Passing over a bridge. Woohoo!");
+            //Debug.Log("Passing over a bridge. Woohoo!");
         }
         else 
         {

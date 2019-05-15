@@ -13,6 +13,7 @@ public class displayBlankScreen : MonoBehaviour
     {
         //Fetch the Image from the GameObject
         blankImage = GetComponent<Image>();
+        blankImage.color = Color.black;
         blankImage.enabled = false;
     }
 
