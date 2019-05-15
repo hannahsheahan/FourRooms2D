@@ -146,7 +146,7 @@ MonoBehaviour:
   rotationSpeed: 0
   floatSpeed: 0
   floatRate: 0
-  startScale: {x: 0.7, y: 0.7, z: 1}
-  endScale: {x: 2.5, y: 2.5, z: 1}
-  scaleSpeed: 4
-  scaleRate: 2
+  startScale: {x: 0.1, y: 0.1, z: 1}
+  endScale: {x: 2.2, y: 2.2, z: 1}
+  scaleSpeed: 8
+  scaleRate: 0.6

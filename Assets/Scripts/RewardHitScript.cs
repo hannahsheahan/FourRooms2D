@@ -68,16 +68,14 @@ public class RewardHitScript : MonoBehaviour
 
         if ((rewardTimer.ElapsedSeconds() > GameController.control.minDwellAtReward) && (rewardHit))
         {
+            GameController.control.StarFound(); 
             GameController.control.AnimateRewardOnHit(rewardIndex);
-            GameController.control.StarFound();
-            //Debug.Log("growing reward now");
+
             if ( (rewardTimer.ElapsedSeconds() > (GameController.control.minDwellAtReward + GameController.control.animationTime)) && (rewardHit) ) 
             {
-                //Debug.Log("disabling reward now");
                 rewardHit = false;   // Note: be careful that the reward doesnt grow in a way that causes it to trigger as two collected rewards prior to it disabling.
                 GameController.control.DisableRewardByIndex(rewardIndex);
             }
-
         }
     }
     // ********************************************************************** //
