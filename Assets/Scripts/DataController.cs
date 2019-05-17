@@ -71,7 +71,7 @@ public class DataController : MonoBehaviour {
 
     void Start()
     {
-        Player = GameObject.Find("PlayerController");     // This will yield null but its on purpose :)
+        Player = GameObject.Find("PlayerAvatar");     // This will yield null but its on purpose :)
     }
 
     // ********************************************************************** //
@@ -83,7 +83,7 @@ public class DataController : MonoBehaviour {
         {
             if (Player == null)
             {
-                Player = GameObject.Find("PlayerController");
+                Player = GameObject.Find("PlayerAvatar");
             }
         }
     }
