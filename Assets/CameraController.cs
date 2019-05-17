@@ -17,6 +17,7 @@ public class CameraController : MonoBehaviour
     private float zPosition;
     private string currentPlayerRoom = "update";    // Note: set this different to previousPlayerRoom so we will update camera position on spawn
     private string previousPlayerRoom = "";
+    //private float margin;
 
     // ********************************************************************** //
 
@@ -26,6 +27,7 @@ public class CameraController : MonoBehaviour
         zPosition = -10f;
         cameraPosition = new Vector3(0f, 0f, zPosition);
         cameraZoom = 5f;
+        //margin = 0.19f;   // make the viewport kind of square to just see the parts of the maze we want in the shot
 
         SetCamera();
     }
@@ -89,6 +91,7 @@ public class CameraController : MonoBehaviour
         transform.position = cameraPosition;
         mainCamera.orthographic = true;
         mainCamera.orthographicSize = cameraZoom;
+        //mainCamera.rect = new Rect(margin, 0.0f, 1.0f - margin * 2.0f, 1.0f);
     }
 
     // ********************************************************************** //

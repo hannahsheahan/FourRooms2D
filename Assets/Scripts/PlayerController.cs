@@ -71,6 +71,7 @@ public class PlayerController : MovingObject
                 jumpingNow = false;
                 animateHow = (horizontal+1 <= 0) ? "left" : "right";
                 AnimateNow();
+                playerControllerTimer.Reset();
                 AttemptMove<Wall>(horizontal, vertical);
             }
         }
@@ -107,7 +108,7 @@ public class PlayerController : MovingObject
 
         if (Move(xDir, yDir, out hit))  // if we moved successfully, start the timer to restrict movement frequency
         {
-            playerControllerTimer.Reset();
+           //
         }
 
         // Tell the gameController to check the new position of the player and reposition the camera
