@@ -100,23 +100,6 @@ public class PlayerController : MovingObject
     }
 
     // ********************************************************************** //
-
-    protected override void AttemptMove <T> (int xDir, int yDir) 
-    {
-        base.AttemptMove <T> (xDir, yDir);
-        RaycastHit2D hit;
-
-        if (Move(xDir, yDir, out hit))  // if we moved successfully, start the timer to restrict movement frequency
-        {
-           //
-        }
-
-        // Tell the gameController to check the new position of the player and reposition the camera
-        Debug.Log("I've just moved and new position is: " + transform.position.x + ", " + transform.position.y + ", " + transform.position.z);
-        GameController.control.MoveCamera(transform.position);
-    }
-
-    // ********************************************************************** //
     // OnCantMove currently doesnt do anything and I dont think we care but its a good placeholder. We just dont want to move off the grid
     protected override void OnCantMove <T> (T component) 
     {

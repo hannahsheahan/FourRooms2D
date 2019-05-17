@@ -92,6 +92,8 @@ public abstract class MovingObject : MonoBehaviour
             //Return and loop until sqrRemainingDistance is close enough to zero to end the function
             yield return null;
         }
+        // Tell the gameController to check the new position of the player and reposition the camera
+        GameController.control.MoveCamera(transform.position);
     }
 
     // ********************************************************************** //

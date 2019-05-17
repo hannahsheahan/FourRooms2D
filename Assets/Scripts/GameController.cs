@@ -555,7 +555,6 @@ public class GameController : MonoBehaviour
                 break;
 
             case STATE_HALLFREEZE:
-
                 Player.GetComponent<PlayerController>().enabled = false;
                 currentFrozenTime = currentMovementTime - firstFrozenTime; // dont think this is being used for anything (HRS 14/05/2019)
 
