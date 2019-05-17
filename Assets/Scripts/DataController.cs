@@ -30,7 +30,7 @@ public class DataController : MonoBehaviour {
     public bool participantFeedbackSubmitted = false;        
 
     // Data file saving
-    private string baseFilePath = "/Users/hannahsheahan/Documents/Postdoc/Unity/FourRooms/data/";
+    private string baseFilePath = "/Users/hannahsheahan/Documents/Postdoc/Unity/FourRooms2D/data/";
     public DateTime dateTime = DateTime.Now;
     public string stringDateTime; 
     public string filePath;
@@ -122,7 +122,7 @@ public class DataController : MonoBehaviour {
         //-----------
 
         // v2.1 - web server (Summerfield lab one)
-        WWW www = new WWW("http://185.47.61.11/sandbox/tasks/hannahs/martinitask/lib/php/fromunity.php", webData);
+        WWW www = new WWW("http://185.47.61.11/sandbox/tasks/hannahs/martinitask2D/lib/php/fromunity.php", webData);
         StartCoroutine(WaitForRequest(www));
     }
 

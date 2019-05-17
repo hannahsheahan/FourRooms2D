@@ -17,12 +17,14 @@ public class RewardHitScript : MonoBehaviour
     private Vector3 rewardPosition;
     private Vector3[] presentPositions;
     private int presentCoveringIndex = 0;
+    private CircleCollider2D rewardCollider;
 
     // ********************************************************************** //
 
     void Start()
     {
         rewardIndex = GetComponent<SpawnRewardLocation>().rewardIndex;
+        rewardCollider = GetComponent<CircleCollider2D>();
 
         rewardTimer = new Timer();
         rewardTimer.Reset();
@@ -37,17 +39,6 @@ public class RewardHitScript : MonoBehaviour
             }
         }
         Debug.Log("the present covering reward " + rewardIndex + "is present no. " + presentCoveringIndex);
-    }
-
-    // ********************************************************************** //
-
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.tag == "Player") 
-        {   
-            //rewardTimer.Reset(); // record entry time
-            //rewardHit = true;
-        }
     }
 
     // ********************************************************************** //
@@ -68,6 +59,7 @@ public class RewardHitScript : MonoBehaviour
 
         if ((rewardTimer.ElapsedSeconds() > GameController.control.minDwellAtReward) && (rewardHit))
         {
+            rewardCollider.enabled = false;  // disabled the reward collidor so we dont accidentally trigger it twice.
             GameController.control.StarFound(); 
             GameController.control.AnimateRewardOnHit(rewardIndex);
 

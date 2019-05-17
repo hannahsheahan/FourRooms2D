@@ -28,6 +28,7 @@ public class GameController : MonoBehaviour
 
     // Game data
     private GameObject Player;
+    private GameObject MainCamera;
     private GameData currentGameData;
     private string filepath;
 
@@ -45,8 +46,9 @@ public class GameController : MonoBehaviour
     public Vector3[] presentPositions;
     public int numberPresentsPerRoom;
     public bool[] bridgeStates;         // used to enable/disable different bridges
-
+    public string playerRoom = "";
     private string nextScene;
+
 
     // Within-trial data that changes with timeframe
     private bool playerControlActive;
@@ -241,7 +243,6 @@ public class GameController : MonoBehaviour
 
         switch (State)
         {
-
             case STATE_STARTSCREEN:
                 // Note: we chill out here in this state until all the starting info pages are done
                 if (gameStarted)
@@ -284,7 +285,6 @@ public class GameController : MonoBehaviour
                             Cursor.visible = true;
                             StateNext(STATE_EXIT);
                             break;
-
                     }
                 }
                 break;
@@ -538,7 +538,7 @@ public class GameController : MonoBehaviour
                 // - exiting fullscreen mode, and can only be escaped from by re-enabling fullscreen mode.
                 // - having an insufficient gameplay framerate.
                 // pause the countdown timer display and disable the player controls
-                // Note that the FPSPlayer and FSM will continue to track position and timestamp, so we know how long it was 'paused' for.
+                // Note that the Player and FSM will continue to track position and timestamp, so we know how long it was 'paused' for.
                 pauseClock = true;
                 if (Player != null)
                 {
@@ -546,7 +546,7 @@ public class GameController : MonoBehaviour
                 }
                 else 
                 {
-                    Player = GameObject.Find("FPSController");
+                    Player = GameObject.Find("PlayerAvatar");
                     if (Player != null)
                     {
                         Player.GetComponent<PlayerController>().enabled = false;
@@ -685,6 +685,9 @@ public class GameController : MonoBehaviour
         Debug.Log("Upcoming scene: " + nextScene);
         SceneManager.LoadScene(nextScene);
 
+        // Position the camera ready for the upcoming scene
+        MoveCamera(playerSpawnLocation);
+
         string[] menuScenesArray = new string[] { "Exit", "RestBreak", "GetReady" };
 
         if (menuScenesArray.Contains(nextScene))  // ***HRS (how is this working if contains is a List method?)
@@ -711,7 +714,7 @@ public class GameController : MonoBehaviour
             }
         }
         else
-        {   // Track the state-transitions at the same update frequency as the FPSPlayer (and putting it here should sync them too)
+        {   // Track the state-transitions at the same update frequency as the PlayerAvatar (and putting it here should sync them too)
             Player = GameObject.Find("PlayerAvatar");
             stateTransitions.Clear();                      // restart the state tracker ready for the new trial
             stateTransitions.Add("Game State");
@@ -1004,6 +1007,45 @@ public class GameController : MonoBehaviour
         previousState = State;
         firstFrozenTime = totalMovementTime;
         StateNext(STATE_HALLFREEZE);
+    }
+
+    // ********************************************************************** //
+
+    private string PlayerInWhichRoom(Vector2 playerPosition)
+    {
+        // Checks which of the four rooms (or a hallway) the player is currently in (having just taken a movement)
+        string room = "hallway";
+
+        if (playerPosition.x < 0f)           // yellow or blue
+        {
+            if (playerPosition.y < 0f)
+            {
+                room = "blue";
+            }
+            else if (playerPosition.y > 0f)
+            {
+                room = "yellow";
+            }
+        }
+        else if (playerPosition.x > 0f)       // green or red
+        {
+            if (playerPosition.y < 0f)
+            {
+                room = "red";
+            }
+            else if (playerPosition.y > 0f)
+            {
+                room = "green";
+            }
+        }
+        return room;
+    }
+
+    // ********************************************************************** //
+
+    public void MoveCamera(Vector2 playerPosition)
+    {
+        playerRoom = PlayerInWhichRoom(playerPosition);  // this will be read from CameraController.cs attached to the main camera
     }
 
     // ********************************************************************** //

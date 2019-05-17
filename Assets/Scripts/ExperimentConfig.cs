@@ -702,7 +702,7 @@ public class ExperimentConfig
     {
         // Add a 16 trial training block to the trial list. Trials are randomised within each context, but not between contexts 
 
-        nextTrial = DoubleRewardBlock_micro(nextTrial, "peanut", numberOfTrials);
+        nextTrial = DoubleRewardBlock_micro(nextTrial, "wine", numberOfTrials);
 
         return nextTrial;
     }

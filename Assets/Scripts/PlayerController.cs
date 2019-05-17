@@ -38,10 +38,6 @@ public class PlayerController : MovingObject
 
     void Update()
     {
-        //horizontal = 0;
-        //vertical = 0;
-        //jump = 0;
-
         horizontal = (int) (Input.GetAxisRaw("Horizontal"));
         vertical = (int) (Input.GetAxisRaw("Vertical"));
         jump = (int)(Input.GetAxisRaw("Jump"));
@@ -73,15 +69,7 @@ public class PlayerController : MovingObject
             if (playerControllerTimer.ElapsedSeconds() >= minTimeBetweenMoves)
             {
                 jumpingNow = false;
-                //animateHow = (horizontal <= 0) ? "left" : "right";
-                if (Mathf.Approximately(horizontal+1, 0f))
-                {
-                    animateHow = "left"; 
-                }
-                else
-                {
-                    animateHow = "right";
-                }
+                animateHow = (horizontal+1 <= 0) ? "left" : "right";
                 AnimateNow();
                 AttemptMove<Wall>(horizontal, vertical);
             }
@@ -113,17 +101,18 @@ public class PlayerController : MovingObject
     // ********************************************************************** //
 
     protected override void AttemptMove <T> (int xDir, int yDir) 
-    //protected override void AttemptMove (int xDir, int yDir)
     {
         base.AttemptMove <T> (xDir, yDir);
-        //base.AttemptMove (xDir, yDir);
         RaycastHit2D hit;
 
-        if (Move(xDir, yDir, out hit))
+        if (Move(xDir, yDir, out hit))  // if we moved successfully, start the timer to restrict movement frequency
         {
-             //Call RandomizeSfx of SoundManager to play the move sound, passing in two audio clips to choose from.
+            playerControllerTimer.Reset();
         }
-        playerControllerTimer.Reset();
+
+        // Tell the gameController to check the new position of the player and reposition the camera
+        Debug.Log("I've just moved and new position is: " + transform.position.x + ", " + transform.position.y + ", " + transform.position.z);
+        GameController.control.MoveCamera(transform.position);
     }
 
     // ********************************************************************** //
@@ -185,4 +174,6 @@ public class PlayerController : MovingObject
     }
 
     // ********************************************************************** //
+
+
 }
