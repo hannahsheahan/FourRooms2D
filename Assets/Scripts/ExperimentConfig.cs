@@ -20,12 +20,14 @@ public class ExperimentConfig
 
 
     // Scenes/mazes
-    private const int setupAndCloseTrials = 7;     // Note: there must be 7 extra trials in trial list to account for Persistent, InformationScreen, BeforeStartingScreen, ConsentScreen, StartScreen, Instructions and Exit 'trials'.
+    private const int setupAndCloseTrials = 7;     // Note: there must be 8 extra trials in trial list to account for Persistent, InformationScreen, BeforeStartingScreen, ConsentScreen, StartScreen, Instructions, QuestionnaireScreen and Exit 'trials'.
+    private const int postTrials = 1;
     private const int restbreakOffset = 1;         // Note: makes specifying restbreaks more intuitive
     private const int getReadyTrial = 1;           // Note: this is the get ready screen after the practice
-    private const int setupTrials = setupAndCloseTrials - 1;
+    private const int setupTrials = setupAndCloseTrials - postTrials;
     private int totalTrials;
     private int practiceTrials;
+    private int nDebreifQuestions;
     private int restFrequency;
     private int nbreaks;
     private string[] trialMazes;
@@ -34,7 +36,6 @@ public class ExperimentConfig
     private int roomSize;
     private float playerZposition;
     private float rewardZposition;
-    private float deltaSquarePosition;
     public bool[][] bridgeStates;                   // whether the 4 different bridges are ON (active) or OFF (a hole in the floor)
 
     // Positions and orientations
@@ -62,7 +63,6 @@ public class ExperimentConfig
     private Vector3[] redPresentPositions;
     private Vector3[] yellowPresentPositions;
     private Vector3[] greenPresentPositions;
-
     public Vector3[][] presentPositions;
 
     // Counterbalancing
@@ -78,7 +78,6 @@ public class ExperimentConfig
     private string[] possibleRewardTypes; 
     private string[] rewardTypes;             // diamond or gold? (martini or beer)
     public int numberPresentsPerRoom;
-    
 
     // Timer variables (public since fewer things go wrong if these are changed externally, since this will be tracked in the data, but please don't...)
     public float[] maxMovementTime;
@@ -100,19 +99,24 @@ public class ExperimentConfig
     public float blankTime;
     public float animationTime;
 
+    // Debriefing question and answer data
+    public QuestionData[] debriefQuestions;                              // final order of questions we WILL include
+    public List<QuestionData> allQuestions = new List<QuestionData>();    // all possible questions that we could include
+
     // Randomisation of trial sequence
     public System.Random rand = new System.Random();
 
     // Preset experiments
     public string experimentVersion;
     private int nExecutedTrials;            // to be used in micro_debug mode only
+
     // ********************************************************************** //
     // Use a constructor to set this up
     public ExperimentConfig() 
     {
         // Experiments with training blocked by context
 
-        //experimentVersion = "mturk_cheesewine";
+        //experimentVersion = "mturk_cheesewine";     // ***HRS note that if you do wacky colours youll have to change the debrief question text which mentions room colours
         experimentVersion = "micro_debug"; 
 
 
@@ -122,8 +126,9 @@ public class ExperimentConfig
         switch (experimentVersion)
         {
             case "mturk_cheesewine":       // ----Full 4 block learning experiment-----
-                practiceTrials = 0 + getReadyTrial;
-                totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
+                nDebreifQuestions = 8; 
+                practiceTrials = 2 + getReadyTrial;
+                totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
                 transferCounterbalance = false;                                     // this does nothing
@@ -131,10 +136,11 @@ public class ExperimentConfig
 
 
             case "micro_debug":            // ----Mini debugging test experiment-----
+                nDebreifQuestions = 8;
                 practiceTrials = 1 + getReadyTrial;
-                nExecutedTrials = 4;                                         // note that this is only used for the micro_debug version
-                totalTrials = nExecutedTrials + setupAndCloseTrials + practiceTrials;        // accounts for the Persistent, StartScreen and Exit 'trials'
-                restFrequency = 2 + restbreakOffset;                            // Take a rest after this many normal trials
+                nExecutedTrials = 1;                                         // note that this is only used for the micro_debug version
+                totalTrials = nExecutedTrials + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
+                restFrequency = 4 + restbreakOffset;                            // Take a rest after this many normal trials
                 restbreakDuration = 5.0f;                                       // how long are the imposed rest breaks?
                 transferCounterbalance = false;
                 break;
@@ -145,12 +151,12 @@ public class ExperimentConfig
         }
 
         // Figure out how many rest breaks we will have and add them to the trial list
-        nbreaks = Math.Max( (int)((totalTrials - setupAndCloseTrials - practiceTrials) / restFrequency), 0 );  // round down to whole integer
+        nbreaks = Math.Max( (int)((totalTrials - setupAndCloseTrials - practiceTrials - nDebreifQuestions) / restFrequency), 0 );  // round down to whole integer
         totalTrials = totalTrials + nbreaks;
        
         // Timer variables (measured in seconds) - these can later be changed to be different per trial for jitter etc
         dataRecordFrequency = 0.06f;
-        getReadyDuration = 3.0f;    // how long do we have to 'get ready' after the practice, before main experiment begins?
+        getReadyDuration = 5.0f;    // how long do we have to 'get ready' after the practice, before main experiment begins?
 
         // Note that when used, jitters ADD to these values - hence they are minimums
         //maxMovementTime        = 60.0f;   // changed to be a function of trial number. Time allowed to collect both rewards, incl. wait after hitting first one
@@ -168,7 +174,7 @@ public class ExperimentConfig
         animationTime          = 1.0f;    // how long the reward grows for when it appears (mainly for visuals)
         numberPresentsPerRoom  = 4;
 
-        // physical movement times
+       // physical movement times
         oneSquareMoveTime = 0.2f;                 // Time it will take player to move from one square to next (sec)
         minTimeBetweenMoves = 0.35f;               // How much time between each allowable move (from movement trigger) (sec)
 
@@ -193,11 +199,17 @@ public class ExperimentConfig
         rewardTypes = new string[totalTrials];
         presentPositions = new Vector3[totalTrials][];
         maxMovementTime = new float[totalTrials];
-        bridgeStates = new bool[totalTrials][];                   
+        bridgeStates = new bool[totalTrials][];
+
+        // make space for the debriefing questions and answers at the end
+        debriefQuestions = new QuestionData[totalTrials];
+        for (int i = 0; i < totalTrials; i++)
+        {
+            debriefQuestions[i] = new QuestionData(0);
+        }
 
         // Generate a list of all the possible (player or star) spawn locations
         GeneratePossibleSettings();
-
 
         // Define the start up menu and exit trials.   Note:  the other variables take their default values on these trials
         trialMazes[0] = "Persistent";
@@ -209,6 +221,7 @@ public class ExperimentConfig
         trialMazes[setupTrials + practiceTrials-1] = "GetReady";
         trialMazes[totalTrials - 1] = "Exit";
 
+
         // Add in the practice trials in an open practice arena with no colour on floors
         AddPracticeTrials();
 
@@ -219,7 +232,7 @@ public class ExperimentConfig
         switch (experimentVersion)
         {
             case "mturk_cheesewine":       // ----Full 4 block learning experiment-----
-            case "mturk_cheesewine_wackycolours":
+            case "mturk_cheesewine_wackycolours":   // ***HRS note that you will need to change the debrief questions if using wacky colours because it says things like 'red room'
 
                 //---- training block 1
                 nextTrial = AddTrainingBlock(nextTrial);
@@ -248,6 +261,8 @@ public class ExperimentConfig
                 Debug.Log("Warning: defining an untested trial sequence");
                 break;
         }
+
+        AddDebriefQuestions(nextTrial);
 
         // For debugging: print out the final trial sequence in readable text to check it looks ok
         PrintTrialSequence();
@@ -288,6 +303,144 @@ public class ExperimentConfig
                 SetDoubleRewardTrial(trial, trialInBlock, "pineapple", "red", "green", "blue", contextSide, freeForageFLAG);
             }
             trialMazes[trial] = "Practice";   // reset the maze for a practice trial
+        }
+    }
+
+    // ********************************************************************** //
+
+    private void AddDebriefQuestions(int nextTrial) 
+    {
+        // Set up a list of all debreifing questions you want to ask and mark which are actually correct 
+        // based on counterbalancing and which reward types were shown.
+
+        int answerOrder;
+        int nPossibleAnswers = 2;
+        QuestionData oneQuestion;
+        string[] rewards = new string[2];
+
+        if (experimentVersion.Contains("peanuts"))
+        {
+            rewards[0] = "peanuts";
+            rewards[1] = "martini";
+        }
+        else
+        {
+            rewards[0] = "cheese";
+            rewards[1] = "wine bottle";
+        }
+
+
+        // ---- Question 1 ---
+        QuestionData questiondata = new QuestionData(nPossibleAnswers);
+
+        answerOrder = rand.Next(nPossibleAnswers);
+        questiondata.questionText = "You have just found a " + rewards[0] + " in the green room.\n Which room will the other " + rewards[0] + " be in?";
+        questiondata.stimulus = "";
+        questiondata.answers[answerOrder].answerText = (!transferCounterbalance) ? "red": "yellow";       // correct
+        questiondata.answers[1 - answerOrder].answerText = (!transferCounterbalance) ? "yellow" : "red";  // incorrect
+        questiondata.answers[answerOrder].isCorrect = true;
+        allQuestions.Add(questiondata);
+
+
+        // ---- Question 2 ---
+        questiondata = new QuestionData(nPossibleAnswers);
+
+        answerOrder = rand.Next(nPossibleAnswers);
+        questiondata.questionText = "You have just found a " + rewards[0] + " in the yellow room.\n Which room will the other " + rewards[0] + " be in?";
+        questiondata.stimulus = "";
+        questiondata.answers[answerOrder].answerText = (!transferCounterbalance) ? "blue" : "green";       // correct
+        questiondata.answers[1 - answerOrder].answerText = (!transferCounterbalance) ? "green" : "blue";  // incorrect
+        questiondata.answers[answerOrder].isCorrect = true;
+        allQuestions.Add(questiondata);
+
+        // ---- Question 3 ---
+        questiondata = new QuestionData(nPossibleAnswers);
+
+        answerOrder = rand.Next(nPossibleAnswers);
+        questiondata.questionText = "You have just found a " + rewards[1] + " in the red room.\n Which room will the other " + rewards[1] + " be in?";
+        questiondata.stimulus = "";
+        questiondata.answers[answerOrder].answerText = (!transferCounterbalance) ? "blue" : "green";       // correct
+        questiondata.answers[1 - answerOrder].answerText = (!transferCounterbalance) ? "green" : "blue";  // incorrect
+        questiondata.answers[answerOrder].isCorrect = true;
+        allQuestions.Add(questiondata);
+
+        // ---- Question 4 ---
+        questiondata = new QuestionData(nPossibleAnswers);
+
+        answerOrder = rand.Next(nPossibleAnswers);
+        questiondata.questionText = "You have just found a " + rewards[1] + " in the blue room.\n Which room will the other " + rewards[1] + " be in?";
+        questiondata.stimulus = "";
+        questiondata.answers[answerOrder].answerText = (!transferCounterbalance) ? "red" : "yellow";       // correct
+        questiondata.answers[1 - answerOrder].answerText = (!transferCounterbalance) ? "yellow" : "red";  // incorrect
+        questiondata.answers[answerOrder].isCorrect = true;
+        allQuestions.Add(questiondata);
+
+        // ---- Question 5 ---
+        questiondata = new QuestionData(nPossibleAnswers);
+
+        answerOrder = rand.Next(nPossibleAnswers);
+        questiondata.questionText = "You were looking for a " + rewards[0] + " and did NOT find one in the blue room.\n Which room should you go to next?";
+        questiondata.stimulus = "";
+        questiondata.answers[answerOrder].answerText = (!transferCounterbalance) ? "red" : "yellow";       // correct
+        questiondata.answers[1 - answerOrder].answerText = (!transferCounterbalance) ? "yellow" : "red";  // incorrect
+        questiondata.answers[answerOrder].isCorrect = true;
+        allQuestions.Add(questiondata);
+
+        // ---- Question 6 ---
+        questiondata = new QuestionData(nPossibleAnswers);
+
+        answerOrder = rand.Next(nPossibleAnswers);
+        questiondata.questionText = "You were looking for a " + rewards[0] + " and did NOT find one in the red room.\n Which room should you go to next?";
+        questiondata.stimulus = "";
+        questiondata.answers[answerOrder].answerText = (!transferCounterbalance) ? "blue" : "green";       // correct
+        questiondata.answers[1 - answerOrder].answerText = (!transferCounterbalance) ? "green" : "blue";  // incorrect
+        questiondata.answers[answerOrder].isCorrect = true;
+        allQuestions.Add(questiondata);
+
+        // ---- Question 7 ---
+        questiondata = new QuestionData(nPossibleAnswers);
+
+        answerOrder = rand.Next(nPossibleAnswers);
+        questiondata.questionText = "You were looking for a " + rewards[1] + " and did NOT find one in the yellow room.\n Which room should you go to next?";
+        questiondata.stimulus = "";
+        questiondata.answers[answerOrder].answerText = (!transferCounterbalance) ? "blue" : "green";       // correct
+        questiondata.answers[1 - answerOrder].answerText = (!transferCounterbalance) ? "green" : "blue";  // incorrect
+        questiondata.answers[answerOrder].isCorrect = true;
+        allQuestions.Add(questiondata);
+
+        // ---- Question 8 ---
+        questiondata = new QuestionData(nPossibleAnswers);
+
+        answerOrder = rand.Next(nPossibleAnswers);
+        questiondata.questionText = "You were looking for a " + rewards[1] + " and did NOT find one in the green room.\n Which room should you go to next?";
+        questiondata.stimulus = "";
+        questiondata.answers[answerOrder].answerText = (!transferCounterbalance) ? "red" : "yellow";       // correct
+        questiondata.answers[1 - answerOrder].answerText = (!transferCounterbalance) ? "yellow" : "red";  // incorrect
+        questiondata.answers[answerOrder].isCorrect = true;
+        allQuestions.Add(questiondata);
+
+
+        // Shuffle the question order
+        int n = allQuestions.Count;
+       
+        // Perform the Fisher-Yates algorithm for shuffling array elements in place 
+        for (int i = 0; i < n; i++)
+        {
+            int k = i + rand.Next(n - i); // select random index in array, less than n-i
+
+            // shuffle questions to ask, keeping their associated data together
+            oneQuestion = allQuestions[k];
+            allQuestions[k] = allQuestions[i];
+            allQuestions[i] = oneQuestion;
+        }
+
+
+        // Store the randomised trial order (reuse random trials if we haven't specified enough unique ones)
+        for (int i = 0; i < nDebreifQuestions; i++)
+        {
+            oneQuestion = (i < n) ? allQuestions[i] : allQuestions[rand.Next(allQuestions.Count)];
+            debriefQuestions[i + nextTrial] = oneQuestion;
+            trialMazes[i + nextTrial] = "QuestionTime";
         }
     }
 
@@ -493,7 +646,6 @@ public class ExperimentConfig
 
         // Blue room
         int startind = 0;
-        deltaSquarePosition = 8.5f; 
         float[] XPositionsblue = { 1f, 2f, 3f, 4f };
         float[] YPositionsblue = { 1f, 2f, 3f, 4f };
 
@@ -965,7 +1117,7 @@ public class ExperimentConfig
         bridgeStates[trial] = new bool[4];                  // there are 4 bridges
 
         // Check that we've inputted a valid trial number
-        if ( (trial < setupTrials - 1) || (trial == setupTrials - 1) )
+        if ( trial <= (setupTrials - 1) )
         {
             Debug.Log("Trial randomisation failed: invalid trial number input writing to.");
         }
@@ -1359,7 +1511,7 @@ public class ExperimentConfig
         // This function generates trial content that randomly positions the player and reward/s in the different rooms
         int n = possibleRewardTypes.Length;
         int rewardInd;
-        for (int trial = setupTrials + practiceTrials; trial < totalTrials - 1; trial++)
+        for (int trial = setupTrials + practiceTrials; trial < totalTrials - postTrials; trial++)
         {
             // Deal with restbreaks and regular trials
             if ((trial - setupTrials - practiceTrials + 1) % restFrequency == 0)  // Time for a rest break

@@ -57,4 +57,15 @@ public class ContinueButtonScript : MonoBehaviour
         source.PlayOneShot(buttonClickSound, 1F);
         GameController.control.StartGame();   // Launch first real trial
     }
+
+    // ********************************************************************** //
+
+    public void ContinueToNextQuestionOnClick()
+    {
+        source.PlayOneShot(buttonClickSound, 1F);
+        GameController.control.ContinueToNextQuestion(); // Continue to the before starting page 
+    }
+
+    // ********************************************************************** //
+
 }

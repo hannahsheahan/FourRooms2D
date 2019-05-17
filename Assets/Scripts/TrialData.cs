@@ -22,6 +22,9 @@ public class TrialData
     public bool freeForage;
     public string rewardType;
     public bool[] bridgeStates;
+    public QuestionData debriefQuestion;
+    public string debriefResponse;
+    public float debriefResponseTime;
 
     public Vector3 playerSpawnLocation;
     public Vector3 playerSpawnOrientation;

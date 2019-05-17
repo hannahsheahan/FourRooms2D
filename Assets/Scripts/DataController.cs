@@ -27,7 +27,8 @@ public class DataController : MonoBehaviour {
     public bool participantAgeSet = false;
     public bool participantGenderSet = false;
     public bool participantFeedbackGiven = false;
-    public bool participantFeedbackSubmitted = false;        
+    public bool participantFeedbackSubmitted = false;
+    public bool questionAnswered = false;
 
     // Data file saving
     private string baseFilePath = "/Users/hannahsheahan/Documents/Postdoc/Unity/FourRooms2D/data/";
@@ -175,6 +176,7 @@ public class DataController : MonoBehaviour {
         {
             trialList.Add(trial); 
             gameData.allTrialData[trial].mapName = config.GetTrialMaze(trial);
+            gameData.allTrialData[trial].debriefQuestion = config.debriefQuestions[trial];
 
             // Positions and orientations
             gameData.allTrialData[trial].playerSpawnLocation = config.GetPlayerStartPosition(trial);
@@ -302,9 +304,10 @@ public class DataController : MonoBehaviour {
         gameData.allTrialData[currentTrialNumber].totalMovementTime.Add(GameController.control.totalMovementTime);
         gameData.allTrialData[currentTrialNumber].trialListIndex.Add(trialListIndex);
 
-
         // This is only updated if the trial is finished correctly anyway
         gameData.allTrialData[currentTrialNumber].trialScore = GameController.control.trialScore;
+        gameData.allTrialData[currentTrialNumber].debriefResponse = GameController.control.debriefResponse;
+        gameData.allTrialData[currentTrialNumber].debriefResponseTime = GameController.control.debriefResponseTime;
 
         // Add in the frame-by-frame data (these should be synchronized)
         if (Player != null)
@@ -421,6 +424,17 @@ public class DataController : MonoBehaviour {
         {
             participantGenderSet = true;
             gameData.participantGender = gender;
+        }
+    }
+
+    // ********************************************************************** //
+
+    public void SetQuestionnaireAnswer(string room) 
+    { 
+        if (room != "Select a room . . .") 
+        {
+            questionAnswered = true;
+            //gameData.debriefQuestions[0].answers[0].answerText = room;  // ***HRS needs updating to store responses for each question separately and should also store which question was asked
         }
     }
 

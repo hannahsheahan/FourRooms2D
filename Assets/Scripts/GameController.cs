@@ -48,8 +48,9 @@ public class GameController : MonoBehaviour
     public bool[] bridgeStates;         // used to enable/disable different bridges
     public string playerRoom = "";
     private string nextScene;
-
-
+    public QuestionData questionData;
+    public string debriefResponse;
+   
     // Within-trial data that changes with timeframe
     private bool playerControlActive;
     private bool starFound = false;
@@ -90,6 +91,7 @@ public class GameController : MonoBehaviour
     public Timer messageTimer;
     private Timer restbreakTimer;
     private Timer getReadyTimer;
+    private Timer debriefResponseTimer;
     public float firstMovementTime;
     public float totalMovementTime;
     public float totalExperimentTime;
@@ -99,6 +101,7 @@ public class GameController : MonoBehaviour
     public float currentFrozenTime;
     public bool displayTimeLeft;
     public float firstFrozenTime;
+    public float debriefResponseTime;
 
     public float maxMovementTime;
     private float preDisplayCueTime;
@@ -152,10 +155,11 @@ public class GameController : MonoBehaviour
     public const int STATE_GETREADY = 17;
     public const int STATE_PAUSE = 18;
     public const int STATE_HALLFREEZE = 19;
-    public const int STATE_EXIT = 20;
-    public const int STATE_MAX = 21;
+    public const int STATE_DEBRIEF = 20;
+    public const int STATE_EXIT = 21;
+    public const int STATE_MAX = 22;
 
-    private string[] stateText = new string[] { "StartScreen", "Setup", "BlankScreen", "StartTrial", "GoalAppear", "Delay", "Go", "Moving1", "FirstGoalHit", "Moving2", "FinalGoalHit", "Finish", "NextTrial", "InterTrial", "Timeout", "Error", "Rest", "GetReady", "Pause", "HallwayFreeze", "Exit", "Max" };
+    private string[] stateText = new string[] { "StartScreen", "Setup", "BlankScreen", "StartTrial", "GoalAppear", "Delay", "Go", "Moving1", "FirstGoalHit", "Moving2", "FinalGoalHit", "Finish", "NextTrial", "InterTrial", "Timeout", "Error", "Rest", "GetReady", "Pause", "HallwayFreeze", "Debrief", "Exit", "Max" };
     public int State;
     public int previousState;     // Note that this currently is not thoroughly used - currently only used for transitioning back from the STATE_HALLFREEZE to the previous gameplay
     public List<string> stateTransitions = new List<string>();   // recorded state transitions (in sync with the player data)
@@ -204,6 +208,7 @@ public class GameController : MonoBehaviour
         messageTimer = new Timer();
         restbreakTimer = new Timer();
         getReadyTimer = new Timer();
+        debriefResponseTimer = new Timer();
 
         // Initialise FSM State
         State = STATE_STARTSCREEN;
@@ -278,6 +283,12 @@ public class GameController : MonoBehaviour
                         case "RestBreak":
                             restbreakTimer.Reset();
                             StateNext(STATE_REST);
+                            break;
+
+                        case "QuestionTime":
+                            Cursor.visible = true;
+                            debriefResponseTimer.Reset();
+                            StateNext(STATE_DEBRIEF);
                             break;
 
                         case "Exit":
@@ -575,6 +586,12 @@ public class GameController : MonoBehaviour
                 }
                 break;
 
+            case STATE_DEBRIEF:
+                // We just chill out in this state until the participant has responded with the dropdown menu, 
+                // then SetQuestionnaireAnswer() is called, and on the submit button we move to next trial.
+
+                break;
+
             case STATE_EXIT:
                 // Display the total experiment time and wait for the participant to close the application
 
@@ -628,6 +645,8 @@ public class GameController : MonoBehaviour
         congratulated = false;
         pauseClock = false;
         trialScore = 0;
+        debriefResponse = "";
+        debriefResponseTime = 0f;
 
         for (int i = 0; i < scaleUpReward.Length; i++)
         {
@@ -646,21 +665,15 @@ public class GameController : MonoBehaviour
         presentPositions = currentTrialData.presentPositions;
         freeForage = currentTrialData.freeForage;
         bridgeStates = currentTrialData.bridgeStates;
+        questionData = currentTrialData.debriefQuestion;
 
-        // ***HRS This is a hack for now for dealing with the free-foraging multi-reward case in the FSM, can make elegant later
-        rewardsRemaining = 1;  // default
+
+        // Deal with the free-foraging multi-reward case, (HRS can make elegant later)
+        rewardsRemaining = 1;           // default
         if (doubleRewardTask)
         {
-            if (freeForage)
-            {
-                rewardsRemaining = 16;
-            }
-            else
-            {
-                rewardsRemaining = 2;
-            }
+            rewardsRemaining = freeForage ? 16 : 2;
         }
-
         for (int i = 0; i < rewardsVisible.Length; i++)
         {
             rewardsVisible[i] = false;
@@ -688,7 +701,7 @@ public class GameController : MonoBehaviour
         Debug.Log("Upcoming scene: " + nextScene);
         SceneManager.LoadScene(nextScene);
 
-        string[] menuScenesArray = new string[] { "Exit", "RestBreak", "GetReady" };
+        string[] menuScenesArray = new string[] { "Exit", "RestBreak", "GetReady", "QuestionTime" };
 
         if (menuScenesArray.Contains(nextScene))  // ***HRS (how is this working if contains is a List method?)
         {
@@ -755,6 +768,13 @@ public class GameController : MonoBehaviour
     {
         NextScene();
         TrialSetup();
+    }
+
+    // ********************************************************************** //
+
+    public void ContinueToNextQuestion() 
+    {
+        StateNext(STATE_FINISH);
     }
 
     // ********************************************************************** //
@@ -998,6 +1018,17 @@ public class GameController : MonoBehaviour
                 displayMessage = "noMessage";
             }
         }
+    }
+
+    // ********************************************************************** //
+
+    public void SetQuestionnaireAnswer(string response) 
+    {
+        // Record the chosen response selected from the dropdown meny for this debrief question
+        debriefResponse = response;
+        debriefResponseTime = debriefResponseTimer.ElapsedSeconds();
+        Debug.Log("You responded with: " + debriefResponse);
+        Debug.Log("It took you " + debriefResponseTime + " sec to respond");
     }
 
     // ********************************************************************** //

@@ -48,6 +48,9 @@ EditorBuildSettings:
     path: Assets/Scenes/RestBreak.unity
     guid: 127d00453e8d144728db204b33f39c57
   - enabled: 1
+    path: Assets/Scenes/QuestionTime.unity
+    guid: 32cabfd08d9b94bc98af2703bff590ac
+  - enabled: 1
     path: Assets/Scenes/Exit.unity
     guid: 3c1070ac5047c476b902a1f9acc7addb
   m_configObjects: {}

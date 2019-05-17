@@ -20,8 +20,7 @@ public class PlayerController : MovingObject
     private int horizontal = 0;
     private int vertical = 0;
     private int jump = 0;
-    private int jumpingValue = 10;
-
+    
     // ********************************************************************** //
     //Start overrides the Start function of MovingObject
     protected override void Start()
