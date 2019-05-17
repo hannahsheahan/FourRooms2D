@@ -42,7 +42,7 @@ public class CameraController : MonoBehaviour
         if (currentPlayerRoom != previousPlayerRoom)
         {
             Debug.Log("Transitioning from: " + previousPlayerRoom + "->" + currentPlayerRoom);
-            cameraZoom = 2.5f;
+            cameraZoom = 3f;
             switch (currentPlayerRoom)
             {
                 case "blue":
@@ -66,8 +66,8 @@ public class CameraController : MonoBehaviour
                     break;
 
                 case "hallway":
-                    cameraPosition = new Vector3(0f, 0f, zPosition); // for debugging!
-                    cameraZoom = 5f;
+                    //cameraPosition = new Vector3(0f, 0f, zPosition); // don't update the camera position for hallways
+                    //cameraZoom = 5f;
                     Debug.Log("Camera positioned on a hallway.");
                     break;
 

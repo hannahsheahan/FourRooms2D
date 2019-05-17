@@ -294,6 +294,10 @@ public class GameController : MonoBehaviour
 
                 // display a blank screen at the start of each trial, for N seconds while things get set up, and to jitter time between trials for fMRI
                 blankScreen = true;
+
+                // Position the camera ready for the upcoming scene
+                MoveCamera(playerSpawnLocation);
+
                 StartRecording();
 
                 if (stateTimer.ElapsedSeconds() > blankTime) // Note: this can be a different blankTime per trial etc once we jitter in ExperimentConfig
@@ -683,9 +687,6 @@ public class GameController : MonoBehaviour
         // Start the next scene/trial
         Debug.Log("Upcoming scene: " + nextScene);
         SceneManager.LoadScene(nextScene);
-
-        // Position the camera ready for the upcoming scene
-        MoveCamera(playerSpawnLocation);
 
         string[] menuScenesArray = new string[] { "Exit", "RestBreak", "GetReady" };
 
