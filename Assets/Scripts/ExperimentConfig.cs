@@ -137,8 +137,8 @@ public class ExperimentConfig
 
             case "micro_debug":            // ----Mini debugging test experiment-----
                 nDebreifQuestions = 8;
-                practiceTrials = 1 + getReadyTrial;
-                nExecutedTrials = 1;                                         // note that this is only used for the micro_debug version
+                practiceTrials = 0 + getReadyTrial;
+                nExecutedTrials = 0;                                         // note that this is only used for the micro_debug version
                 totalTrials = nExecutedTrials + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 4 + restbreakOffset;                            // Take a rest after this many normal trials
                 restbreakDuration = 5.0f;                                       // how long are the imposed rest breaks?
@@ -422,7 +422,7 @@ public class ExperimentConfig
 
         // Shuffle the question order
         int n = allQuestions.Count;
-       
+        Debug.Log("allQuestions has a length of: " + allQuestions.Count);
         // Perform the Fisher-Yates algorithm for shuffling array elements in place 
         for (int i = 0; i < n; i++)
         {
@@ -433,7 +433,6 @@ public class ExperimentConfig
             allQuestions[k] = allQuestions[i];
             allQuestions[i] = oneQuestion;
         }
-
 
         // Store the randomised trial order (reuse random trials if we haven't specified enough unique ones)
         for (int i = 0; i < nDebreifQuestions; i++)

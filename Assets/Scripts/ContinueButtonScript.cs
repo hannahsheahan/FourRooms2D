@@ -62,8 +62,11 @@ public class ContinueButtonScript : MonoBehaviour
 
     public void ContinueToNextQuestionOnClick()
     {
-        source.PlayOneShot(buttonClickSound, 1F);
-        GameController.control.ContinueToNextQuestion(); // Continue to the before starting page 
+        if (GameController.control.debriefResponseRecorded) 
+        { 
+            source.PlayOneShot(buttonClickSound, 1F);
+            GameController.control.ContinueToNextQuestion(); // Continue to the before starting page 
+        }
     }
 
     // ********************************************************************** //

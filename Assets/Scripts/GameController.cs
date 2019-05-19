@@ -83,6 +83,7 @@ public class GameController : MonoBehaviour
     public float animationTime;         
     public float blankTime;
     public bool[] scaleUpReward;
+    public bool debriefResponseRecorded;
 
     // Timer variables
     private Timer experimentTimer;
@@ -644,6 +645,7 @@ public class GameController : MonoBehaviour
         scoreUpdated = false;
         congratulated = false;
         pauseClock = false;
+        debriefResponseRecorded = false;
         trialScore = 0;
         debriefResponse = "";
         debriefResponseTime = 0f;
@@ -1025,10 +1027,14 @@ public class GameController : MonoBehaviour
     public void SetQuestionnaireAnswer(string response) 
     {
         // Record the chosen response selected from the dropdown meny for this debrief question
-        debriefResponse = response;
-        debriefResponseTime = debriefResponseTimer.ElapsedSeconds();
-        Debug.Log("You responded with: " + debriefResponse);
-        Debug.Log("It took you " + debriefResponseTime + " sec to respond");
+        if (response != "Select a room . . .") 
+        {
+            debriefResponseRecorded = true;
+            debriefResponse = response;
+            debriefResponseTime = debriefResponseTimer.ElapsedSeconds();
+            Debug.Log("You responded with: " + debriefResponse);
+            Debug.Log("It took you " + debriefResponseTime + " sec to respond");
+        }
     }
 
     // ********************************************************************** //
