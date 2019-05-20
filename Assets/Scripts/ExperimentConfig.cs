@@ -137,8 +137,8 @@ public class ExperimentConfig
 
             case "micro_debug":            // ----Mini debugging test experiment-----
                 nDebreifQuestions = 8;
-                practiceTrials = 0 + getReadyTrial;
-                nExecutedTrials = 0;                                         // note that this is only used for the micro_debug version
+                practiceTrials = 1 + getReadyTrial;
+                nExecutedTrials = 2;                                         // note that this is only used for the micro_debug version
                 totalTrials = nExecutedTrials + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 4 + restbreakOffset;                            // Take a rest after this many normal trials
                 restbreakDuration = 5.0f;                                       // how long are the imposed rest breaks?
