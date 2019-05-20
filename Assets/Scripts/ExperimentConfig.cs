@@ -117,7 +117,9 @@ public class ExperimentConfig
         // Experiments with training blocked by context
 
         //experimentVersion = "mturk_cheesewine";     // ***HRS note that if you do wacky colours youll have to change the debrief question text which mentions room colours
-        experimentVersion = "micro_debug"; 
+        experimentVersion = "mturk_peanutmartini";
+
+        //experimentVersion = "micro_debug"; 
 
 
         // ------------------------------------------
@@ -133,7 +135,25 @@ public class ExperimentConfig
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
                 transferCounterbalance = false;                                     // this does nothing
                 break;
+            
+            case "mturk_cheesewine_wackycolours":       // ----Full 4 block learning experiment-----
+                nDebreifQuestions = 8; 
+                practiceTrials = 2 + getReadyTrial;
+                totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
+                restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
+                restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
+                transferCounterbalance = false;                                     // this does nothing
+                wackyColours = true;                                                // use different colours to the peanut/martini case
+                break;
 
+            case "mturk_peanutmartini":       // ----Full 4 block learning experiment-----
+                nDebreifQuestions = 8;
+                practiceTrials = 2 + getReadyTrial;
+                totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
+                restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
+                restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
+                transferCounterbalance = false;                                    
+                break;
 
             case "micro_debug":            // ----Mini debugging test experiment-----
                 nDebreifQuestions = 8;
@@ -251,7 +271,25 @@ public class ExperimentConfig
 
                 break;
 
-           
+            case "mturk_peanutmartini":  // ----To be performed day after learning experiment: 4 block transfer experiment (1hr)-----
+
+                //---- transfer block 1
+                nextTrial = AddTransferBlock(nextTrial);
+                nextTrial = RestBreakHere(nextTrial);
+
+                //---- transfer block 2
+                nextTrial = AddTransferBlock(nextTrial);
+                nextTrial = RestBreakHere(nextTrial);
+
+                //---- transfer block 3
+                nextTrial = AddTransferBlock(nextTrial);
+                nextTrial = RestBreakHere(nextTrial);
+
+                //---- transfer block 4
+                nextTrial = AddTransferBlock(nextTrial);
+
+                break;
+
             case "micro_debug":            // ----Mini debugging test experiment-----
 
                 nextTrial = AddTrainingBlock_micro(nextTrial, nExecutedTrials); 
