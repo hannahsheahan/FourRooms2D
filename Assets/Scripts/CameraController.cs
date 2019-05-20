@@ -49,19 +49,19 @@ public class CameraController : MonoBehaviour
             switch (currentPlayerRoom)
             {
                 case "blue":
-                    cameraPosition = new Vector3(-2.5f, -2.5f, zPosition);
+                    cameraPosition = new Vector3(-2.52f, -2.5f, zPosition);  // Note: there is a very very slight asymmetry of the rooms around the centre of the screen
                     break;
 
                 case "yellow":
-                    cameraPosition = new Vector3(-2.5f, 2.5f, zPosition);
+                    cameraPosition = new Vector3(-2.52f, 2.5f, zPosition);
                     break;
 
                 case "red":
-                    cameraPosition = new Vector3(2.5f, -2.5f, zPosition);
+                    cameraPosition = new Vector3(2.48f, -2.5f, zPosition);
                     break;
 
                 case "green":
-                    cameraPosition = new Vector3(2.5f, 2.5f, zPosition);
+                    cameraPosition = new Vector3(2.48f, 2.5f, zPosition);
                     break;
 
                 case "hallway":
@@ -97,7 +97,6 @@ public class CameraController : MonoBehaviour
 
     private void PillarBoxCamera() 
     {
-
         // This function will resize the display of the game to a specific aspect ratio, regardless of what the screen resolution/ratio is.
         // This way we get consistent play across different playforms/monitors etc by pillarboxing/letterboxing the viewing window.
         // downloaded on 20/05/2019 from http://gamedesigntheory.blogspot.com/2010/09/controlling-aspect-ratio-in-unity.html , downloaded by Hannah Sheahan, sheahan.hannah@gmail.com
