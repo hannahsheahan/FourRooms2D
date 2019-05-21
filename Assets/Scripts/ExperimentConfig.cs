@@ -117,9 +117,9 @@ public class ExperimentConfig
         // Experiments with training blocked by context
 
         //experimentVersion = "mturk2D_cheesewine";     // ***HRS note that if you do wacky colours youll have to change the debrief question text which mentions room colours
-        //experimentVersion = "mturk2D_peanutmartini";
+        experimentVersion = "mturk2D_peanutmartini";
         //experimentVersion = "mturk2D_cheesewine_wackycolours";  
-        experimentVersion = "mturk2D_peanutmartini_wackycolours";
+        //experimentVersion = "mturk2D_peanutmartini_wackycolours";
 
         //experimentVersion = "micro2D_debug"; 
 
