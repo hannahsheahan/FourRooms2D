@@ -810,7 +810,7 @@ public class GameController : MonoBehaviour
         // Check if the game framerate is sufficiently high. If not, give warning telling them to open in a different browser with fewer plugins or quit.
         if (frameRateMonitor.Framerate < minFramerate)
         {
-            if (State != STATE_STARTSCREEN) // ***HRS ah, this is why the start button doesnt work for some people, but if we check framerate from the start of the experiment the smoothing from starting at 0fps will mean every computer fails this test
+            if (State != STATE_STARTSCREEN) // If we don't include this, the start button doesnt work for some people. But if we check framerate from the start of the experiment the smoothing from starting at 0fps will mean every computer fails this test.
             {
                 FLAG_frameRateError = true;
 

@@ -118,8 +118,10 @@ public class ExperimentConfig
 
         //experimentVersion = "mturk2D_cheesewine";     // ***HRS note that if you do wacky colours youll have to change the debrief question text which mentions room colours
         //experimentVersion = "mturk2D_peanutmartini";
+        //experimentVersion = "mturk2D_cheesewine_wackycolours";  
+        experimentVersion = "mturk2D_peanutmartini_wackycolours";
 
-        experimentVersion = "micro2D_debug"; 
+        //experimentVersion = "micro2D_debug"; 
 
 
         // ------------------------------------------
@@ -152,7 +154,17 @@ public class ExperimentConfig
                 totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
-                transferCounterbalance = false;                                    
+                transferCounterbalance = false;
+                break;
+
+            case "mturk2D_peanutmartini_wackycolours":       // ----Full 4 block learning experiment-----
+                nDebreifQuestions = 8;
+                practiceTrials = 2 + getReadyTrial;
+                totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
+                restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
+                restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
+                transferCounterbalance = false;
+                wackyColours = true;
                 break;
 
             case "micro2D_debug":            // ----Mini debugging test experiment-----
@@ -252,7 +264,7 @@ public class ExperimentConfig
         switch (experimentVersion)
         {
             case "mturk2D_cheesewine":       // ----Full 4 block learning experiment-----
-            case "mturk2D_cheesewine_wackycolours":   // ***HRS note that you will need to change the debrief questions if using wacky colours because it says things like 'red room'
+            case "mturk2D_cheesewine_wackycolours":  
 
                 //---- training block 1
                 nextTrial = AddTrainingBlock(nextTrial);
@@ -272,6 +284,7 @@ public class ExperimentConfig
                 break;
 
             case "mturk2D_peanutmartini":  // ----To be performed day after learning experiment: 4 block transfer experiment (1hr)-----
+            case "mturk2D_peanutmartini_wackycolours":  
 
                 //---- transfer block 1
                 nextTrial = AddTransferBlock(nextTrial);
@@ -355,6 +368,7 @@ public class ExperimentConfig
         int nPossibleAnswers = 2;
         QuestionData oneQuestion;
         string[] rewards = new string[2];
+        string[] rooms = new string[4];
 
         if (experimentVersion.Contains("peanuts"))
         {
@@ -367,15 +381,30 @@ public class ExperimentConfig
             rewards[1] = "wine bottle";
         }
 
+        if (wackyColours) 
+        {
+            rooms[0] = "lavender";
+            rooms[1] = "pink";
+            rooms[2] = "turquoise";
+            rooms[3] = "orange";
+        }
+        else 
+        {
+            rooms[0] = "yellow";
+            rooms[1] = "green";
+            rooms[2] = "red";
+            rooms[3] = "blue";
+        }
+
 
         // ---- Question 1 ---
         QuestionData questiondata = new QuestionData(nPossibleAnswers);
 
         answerOrder = rand.Next(nPossibleAnswers);
-        questiondata.questionText = "You have just found a " + rewards[0] + " in the green room.\n Which room will the other " + rewards[0] + " be in?";
+        questiondata.questionText = "You have just found a " + rewards[0] + " in the " + rooms[1] + " room.\n Which room will the other " + rewards[0] + " be in?";
         questiondata.stimulus = "";
-        questiondata.answers[answerOrder].answerText = (!transferCounterbalance) ? "red": "yellow";       // correct
-        questiondata.answers[1 - answerOrder].answerText = (!transferCounterbalance) ? "yellow" : "red";  // incorrect
+        questiondata.answers[answerOrder].answerText = (!transferCounterbalance) ? rooms[2]: rooms[0];       // correct
+        questiondata.answers[1 - answerOrder].answerText = (!transferCounterbalance) ? rooms[0] : rooms[2];  // incorrect
         questiondata.answers[answerOrder].isCorrect = true;
         allQuestions.Add(questiondata);
 
@@ -384,10 +413,10 @@ public class ExperimentConfig
         questiondata = new QuestionData(nPossibleAnswers);
 
         answerOrder = rand.Next(nPossibleAnswers);
-        questiondata.questionText = "You have just found a " + rewards[0] + " in the yellow room.\n Which room will the other " + rewards[0] + " be in?";
+        questiondata.questionText = "You have just found a " + rewards[0] + " in the " + rooms[0] + " room.\n Which room will the other " + rewards[0] + " be in?";
         questiondata.stimulus = "";
-        questiondata.answers[answerOrder].answerText = (!transferCounterbalance) ? "blue" : "green";       // correct
-        questiondata.answers[1 - answerOrder].answerText = (!transferCounterbalance) ? "green" : "blue";  // incorrect
+        questiondata.answers[answerOrder].answerText = (!transferCounterbalance) ? rooms[3] : rooms[1];       // correct
+        questiondata.answers[1 - answerOrder].answerText = (!transferCounterbalance) ? rooms[1] : rooms[3];  // incorrect
         questiondata.answers[answerOrder].isCorrect = true;
         allQuestions.Add(questiondata);
 
@@ -395,10 +424,10 @@ public class ExperimentConfig
         questiondata = new QuestionData(nPossibleAnswers);
 
         answerOrder = rand.Next(nPossibleAnswers);
-        questiondata.questionText = "You have just found a " + rewards[1] + " in the red room.\n Which room will the other " + rewards[1] + " be in?";
+        questiondata.questionText = "You have just found a " + rewards[1] + " in the " + rooms[2] + " room.\n Which room will the other " + rewards[1] + " be in?";
         questiondata.stimulus = "";
-        questiondata.answers[answerOrder].answerText = (!transferCounterbalance) ? "blue" : "green";       // correct
-        questiondata.answers[1 - answerOrder].answerText = (!transferCounterbalance) ? "green" : "blue";  // incorrect
+        questiondata.answers[answerOrder].answerText = (!transferCounterbalance) ? rooms[3] : rooms[1];       // correct
+        questiondata.answers[1 - answerOrder].answerText = (!transferCounterbalance) ? rooms[1] : rooms[3];  // incorrect
         questiondata.answers[answerOrder].isCorrect = true;
         allQuestions.Add(questiondata);
 
@@ -406,10 +435,10 @@ public class ExperimentConfig
         questiondata = new QuestionData(nPossibleAnswers);
 
         answerOrder = rand.Next(nPossibleAnswers);
-        questiondata.questionText = "You have just found a " + rewards[1] + " in the blue room.\n Which room will the other " + rewards[1] + " be in?";
+        questiondata.questionText = "You have just found a " + rewards[1] + " in the " + rooms[3] + " room.\n Which room will the other " + rewards[1] + " be in?";
         questiondata.stimulus = "";
-        questiondata.answers[answerOrder].answerText = (!transferCounterbalance) ? "red" : "yellow";       // correct
-        questiondata.answers[1 - answerOrder].answerText = (!transferCounterbalance) ? "yellow" : "red";  // incorrect
+        questiondata.answers[answerOrder].answerText = (!transferCounterbalance) ? rooms[2] : rooms[0];       // correct
+        questiondata.answers[1 - answerOrder].answerText = (!transferCounterbalance) ? rooms[0] : rooms[2];  // incorrect
         questiondata.answers[answerOrder].isCorrect = true;
         allQuestions.Add(questiondata);
 
@@ -417,10 +446,10 @@ public class ExperimentConfig
         questiondata = new QuestionData(nPossibleAnswers);
 
         answerOrder = rand.Next(nPossibleAnswers);
-        questiondata.questionText = "You were looking for a " + rewards[0] + " and did NOT find one in the blue room.\n Which room should you go to next?";
+        questiondata.questionText = "You were looking for a " + rewards[0] + " and did NOT find one in the " + rooms[3] + " room.\n Which room should you go to next?";
         questiondata.stimulus = "";
-        questiondata.answers[answerOrder].answerText = (!transferCounterbalance) ? "red" : "yellow";       // correct
-        questiondata.answers[1 - answerOrder].answerText = (!transferCounterbalance) ? "yellow" : "red";  // incorrect
+        questiondata.answers[answerOrder].answerText = (!transferCounterbalance) ? rooms[2] : rooms[0];       // correct
+        questiondata.answers[1 - answerOrder].answerText = (!transferCounterbalance) ? rooms[0] : rooms[2];  // incorrect
         questiondata.answers[answerOrder].isCorrect = true;
         allQuestions.Add(questiondata);
 
@@ -428,10 +457,10 @@ public class ExperimentConfig
         questiondata = new QuestionData(nPossibleAnswers);
 
         answerOrder = rand.Next(nPossibleAnswers);
-        questiondata.questionText = "You were looking for a " + rewards[0] + " and did NOT find one in the red room.\n Which room should you go to next?";
+        questiondata.questionText = "You were looking for a " + rewards[0] + " and did NOT find one in the " + rooms[2] + " room.\n Which room should you go to next?";
         questiondata.stimulus = "";
-        questiondata.answers[answerOrder].answerText = (!transferCounterbalance) ? "blue" : "green";       // correct
-        questiondata.answers[1 - answerOrder].answerText = (!transferCounterbalance) ? "green" : "blue";  // incorrect
+        questiondata.answers[answerOrder].answerText = (!transferCounterbalance) ? rooms[3] : rooms[1];       // correct
+        questiondata.answers[1 - answerOrder].answerText = (!transferCounterbalance) ? rooms[1] : rooms[3];  // incorrect
         questiondata.answers[answerOrder].isCorrect = true;
         allQuestions.Add(questiondata);
 
@@ -439,10 +468,10 @@ public class ExperimentConfig
         questiondata = new QuestionData(nPossibleAnswers);
 
         answerOrder = rand.Next(nPossibleAnswers);
-        questiondata.questionText = "You were looking for a " + rewards[1] + " and did NOT find one in the yellow room.\n Which room should you go to next?";
+        questiondata.questionText = "You were looking for a " + rewards[1] + " and did NOT find one in the " + rooms[0] + " room.\n Which room should you go to next?";
         questiondata.stimulus = "";
-        questiondata.answers[answerOrder].answerText = (!transferCounterbalance) ? "blue" : "green";       // correct
-        questiondata.answers[1 - answerOrder].answerText = (!transferCounterbalance) ? "green" : "blue";  // incorrect
+        questiondata.answers[answerOrder].answerText = (!transferCounterbalance) ? rooms[3] : rooms[1];       // correct
+        questiondata.answers[1 - answerOrder].answerText = (!transferCounterbalance) ? rooms[1] : rooms[3];  // incorrect
         questiondata.answers[answerOrder].isCorrect = true;
         allQuestions.Add(questiondata);
 
@@ -450,17 +479,17 @@ public class ExperimentConfig
         questiondata = new QuestionData(nPossibleAnswers);
 
         answerOrder = rand.Next(nPossibleAnswers);
-        questiondata.questionText = "You were looking for a " + rewards[1] + " and did NOT find one in the green room.\n Which room should you go to next?";
+        questiondata.questionText = "You were looking for a " + rewards[1] + " and did NOT find one in the " + rooms[1] + " room.\n Which room should you go to next?";
         questiondata.stimulus = "";
-        questiondata.answers[answerOrder].answerText = (!transferCounterbalance) ? "red" : "yellow";       // correct
-        questiondata.answers[1 - answerOrder].answerText = (!transferCounterbalance) ? "yellow" : "red";  // incorrect
+        questiondata.answers[answerOrder].answerText = (!transferCounterbalance) ? rooms[2] : rooms[0];       // correct
+        questiondata.answers[1 - answerOrder].answerText = (!transferCounterbalance) ? rooms[0] : rooms[2];  // incorrect
         questiondata.answers[answerOrder].isCorrect = true;
         allQuestions.Add(questiondata);
 
 
         // Shuffle the question order
         int n = allQuestions.Count;
-        Debug.Log("allQuestions has a length of: " + allQuestions.Count);
+
         // Perform the Fisher-Yates algorithm for shuffling array elements in place 
         for (int i = 0; i < n; i++)
         {
@@ -803,26 +832,6 @@ public class ExperimentConfig
         // reshuffle the trial ordering so they are intermingled but preserve the previous arrangement of things
         ReshuffleTrialOrder(firstTrial, nextTrial-firstTrial );
 
-        return nextTrial;
-    }
-
-    // ********************************************************************** //
-
-    private int OldAddTransferBlock(int nextTrial)
-    {
-        // Add a 16 trial training block to the trial list. Trials are randomised within each context, but not between contexts 
-        bool freeForageFLAG = false;
-
-        if (rand.Next(2) == 0)   // randomise whether the watermelon or banana sub-block happens first
-        {
-            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "banana", freeForageFLAG);
-            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "watermelon", freeForageFLAG);
-        }
-        else
-        {
-            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "watermelon", freeForageFLAG);
-            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "banana", freeForageFLAG);
-        }
         return nextTrial;
     }
 
