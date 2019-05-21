@@ -1035,6 +1035,10 @@ public class GameController : MonoBehaviour
             Debug.Log("You responded with: " + debriefResponse);
             Debug.Log("It took you " + debriefResponseTime + " sec to respond");
         }
+        else 
+        {
+            debriefResponseRecorded = false;     // prevent them from going back and selecting the default option
+        }
     }
 
     // ********************************************************************** //

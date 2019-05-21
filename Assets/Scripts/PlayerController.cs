@@ -10,7 +10,6 @@ public class PlayerController : MovingObject
 {
 
     private Animator animator;
-    private bool playersTurn = true;
     private Timer playerControllerTimer;     // use this to discretize movement input
     private float minTimeBetweenMoves;
     private string animateHow;

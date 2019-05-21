@@ -116,10 +116,10 @@ public class ExperimentConfig
     {
         // Experiments with training blocked by context
 
-        //experimentVersion = "mturk_cheesewine";     // ***HRS note that if you do wacky colours youll have to change the debrief question text which mentions room colours
-        experimentVersion = "mturk_peanutmartini";
+        //experimentVersion = "mturk2D_cheesewine";     // ***HRS note that if you do wacky colours youll have to change the debrief question text which mentions room colours
+        //experimentVersion = "mturk2D_peanutmartini";
 
-        //experimentVersion = "micro_debug"; 
+        experimentVersion = "micro2D_debug"; 
 
 
         // ------------------------------------------
@@ -127,7 +127,7 @@ public class ExperimentConfig
         // Set these variables to define your experiment:
         switch (experimentVersion)
         {
-            case "mturk_cheesewine":       // ----Full 4 block learning experiment-----
+            case "mturk2D_cheesewine":       // ----Full 4 block learning experiment-----
                 nDebreifQuestions = 8; 
                 practiceTrials = 2 + getReadyTrial;
                 totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
@@ -136,7 +136,7 @@ public class ExperimentConfig
                 transferCounterbalance = false;                                     // this does nothing
                 break;
             
-            case "mturk_cheesewine_wackycolours":       // ----Full 4 block learning experiment-----
+            case "mturk2D_cheesewine_wackycolours":       // ----Full 4 block learning experiment-----
                 nDebreifQuestions = 8; 
                 practiceTrials = 2 + getReadyTrial;
                 totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
@@ -146,7 +146,7 @@ public class ExperimentConfig
                 wackyColours = true;                                                // use different colours to the peanut/martini case
                 break;
 
-            case "mturk_peanutmartini":       // ----Full 4 block learning experiment-----
+            case "mturk2D_peanutmartini":       // ----Full 4 block learning experiment-----
                 nDebreifQuestions = 8;
                 practiceTrials = 2 + getReadyTrial;
                 totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
@@ -155,10 +155,10 @@ public class ExperimentConfig
                 transferCounterbalance = false;                                    
                 break;
 
-            case "micro_debug":            // ----Mini debugging test experiment-----
+            case "micro2D_debug":            // ----Mini debugging test experiment-----
                 nDebreifQuestions = 8;
-                practiceTrials = 1 + getReadyTrial;
-                nExecutedTrials = 2;                                         // note that this is only used for the micro_debug version
+                practiceTrials = 0 + getReadyTrial;
+                nExecutedTrials = 0;                                         // note that this is only used for the micro_debug version
                 totalTrials = nExecutedTrials + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 4 + restbreakOffset;                            // Take a rest after this many normal trials
                 restbreakDuration = 5.0f;                                       // how long are the imposed rest breaks?
@@ -251,8 +251,8 @@ public class ExperimentConfig
         // Define the full trial sequence
         switch (experimentVersion)
         {
-            case "mturk_cheesewine":       // ----Full 4 block learning experiment-----
-            case "mturk_cheesewine_wackycolours":   // ***HRS note that you will need to change the debrief questions if using wacky colours because it says things like 'red room'
+            case "mturk2D_cheesewine":       // ----Full 4 block learning experiment-----
+            case "mturk2D_cheesewine_wackycolours":   // ***HRS note that you will need to change the debrief questions if using wacky colours because it says things like 'red room'
 
                 //---- training block 1
                 nextTrial = AddTrainingBlock(nextTrial);
@@ -271,7 +271,7 @@ public class ExperimentConfig
 
                 break;
 
-            case "mturk_peanutmartini":  // ----To be performed day after learning experiment: 4 block transfer experiment (1hr)-----
+            case "mturk2D_peanutmartini":  // ----To be performed day after learning experiment: 4 block transfer experiment (1hr)-----
 
                 //---- transfer block 1
                 nextTrial = AddTransferBlock(nextTrial);
@@ -290,7 +290,7 @@ public class ExperimentConfig
 
                 break;
 
-            case "micro_debug":            // ----Mini debugging test experiment-----
+            case "micro2D_debug":            // ----Mini debugging test experiment-----
 
                 nextTrial = AddTrainingBlock_micro(nextTrial, nExecutedTrials); 
                 break;
