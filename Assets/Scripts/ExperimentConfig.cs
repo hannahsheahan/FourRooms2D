@@ -370,7 +370,7 @@ public class ExperimentConfig
         string[] rewards = new string[2];
         string[] rooms = new string[4];
 
-        if (experimentVersion.Contains("peanuts"))
+        if (experimentVersion.Contains("peanut"))
         {
             rewards[0] = "peanuts";
             rewards[1] = "martini";
