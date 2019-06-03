@@ -31,14 +31,13 @@ public class RewardAnimationScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
     {
-        rewardIndex = GetComponent<SpawnRewardLocation>().rewardIndex;
         spriteRenderer = GetComponent<SpriteRenderer>();
-	}
+        rewardIndex = GetComponent<SpawnRewardLocation>().rewardIndex;
+    }
 	
 	// Update is called once per frame
 	void Update () {
 
-        //scaleUpOnly = GameController.control.scaleUpReward[rewardIndex];
         isScaling = GameController.control.scaleUpReward[rewardIndex];
 
 
@@ -84,7 +83,7 @@ public class RewardAnimationScript : MonoBehaviour {
                     transform.localScale = Vector3.Lerp(transform.localScale, startScale, scaleSpeed * Time.deltaTime);
                 }
 
-                if(scaleTimer >= scaleRate)
+                if (scaleTimer >= scaleRate)
                 {
                     if (scalingUp) { scalingUp = false; }
                     else if (!scalingUp) { scalingUp = true; }

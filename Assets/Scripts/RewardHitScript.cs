@@ -60,8 +60,8 @@ public class RewardHitScript : MonoBehaviour
         if ((rewardTimer.ElapsedSeconds() > GameController.control.minDwellAtReward) && (rewardHit))
         {
             rewardCollider.enabled = false;  // disabled the reward collidor so we dont accidentally trigger it twice.
-            GameController.control.StarFound(); 
-            GameController.control.AnimateRewardOnHit(rewardIndex);
+            GameController.control.StarFound();
+            //GameController.control.AnimateRewardOnHit(rewardIndex);  // for making reward animate at location of reward hit
 
             if ( (rewardTimer.ElapsedSeconds() > (GameController.control.minDwellAtReward + GameController.control.animationTime)) && (rewardHit) ) 
             {

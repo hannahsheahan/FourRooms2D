@@ -54,6 +54,7 @@ public class GameController : MonoBehaviour
     // Within-trial data that changes with timeframe
     private bool playerControlActive;
     private bool starFound = false;
+    private bool boulderLifted = false;
 
     // Audio clips
     public AudioClip starFoundSound;
@@ -70,7 +71,7 @@ public class GameController : MonoBehaviour
     public bool displayCue;
     public string rewardType;
     public bool[] rewardsVisible;
-    public int maxNRewards = 20;
+    public int maxNRewards = 20;                // ensure this is at least NActualRewards + 1, so that we can animate the canvas reward for scanning
     public int trialScore = 0;
     public int totalScore = 0;
     public int nextScore;
@@ -80,9 +81,11 @@ public class GameController : MonoBehaviour
     public bool flashCongratulations = false;
     public bool congratulated = false;
     private float beforeScoreUpdateTime = 1.2f;  // this is just for display (but maybe relevant for fMRI?)  ***HRS
-    public float animationTime;         
+    public float animationTime;
+    public float preRewardAppearTime;
     public float blankTime;
     public bool[] scaleUpReward;
+    public bool showCanvasReward;
     public bool debriefResponseRecorded;
 
     // Timer variables
@@ -93,6 +96,7 @@ public class GameController : MonoBehaviour
     private Timer restbreakTimer;
     private Timer getReadyTimer;
     private Timer debriefResponseTimer;
+    private float movementTime;
     public float firstMovementTime;
     public float totalMovementTime;
     public float totalExperimentTime;
@@ -144,23 +148,24 @@ public class GameController : MonoBehaviour
     public const int STATE_DELAY = 5;
     public const int STATE_GO = 6;
     public const int STATE_MOVING1 = 7;
-    public const int STATE_STAR1FOUND = 8;
-    public const int STATE_MOVING2 = 9;
-    public const int STATE_STAR2FOUND = 10;
-    public const int STATE_FINISH = 11;
-    public const int STATE_NEXTTRIAL = 12;
-    public const int STATE_INTERTRIAL = 13;
-    public const int STATE_TIMEOUT = 14;
-    public const int STATE_ERROR = 15;
-    public const int STATE_REST = 16;
-    public const int STATE_GETREADY = 17;
-    public const int STATE_PAUSE = 18;
-    public const int STATE_HALLFREEZE = 19;
-    public const int STATE_DEBRIEF = 20;
-    public const int STATE_EXIT = 21;
-    public const int STATE_MAX = 22;
+    public const int STATE_SHOWREWARD = 8;
+    public const int STATE_STAR1FOUND = 9;
+    public const int STATE_MOVING2 = 10;
+    public const int STATE_STAR2FOUND = 11;
+    public const int STATE_FINISH = 12;
+    public const int STATE_NEXTTRIAL = 13;
+    public const int STATE_INTERTRIAL = 14;
+    public const int STATE_TIMEOUT = 15;
+    public const int STATE_ERROR = 16;
+    public const int STATE_REST = 17;
+    public const int STATE_GETREADY = 18;
+    public const int STATE_PAUSE = 19;
+    public const int STATE_HALLFREEZE = 20;
+    public const int STATE_DEBRIEF = 21;
+    public const int STATE_EXIT = 22;
+    public const int STATE_MAX = 23;
 
-    private string[] stateText = new string[] { "StartScreen", "Setup", "BlankScreen", "StartTrial", "GoalAppear", "Delay", "Go", "Moving1", "FirstGoalHit", "Moving2", "FinalGoalHit", "Finish", "NextTrial", "InterTrial", "Timeout", "Error", "Rest", "GetReady", "Pause", "HallwayFreeze", "Debrief", "Exit", "Max" };
+    private string[] stateText = new string[] { "StartScreen", "Setup", "BlankScreen", "StartTrial", "GoalAppear", "Delay", "Go", "Moving1", "ShowReward", "FirstGoalHit", "Moving2", "FinalGoalHit", "Finish", "NextTrial", "InterTrial", "Timeout", "Error", "Rest", "GetReady", "Pause", "HallwayFreeze", "Debrief", "Exit", "Max" };
     public int State;
     public int previousState;     // Note that this currently is not thoroughly used - currently only used for transitioning back from the STATE_HALLFREEZE to the previous gameplay
     public List<string> stateTransitions = new List<string>();   // recorded state transitions (in sync with the player data)
@@ -337,6 +342,7 @@ public class GameController : MonoBehaviour
                 {
                     displayCue = false;
                     starFound = false;
+                    boulderLifted = false;
                     StateNext(STATE_DELAY);
                     break;
                 }
@@ -368,36 +374,81 @@ public class GameController : MonoBehaviour
                 break;
 
             case STATE_MOVING1:
-            
+
+                if (!Player.GetComponent<PlayerController>().enabled)
+                {
+                    Player.GetComponent<PlayerController>().enabled = true; // let the player move again
+                }
+
                 if (movementTimer.ElapsedSeconds() > maxMovementTime)  // the trial should timeout
                 {
                     StateNext(STATE_TIMEOUT);
                 }
 
-                if (starFound)
+                if (boulderLifted) 
                 {
-                    source.PlayOneShot(starFoundSound, 1F);
-                    firstMovementTime = movementTimer.ElapsedSeconds();
-
-                    if (doubleRewardTask)  // we are collecting two or more stars on this trial
-                    {
-                        StateNext(STATE_STAR1FOUND);
-                    }
-                    else              // there's only one star to collect
-                    {
-                        totalMovementTime = firstMovementTime;
-                        StateNext(STATE_STAR2FOUND);
-                    }
+                    Debug.Log("Boulder lifted now.");
+                    previousState = State;
+                    movementTime = movementTimer.ElapsedSeconds();
+                    StateNext(STATE_SHOWREWARD);  // go to blank screen
                 }
                 break;
 
+            case STATE_SHOWREWARD:
+
+                Player.GetComponent<PlayerController>().enabled = false;
+
+                if (stateTimer.ElapsedSeconds() > minDwellAtReward)  // Note: this is just a proxy for waiting a bit prior to moving to blank screen
+                {
+                    // turn screen blank
+                    blankScreen = true;
+
+                    if (stateTimer.ElapsedSeconds() > (minDwellAtReward + preRewardAppearTime))
+                    {
+                        // show the reward when ready
+                        if (!showCanvasReward)
+                        {
+                            if (starFound)
+                            {
+                                showCanvasReward = true;
+                                source.PlayOneShot(starFoundSound, 1F);
+                            }
+                        }
+
+                        // turn off the reward and transition state
+                        if (stateTimer.ElapsedSeconds() > (minDwellAtReward + preRewardAppearTime + goalHitPauseTime))
+                        {
+                            if (showCanvasReward)
+                            {
+                                // First reward collected (or not if it's the many-reward, free-foraging case)
+                                if (rewardsRemaining > 1)
+                                {
+                                    firstMovementTime = movementTime;
+                                    StateNext(STATE_STAR1FOUND);
+                                }
+                                else
+                                {   // STATE_STAR2FOUND is the state accessed when the FINAL reward to be collected is found
+                                    totalMovementTime = movementTime;
+                                    StateNext(STATE_STAR2FOUND);
+                                }
+                            }
+                            else
+                            {
+                                // there was no reward, so go back to previous moving state
+                                StateNext(previousState);
+                            }
+                            blankScreen = false;
+                            showCanvasReward = false;
+                        }
+                    }
+                    boulderLifted = false;
+                }
+                break;
 
             case STATE_STAR1FOUND:
 
                 // disable the player control and reset the starFound trigger ready to collect the next star
                 starFound = false;
-                Player.GetComponent<PlayerController>().enabled = false;
-                //Debug.Log("disabling player controls now");
 
                 if (!freeForage) 
                 {
@@ -407,49 +458,42 @@ public class GameController : MonoBehaviour
                         displayMessage = "keepSearchingMessage";
                     }
                 }
-                // pause here so that we can take a TR
-                if (stateTimer.ElapsedSeconds() > goalHitPauseTime)
-                {
-                    // decrement the counter tracking the number of rewards remaining to be collected
-                    rewardsRemaining = rewardsRemaining - 1;
-                    Debug.Log("Rewards remaining: " + rewardsRemaining);
 
-                    //Debug.Log("re-enabling player controls now");
-                    Player.GetComponent<PlayerController>().enabled = true; // let the player move again
-                    StateNext(STATE_MOVING2);
-                }
+                // decrement the counter tracking the number of rewards remaining to be collected
+                rewardsRemaining = rewardsRemaining - 1;
+                Debug.Log("Rewards remaining: " + rewardsRemaining);
+
+                //Debug.Log("re-enabling player controls now");
+                StateNext(STATE_MOVING2);
+
                 break;
 
 
             case STATE_MOVING2:
+
+                if (!Player.GetComponent<PlayerController>().enabled)
+                {
+                    Player.GetComponent<PlayerController>().enabled = true; // let the player move again
+                }
 
                 if (movementTimer.ElapsedSeconds() > maxMovementTime)  // the trial should timeout
                 {
                     StateNext(STATE_TIMEOUT);
                 }
 
-                if (starFound)
+                if (boulderLifted)
                 {
-                    source.PlayOneShot(starFoundSound, 1F);
-
-                    // help the FSM deal with the free-foraging multi-reward case
-                    if (rewardsRemaining > 1)
-                    {
-                        StateNext(STATE_STAR1FOUND);
-                    }
-                    else
-                    {   // STATE_STAR2FOUND is the state accessed when the FINAL reward to be collected is found
-                        totalMovementTime = movementTimer.ElapsedSeconds(); 
-                        StateNext(STATE_STAR2FOUND);
-                    }
+                    Debug.Log("Boulder lifted now.");
+                    previousState = State;
+                    movementTime = movementTimer.ElapsedSeconds();
+                    StateNext(STATE_SHOWREWARD);  // go to blank screen
                 }
+
                 break;
 
             case STATE_STAR2FOUND:
 
                 // This is the state when the FINAL reward to be collected is found (in the case of 2 or multiple rewards)
-
-                Player.GetComponent<PlayerController>().enabled = false; // disable controller
                 displayTimeLeft = false;             // freeze the visible countdown
 
                 if (stateTimer.ElapsedSeconds() > goalHitPauseTime)
@@ -641,6 +685,7 @@ public class GameController : MonoBehaviour
         FLAG_frameRateError = false;
         FLAG_cliffFallError = false;
         starFound = false;
+        boulderLifted = false;
         displayTimeLeft = false;
         scoreUpdated = false;
         congratulated = false;
@@ -649,6 +694,7 @@ public class GameController : MonoBehaviour
         trialScore = 0;
         debriefResponse = "";
         debriefResponseTime = 0f;
+        showCanvasReward = false;
 
         for (int i = 0; i < scaleUpReward.Length; i++)
         {
@@ -698,6 +744,7 @@ public class GameController : MonoBehaviour
         oneSquareMoveTime = currentTrialData.oneSquareMoveTime;
         blankTime = currentTrialData.blankTime;
         animationTime = currentTrialData.animationTime;
+        preRewardAppearTime = currentTrialData.preRewardAppearTime;
 
         // Start the next scene/trial
         Debug.Log("Upcoming scene: " + nextScene);
@@ -1143,6 +1190,13 @@ public class GameController : MonoBehaviour
     public void StarFound()
     {
         starFound = true; // The player has been at the star for minDwellAtReward seconds
+    }
+
+    // ********************************************************************** //
+
+    public void LiftingBoulder() 
+    {
+        boulderLifted = true; 
     }
 
     // ********************************************************************** //

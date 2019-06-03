@@ -137,6 +137,7 @@ public class PlayerController : MovingObject
         {
             if (jumpingNow) 
             {
+                GameController.control.LiftingBoulder();                // transition the state machine
                 GameController.control.OpenBoxQuestion(false);
                 GameController.control.giftWrapState[other.gameObject.GetComponent<PresentRevealScript>().presentIndex] = 0; // effectively a bool, but shorter to write as string to file 
                 GameController.control.RecordGiftStates();              // save a timestamp and the gift states

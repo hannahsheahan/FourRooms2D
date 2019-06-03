@@ -199,6 +199,7 @@ public class DataController : MonoBehaviour {
             gameData.allTrialData[trial].displayCueTime = config.displayCueTime;
             gameData.allTrialData[trial].goCueDelay      = config.goCueDelay;
             gameData.allTrialData[trial].minDwellAtReward  = config.minDwellAtReward;
+            gameData.allTrialData[trial].preRewardAppearTime = config.preRewardAppearTime;
             gameData.allTrialData[trial].displayMessageTime = config.displayMessageTime;
             gameData.allTrialData[trial].errorDwellTime  = config.errorDwellTime;
             gameData.allTrialData[trial].hallwayFreezeTime = config.hallwayFreezeTime;
@@ -207,6 +208,7 @@ public class DataController : MonoBehaviour {
             gameData.allTrialData[trial].oneSquareMoveTime = config.oneSquareMoveTime;
             gameData.allTrialData[trial].minTimeBetweenMoves = config.minTimeBetweenMoves;
             gameData.allTrialData[trial].animationTime = config.animationTime;
+
         }
         SaveData();   // Note: Important to keep this here. It seems unimportant, but without it the timing of object initialisation changes somehow(?) and errors emerge. Make sure this isn't too sensitive or figure out a better way to resolve this issue
     }

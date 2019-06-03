@@ -42,7 +42,8 @@ public class TrialData
     public float preDisplayCueTime;
     public float displayCueTime;
     public float goCueDelay;
-    public float minDwellAtReward;      
+    public float minDwellAtReward;
+    public float preRewardAppearTime;
     public float displayMessageTime;    
     public float errorDwellTime;
     public float goalHitPauseTime;

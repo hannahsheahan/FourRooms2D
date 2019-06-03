@@ -30,7 +30,7 @@ public class DisplayRewardCue : MonoBehaviour
 
     void Update()
     {
-        if ( GameController.control.displayCue )
+        if ( GameController.control.displayCue  || GameController.control.showCanvasReward )
         {
             cue = GameController.control.rewardType;
             switch (cue)
@@ -57,6 +57,18 @@ public class DisplayRewardCue : MonoBehaviour
                     rewardImage.sprite = pineappleImage;
                     break;
             }
+
+            if (GameController.control.showCanvasReward) 
+            {
+                transform.localScale = new Vector3(2f,2f,2f);
+            }
+            else 
+            {
+                transform.localScale = new Vector3(1f, 1f, 1f);
+            }
+
+
+
             rewardImage.enabled = true;
         }
         else
@@ -66,5 +78,9 @@ public class DisplayRewardCue : MonoBehaviour
     }
 
     // ********************************************************************** //
+
+            
+           
+        
 
 }

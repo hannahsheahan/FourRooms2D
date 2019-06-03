@@ -98,6 +98,7 @@ public class ExperimentConfig
     public float minTimeBetweenMoves;
     public float blankTime;
     public float animationTime;
+    public float preRewardAppearTime;
 
     // Debriefing question and answer data
     public QuestionData[] debriefQuestions;                              // final order of questions we WILL include
@@ -195,9 +196,10 @@ public class ExperimentConfig
         preDisplayCueTime      = 1.5f;    // will take a TR during this period
         displayCueTime         = 2.0f;
         goCueDelay             = 1.5f;    // will take a TR during this period
-        goalHitPauseTime       = 1.0f;    // we will take a TR during this period
+        goalHitPauseTime       = 1.5f;    // we will take a TR during this period
         finalGoalHitPauseTime  = 2.0f;    // we will take a TR during this period (but should be independent of first goal hit time in case we want to jitter)
-        minDwellAtReward       = 0.2f;      
+        minDwellAtReward       = 0.3f;
+        preRewardAppearTime    = 0.5f; // to ensure it's greater than minDwellAtReward, for reasons to do with my poor gameplay-design 
         displayMessageTime     = 1.5f;     
         errorDwellTime         = 1.5f;    // Note: should be at least as long as displayMessageTime
         hallwayFreezeTime      = 5.0f;    // amount of time player is stuck in place with each hallway traversal
@@ -372,7 +374,7 @@ public class ExperimentConfig
 
         if (experimentVersion.Contains("peanut"))
         {
-            rewards[0] = "peanuts";
+            rewards[0] = "peanut";
             rewards[1] = "martini";
         }
         else
