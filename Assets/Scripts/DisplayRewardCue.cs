@@ -16,6 +16,7 @@ public class DisplayRewardCue : MonoBehaviour
     public Sprite peanutImage;
     public Sprite pineappleImage;
     private string cue;
+    private Vector3 originalRewardScale;
 
     // ********************************************************************** //
 
@@ -24,6 +25,7 @@ public class DisplayRewardCue : MonoBehaviour
         //Fetch the Image from the GameObject
         rewardImage = GetComponent<Image>();
         rewardImage.enabled = false;
+        originalRewardScale = transform.localScale;
     }
 
     // ********************************************************************** //
@@ -60,11 +62,11 @@ public class DisplayRewardCue : MonoBehaviour
 
             if (GameController.control.showCanvasReward) 
             {
-                transform.localScale = new Vector3(2f,2f,2f);
+                transform.localScale = 2 * originalRewardScale;
             }
             else 
             {
-                transform.localScale = new Vector3(1f, 1f, 1f);
+                transform.localScale = originalRewardScale;
             }
 
 
