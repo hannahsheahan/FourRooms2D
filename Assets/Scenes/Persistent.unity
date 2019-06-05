@@ -153,6 +153,12 @@ MonoBehaviour:
   presentPositions: []
   numberPresentsPerRoom: 0
   bridgeStates: 
+  playerRoom: 
+  questionData:
+    questionText: 
+    stimulus: 
+    answers: []
+  debriefResponse: 
   starFoundSound: {fileID: 8300000, guid: 52320e590bf774734a288886eba557ba, type: 3}
   goCueSound: {fileID: 8300000, guid: 19f89c6e740e7447f9e12a8310d3e973, type: 3}
   errorSound: {fileID: 8300000, guid: 4b4dd7245f6104c8c8eb07ccf6b386ed, type: 3}
@@ -173,7 +179,12 @@ MonoBehaviour:
   pauseClock: 0
   flashCongratulations: 0
   congratulated: 0
+  animationTime: 0
+  preRewardAppearTime: 0
   blankTime: 0
+  scaleUpReward: 
+  showCanvasReward: 0
+  debriefResponseRecorded: 0
   firstMovementTime: 0
   totalMovementTime: 0
   totalExperimentTime: 0
@@ -183,6 +194,7 @@ MonoBehaviour:
   currentFrozenTime: 0
   displayTimeLeft: 0
   firstFrozenTime: 0
+  debriefResponseTime: 0
   maxMovementTime: 30
   minDwellAtReward: 0
   displayMessageTime: 1.5
@@ -232,8 +244,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 52320e590bf774734a288886eba557ba, type: 3}
-  m_PlayOnAwake: 0
+  m_audioClip: {fileID: 8300000, guid: fdc942ce57590486b88be551882df8e1, type: 3}
+  m_PlayOnAwake: 1
   m_Volume: 0.793
   m_Pitch: 1
   Loop: 0
@@ -481,6 +493,7 @@ MonoBehaviour:
   participantGenderSet: 0
   participantFeedbackGiven: 0
   participantFeedbackSubmitted: 0
+  questionAnswered: 0
   stringDateTime: 
   filePath: 
   fileName: 

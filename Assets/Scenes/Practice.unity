@@ -1722,6 +1722,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2792722533879230940, guid: ce101b343293d4430981092e9a584736,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2792722533879230940, guid: ce101b343293d4430981092e9a584736,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 2792722533879230912, guid: ce101b343293d4430981092e9a584736,
         type: 3}
       propertyPath: rewardIndex
@@ -7897,6 +7907,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2792722533879230940, guid: ce101b343293d4430981092e9a584736,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2792722533879230940, guid: ce101b343293d4430981092e9a584736,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5677791693938289440, guid: ce101b343293d4430981092e9a584736,
         type: 3}
