@@ -402,7 +402,7 @@ public class DataController : MonoBehaviour {
         if (participantFeedbackGiven) 
         { 
             SaveData();
-
+            gameData.totalExperimentTime = GameController.control.totalExperimentTime;
             participantFeedbackSubmitted = true;
         }
     }

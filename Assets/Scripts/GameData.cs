@@ -17,6 +17,7 @@ public class GameData
     public float dataRecordFrequency;
     public float restbreakDuration;
     public float getReadyDuration;
+    public float totalExperimentTime;
 
     public List<int> trialList = new List<int>();
 

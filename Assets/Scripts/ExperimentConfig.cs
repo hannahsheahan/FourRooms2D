@@ -118,8 +118,8 @@ public class ExperimentConfig
         // Experiments with training blocked by context
 
         //experimentVersion = "mturk2D_cheesewine";     // ***HRS note that if you do wacky colours youll have to change the debrief question text which mentions room colours
-        //experimentVersion = "mturk2D_peanutmartini";
-        experimentVersion = "mturk2D_cheesewine_wackycolours";  
+        experimentVersion = "mturk2D_peanutmartini";
+        //experimentVersion = "mturk2D_cheesewine_wackycolours";  
         //experimentVersion = "mturk2D_peanutmartini_wackycolours";
         //experimentVersion = "micro2D_debug"; 
 
@@ -130,7 +130,7 @@ public class ExperimentConfig
         switch (experimentVersion)
         {
             case "mturk2D_cheesewine":       // ----Full 4 block learning experiment-----
-                nDebreifQuestions = 8; 
+                nDebreifQuestions = 0; 
                 practiceTrials = 2 + getReadyTrial;
                 totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
@@ -139,7 +139,7 @@ public class ExperimentConfig
                 break;
             
             case "mturk2D_cheesewine_wackycolours":       // ----Full 4 block learning experiment-----
-                nDebreifQuestions = 8; 
+                nDebreifQuestions = 0; 
                 practiceTrials = 2 + getReadyTrial;
                 totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
@@ -149,16 +149,16 @@ public class ExperimentConfig
                 break;
 
             case "mturk2D_peanutmartini":       // ----Full 4 block learning experiment-----
-                nDebreifQuestions = 8;
+                nDebreifQuestions = 0;
                 practiceTrials = 2 + getReadyTrial;
                 totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
-                transferCounterbalance = false;
+                transferCounterbalance = true;
                 break;
 
             case "mturk2D_peanutmartini_wackycolours":       // ----Full 4 block learning experiment-----
-                nDebreifQuestions = 8;
+                nDebreifQuestions = 0;
                 practiceTrials = 2 + getReadyTrial;
                 totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
@@ -168,9 +168,9 @@ public class ExperimentConfig
                 break;
 
             case "micro2D_debug":            // ----Mini debugging test experiment-----
-                nDebreifQuestions = 8;
+                nDebreifQuestions = 0;
                 practiceTrials = 0 + getReadyTrial;
-                nExecutedTrials = 3;                                         // note that this is only used for the micro_debug version
+                nExecutedTrials = 1;                                         // note that this is only used for the micro_debug version
                 totalTrials = nExecutedTrials + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 4 + restbreakOffset;                            // Take a rest after this many normal trials
                 restbreakDuration = 5.0f;                                       // how long are the imposed rest breaks?
@@ -486,6 +486,10 @@ public class ExperimentConfig
         questiondata.answers[1 - answerOrder].answerText = (!transferCounterbalance) ? rooms[0] : rooms[2];  // incorrect
         questiondata.answers[answerOrder].isCorrect = true;
         allQuestions.Add(questiondata);
+
+        // ----------------------------------
+
+
 
 
         // Shuffle the question order
@@ -1051,7 +1055,7 @@ public class ExperimentConfig
 
         switch (context)
         {
-            case "cheese":
+            case "cheese":   // vertical
                    
                 if (contextSide==1)
                 {
@@ -1065,7 +1069,7 @@ public class ExperimentConfig
                 }
                 break;
 
-            case "wine":
+            case "wine":   // horizontal
 
                 if (contextSide == 1)
                 {
