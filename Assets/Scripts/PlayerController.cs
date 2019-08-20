@@ -38,7 +38,8 @@ public class PlayerController : MovingObject
     {
         horizontal = (int) (Input.GetAxisRaw("Horizontal"));
         vertical = (int) (Input.GetAxisRaw("Vertical"));
-        jump = (int)(Input.GetAxisRaw("Jump"));
+        //jump = (int)(Input.GetAxisRaw("Jump"));
+        jump = 0;   // remove jump control for this version of the experiment
 
         // prevent player from moving diagonally
         if (horizontal != 0) 
@@ -113,7 +114,8 @@ public class PlayerController : MovingObject
         if (other.tag == "boulder") 
         {
             //Debug.Log("You just hit a boulder! Yay!");
-            GameController.control.OpenBoxQuestion(true);
+            // GameController.control.OpenBoxQuestion(true); // Ask player to confirm if they want to open the box (space bar)
+            GameController.control.OpenBox();                // Just make the opening sound
         }
         else if (other.tag == "reward") 
         {
@@ -135,6 +137,8 @@ public class PlayerController : MovingObject
     {
         if (other.tag == "boulder")
         {
+            // If we want player to 'jump' (space bar) to open box
+            /*
             if (jumpingNow) 
             {
                 GameController.control.LiftingBoulder();                // transition the state machine
@@ -143,6 +147,13 @@ public class PlayerController : MovingObject
                 GameController.control.RecordGiftStates();              // save a timestamp and the gift states
                 other.gameObject.SetActive(false);
             }
+            */
+            // If we want player to open box on contact
+            GameController.control.LiftingBoulder();                // transition the state machine
+            GameController.control.giftWrapState[other.gameObject.GetComponent<PresentRevealScript>().presentIndex] = 0; // effectively a bool, but shorter to write as string to file 
+            GameController.control.RecordGiftStates();              // save a timestamp and the gift states
+            other.gameObject.SetActive(false);
+
         }
     }
 

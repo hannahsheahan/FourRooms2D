@@ -195,9 +195,9 @@ public class ExperimentConfig
         preDisplayCueTime      = 1.5f;    // will take a TR during this period
         displayCueTime         = 2.0f;
         goCueDelay             = 1.5f;    // will take a TR during this period
-        goalHitPauseTime       = 1.0f;    // we will take a TR during this period
+        goalHitPauseTime       = 0.5f;    // we will take a TR during this period
         finalGoalHitPauseTime  = 2.0f;    // we will take a TR during this period (but should be independent of first goal hit time in case we want to jitter)
-        minDwellAtReward       = 0.3f;
+        minDwellAtReward       = 0.2f;
         preRewardAppearTime    = 0.3f;    
         displayMessageTime     = 1.5f;     
         errorDwellTime         = 1.5f;    // Note: should be at least as long as displayMessageTime
@@ -205,7 +205,7 @@ public class ExperimentConfig
         preFreezeTime          = 0.3f;    // should be about the same, maybe slightly longer than oneSquareMoveTime
         blankTime              = 2.0f;    // Note: ***HRS should be jittered (blank screen time prior to trial starting)
         animationTime          = 1.0f;    // how long the reward grows for when it appears (mainly for visuals)
-        numberPresentsPerRoom  = 1;       // HRS new
+        numberPresentsPerRoom  = 1;       //
 
        // physical movement times
         oneSquareMoveTime = 0.1f;         // Time it will take player to move from one square to next (sec)
