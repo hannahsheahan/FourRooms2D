@@ -151,7 +151,9 @@ public class PlayerController : MovingObject
             // If we want player to open box on contact
             GameController.control.LiftingBoulder();                // transition the state machine
             GameController.control.giftWrapState[other.gameObject.GetComponent<PresentRevealScript>().presentIndex] = 0; // effectively a bool, but shorter to write as string to file 
+            GameController.control.SwitchControlState(); 
             GameController.control.RecordGiftStates();              // save a timestamp and the gift states
+            GameController.control.RecordControlStates();           // save a timestamp and the control states
             other.gameObject.SetActive(false);
 
         }

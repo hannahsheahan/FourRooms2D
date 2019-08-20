@@ -185,6 +185,7 @@ public class DataController : MonoBehaviour {
             gameData.allTrialData[trial].rewardPositions = config.GetRewardStartPositions(trial);
             gameData.allTrialData[trial].presentPositions = config.presentPositions[trial];
             gameData.allTrialData[trial].bridgeStates = config.bridgeStates[trial];
+            gameData.allTrialData[trial].controlStateOrder = config.controlStateOrder[trial];
 
             // Rewards
             gameData.allTrialData[trial].rewardType = config.GetRewardType(trial);
@@ -333,6 +334,16 @@ public class DataController : MonoBehaviour {
             for (var i = 0; i < stringLength; i++)
             {
                 gameData.allTrialData[currentTrialNumber].giftWrapStateTransitions.Add(trackedGiftWrapStateData[i]);
+            }
+
+            // Add in the control state transition data
+            List<string> trackedControlStateData = new List<string>(); // We stop collecting data here, just it case it keeps incrementing with another timestep
+            trackedControlStateData = GameController.control.controlStateTransitions;
+
+            stringLength = trackedControlStateData.Count;
+            for (var i = 0; i < stringLength; i++)
+            {
+                gameData.allTrialData[currentTrialNumber].controlStateTransitions.Add(trackedControlStateData[i]);
             }
 
             // Add in the player tracking data

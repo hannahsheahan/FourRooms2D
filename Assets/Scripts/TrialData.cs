@@ -30,6 +30,7 @@ public class TrialData
     public Vector3 playerSpawnOrientation;
     public Vector3[] rewardPositions;
     public Vector3[] presentPositions;
+    public string[] controlStateOrder;
 
     // trial event times
     public float maxMovementTime;
@@ -67,5 +68,6 @@ public class TrialData
     public List<string> stateTransitions = new List<string>();
     public List<string> timeStepTrackingData = new List<string>();
     public List<string> giftWrapStateTransitions = new List<string>();
+    public List<string> controlStateTransitions = new List<string>();
 
 }

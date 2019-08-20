@@ -165,10 +165,20 @@ public class GameController : MonoBehaviour
     public const int STATE_EXIT = 22;
     public const int STATE_MAX = 23;
 
+    // Computer/human control states
+    public const string CONTROL_HUMAN = "Human";
+    public const string CONTROL_COMPUTER = "Computer";
+
     private string[] stateText = new string[] { "StartScreen", "Setup", "BlankScreen", "StartTrial", "GoalAppear", "Delay", "Go", "Moving1", "ShowReward", "FirstGoalHit", "Moving2", "FinalGoalHit", "Finish", "NextTrial", "InterTrial", "Timeout", "Error", "Rest", "GetReady", "Pause", "HallwayFreeze", "Debrief", "Exit", "Max" };
     public int State;
     public int previousState;     // Note that this currently is not thoroughly used - currently only used for transitioning back from the STATE_HALLFREEZE to the previous gameplay
     public List<string> stateTransitions = new List<string>();   // recorded state transitions (in sync with the player data)
+
+    public string controlState;
+    public int controlStateIndex = 0;
+    public string[] controlStateOrder;                      // specified transition pattern for control (e.g. human -> computer)
+    public string previousControlState;        
+    public List<string> controlStateTransitions = new List<string>();   // recorded control-state transitions (in sync with the player data)
 
     public bool playersTurn;      // for moving in discrete steps on a 2D grid
 
@@ -226,6 +236,10 @@ public class GameController : MonoBehaviour
         // Initialise giftwrap states
         giftWrapState = new int[4 * dataController.numberPresentsPerRoom];
         giftWrapStateTransitions.Clear();
+
+        // Initialise control states
+        controlState = CONTROL_HUMAN;
+        controlStateTransitions.Clear();
 
         // Ensure cue images are off
         displayCue = false;
@@ -315,6 +329,9 @@ public class GameController : MonoBehaviour
                 // Position the camera ready for the upcoming scene
                 MoveCamera(playerSpawnLocation);
 
+                // Set the control configuration (human/computer)
+                controlState = controlStateOrder[0];
+
                 StartRecording();
 
                 if (stateTimer.ElapsedSeconds() > blankTime) // Note: this can be a different blankTime per trial etc once we jitter in ExperimentConfig
@@ -375,22 +392,26 @@ public class GameController : MonoBehaviour
 
             case STATE_MOVING1:
 
-                if (!Player.GetComponent<PlayerController>().enabled)
-                {
-                    Player.GetComponent<PlayerController>().enabled = true; // let the player move again
-                }
+                if ( (controlState == CONTROL_HUMAN) || (controlState == CONTROL_COMPUTER))
+                { 
 
-                if (movementTimer.ElapsedSeconds() > maxMovementTime)  // the trial should timeout
-                {
-                    StateNext(STATE_TIMEOUT);
-                }
+                    if (!Player.GetComponent<PlayerController>().enabled)
+                    {
+                        Player.GetComponent<PlayerController>().enabled = true; // let the player move again
+                    }
 
-                if (boulderLifted) 
-                {
-                    Debug.Log("Boulder lifted now.");
-                    previousState = State;
-                    movementTime = movementTimer.ElapsedSeconds();
-                    StateNext(STATE_SHOWREWARD);  // go to blank screen
+                    if (movementTimer.ElapsedSeconds() > maxMovementTime)  // the trial should timeout
+                    {
+                        StateNext(STATE_TIMEOUT);
+                    }
+
+                    if (boulderLifted) 
+                    {
+                        Debug.Log("Boulder lifted now.");
+                        previousState = State;
+                        movementTime = movementTimer.ElapsedSeconds();
+                        StateNext(STATE_SHOWREWARD);  // go to blank screen
+                    }
                 }
                 break;
 
@@ -471,24 +492,26 @@ public class GameController : MonoBehaviour
 
             case STATE_MOVING2:
 
-                if (!Player.GetComponent<PlayerController>().enabled)
+                if ((controlState == CONTROL_HUMAN) || (controlState == CONTROL_COMPUTER))
                 {
-                    Player.GetComponent<PlayerController>().enabled = true; // let the player move again
-                }
+                    if (!Player.GetComponent<PlayerController>().enabled)
+                    {
+                        Player.GetComponent<PlayerController>().enabled = true; // let the player move again
+                    }
 
-                if (movementTimer.ElapsedSeconds() > maxMovementTime)  // the trial should timeout
-                {
-                    StateNext(STATE_TIMEOUT);
-                }
+                    if (movementTimer.ElapsedSeconds() > maxMovementTime)  // the trial should timeout
+                    {
+                        StateNext(STATE_TIMEOUT);
+                    }
 
-                if (boulderLifted)
-                {
-                    Debug.Log("Boulder lifted now.");
-                    previousState = State;
-                    movementTime = movementTimer.ElapsedSeconds();
-                    StateNext(STATE_SHOWREWARD);  // go to blank screen
+                    if (boulderLifted)
+                    {
+                        Debug.Log("Boulder lifted now.");
+                        previousState = State;
+                        movementTime = movementTimer.ElapsedSeconds();
+                        StateNext(STATE_SHOWREWARD);  // go to blank screen
+                    }
                 }
-
                 break;
 
             case STATE_STAR2FOUND:
@@ -695,6 +718,7 @@ public class GameController : MonoBehaviour
         debriefResponse = "";
         debriefResponseTime = 0f;
         showCanvasReward = false;
+        controlStateIndex = 0;
 
         for (int i = 0; i < scaleUpReward.Length; i++)
         {
@@ -714,7 +738,7 @@ public class GameController : MonoBehaviour
         freeForage = currentTrialData.freeForage;
         bridgeStates = currentTrialData.bridgeStates;
         questionData = currentTrialData.debriefQuestion;
-
+        controlStateOrder = currentTrialData.controlStateOrder;
 
         // Deal with the free-foraging multi-reward case, (HRS can make elegant later)
         rewardsRemaining = 1;           // default
@@ -789,6 +813,12 @@ public class GameController : MonoBehaviour
             giftWrapStateTransitions.Add("Wrapping State");
             giftWrapState = Enumerable.Repeat(1, giftWrapState.Length).ToArray();
             RecordGiftStates();
+
+            // Track the control states whenever a change in human/computer control in made
+            controlStateTransitions.Clear();
+            controlStateTransitions.Add("Control State");
+            RecordControlStates();
+
         }
     }
 
@@ -939,6 +969,17 @@ public class GameController : MonoBehaviour
 
     // ********************************************************************** //
 
+    public void SwitchControlState() 
+    {
+        // allow our incremented control state index to wrap around the control order array
+        controlStateIndex = (controlStateIndex+1 + controlStateOrder.Length) % controlStateOrder.Length;
+        controlState = controlStateOrder[controlStateIndex];
+        Debug.Log("Switching control state to: " + controlState);
+
+    }
+
+    // ********************************************************************** //
+
     private void RecordFSMState()
     {
         // add the current stateof the gameplay at this moment to the array
@@ -956,6 +997,16 @@ public class GameController : MonoBehaviour
             giftWrapStateString = giftWrapStateString + " " + giftWrapState[i].ToString();
         }
         giftWrapStateTransitions.Add(giftWrapStateString);
+    }
+
+    // ********************************************************************** //
+
+    public void RecordControlStates()
+    {
+        // add the current state of the human/computer control to a list
+        string controlStateString = string.Format("{0:0.00}", Time.time);    // timestamp the state array with same timer as the positional tracking data
+        controlStateString = controlStateString + " " + controlState;
+        controlStateTransitions.Add(controlStateString);
     }
 
     // ********************************************************************** //

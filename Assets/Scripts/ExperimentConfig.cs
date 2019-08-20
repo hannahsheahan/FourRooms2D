@@ -38,6 +38,9 @@ public class ExperimentConfig
     private float rewardZposition;
     public bool[][] bridgeStates;                   // whether the 4 different bridges are ON (active) or OFF (a hole in the floor)
 
+    // Control state ordering (human/computer)
+    public string[][] controlStateOrder;
+
     // Positions and orientations
     private Vector3 mazeCentre;
     private Vector3[] possiblePlayerPositions;
@@ -233,6 +236,7 @@ public class ExperimentConfig
         presentPositions = new Vector3[totalTrials][];
         maxMovementTime = new float[totalTrials];
         bridgeStates = new bool[totalTrials][];
+        controlStateOrder = new string[totalTrials][];
 
         // make space for the debriefing questions and answers at the end
         debriefQuestions = new QuestionData[totalTrials];
@@ -818,6 +822,21 @@ public class ExperimentConfig
 
     // ********************************************************************** //
 
+    private void GenerateControlOrder(int trial)
+    {
+        // For now set this to be human-human control. Later we will have:
+        // H-H
+        // C-C
+        // H-C
+        // C-H
+        // And this will be balanced appropriately across trials
+
+        // presents can be at any position in the room now
+        controlStateOrder[trial] = new string[2] { "Human", "Computer" };
+    }
+
+    // ********************************************************************** //
+
     private Vector3 findStartOrientation(Vector3 position)     {
         /*
         // Generate a starting orientation that always makes the player look towards the centre of the environment
@@ -1214,6 +1233,9 @@ public class ExperimentConfig
 
             // generate the random locations for the presents in each room
             GeneratePresentPositions(trial, trialInBlock, freeForageFLAG);
+
+            // generate and order for the control states (human/computer)
+            GenerateControlOrder(trial);
 
             if (freeForageFLAG) 
             {
