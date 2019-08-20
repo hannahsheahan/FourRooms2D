@@ -401,7 +401,7 @@ public class GameController : MonoBehaviour
                 if (stateTimer.ElapsedSeconds() > minDwellAtReward)  // Note: this is just a proxy for waiting a bit prior to moving to blank screen
                 {
                     // turn screen blank
-                    blankScreen = true;
+                    //blankScreen = true;
 
                     if (stateTimer.ElapsedSeconds() > (minDwellAtReward + preRewardAppearTime))
                     {
@@ -437,7 +437,7 @@ public class GameController : MonoBehaviour
                                 // there was no reward, so go back to previous moving state
                                 StateNext(previousState);
                             }
-                            blankScreen = false;
+                            //blankScreen = false;
                             showCanvasReward = false;
                         }
                     }
