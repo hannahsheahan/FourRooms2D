@@ -2866,7 +2866,7 @@ PrefabInstance:
     - target: {fileID: 8120102747300485704, guid: 5bc63b27fcfda46eaa41b9ffe7c62b54,
         type: 3}
       propertyPath: presentIndex
-      value: 4
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3501078222836690727, guid: 5bc63b27fcfda46eaa41b9ffe7c62b54,
         type: 3}
@@ -3696,7 +3696,7 @@ PrefabInstance:
     - target: {fileID: 8120102747300485704, guid: 5bc63b27fcfda46eaa41b9ffe7c62b54,
         type: 3}
       propertyPath: presentIndex
-      value: 8
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3501078222836690727, guid: 5bc63b27fcfda46eaa41b9ffe7c62b54,
         type: 3}
@@ -3977,7 +3977,7 @@ PrefabInstance:
     - target: {fileID: 8120102747300485704, guid: 5bc63b27fcfda46eaa41b9ffe7c62b54,
         type: 3}
       propertyPath: presentIndex
-      value: 12
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3501078222836690727, guid: 5bc63b27fcfda46eaa41b9ffe7c62b54,
         type: 3}
@@ -5199,28 +5199,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   reward: {fileID: 1316469269}
---- !u!1 &1861774296 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6219392713695014253, guid: 5bc63b27fcfda46eaa41b9ffe7c62b54,
-    type: 3}
-  m_PrefabInstance: {fileID: 6219392713377043699}
-  m_PrefabAsset: {fileID: 0}
---- !u!58 &1861774299
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1861774296}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.4
 --- !u!1 &1979681063
 GameObject:
   m_ObjectHideFlags: 0

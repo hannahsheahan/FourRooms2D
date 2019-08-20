@@ -205,11 +205,11 @@ public class ExperimentConfig
         preFreezeTime          = 0.3f;    // should be about the same, maybe slightly longer than oneSquareMoveTime
         blankTime              = 2.0f;    // Note: ***HRS should be jittered (blank screen time prior to trial starting)
         animationTime          = 1.0f;    // how long the reward grows for when it appears (mainly for visuals)
-        numberPresentsPerRoom  = 4;
+        numberPresentsPerRoom  = 1;       // HRS new
 
        // physical movement times
-        oneSquareMoveTime = 0.2f;                 // Time it will take player to move from one square to next (sec)
-        minTimeBetweenMoves = 0.35f;               // How much time between each allowable move (from movement trigger) (sec)
+        oneSquareMoveTime = 0.1f;         // Time it will take player to move from one square to next (sec)
+        minTimeBetweenMoves = 0.15f;      // How much time between each allowable move (from movement trigger) (sec) (must be greater than oneSquareMoveTime or position moves off board - weird exception)
 
         // These variables define the environment (are less likely to be played with)
         roomSize = 4;              // rooms are each 4x4 grids. If this changes, you will need to change this code
@@ -567,6 +567,31 @@ public class ExperimentConfig
 
     // ********************************************************************** //
 
+    private Vector3[] ChooseSingleCornerPresentPosition(Vector3[] roomPositions)
+    {
+        Vector3[] positionInRoom = new Vector3[1];
+        Vector3 possiblePosition = new Vector3();
+
+        // generate a single present position from the vector (the one in the furthest corner)
+        possiblePosition = roomPositions[0];
+        for (int i=0; i < roomPositions.Length; i++) {
+
+            // the way our room positions are designed we always want the square with x,y = [4|-4,4|-4]
+            if (possiblePosition.x < Math.Abs(roomPositions[i].x))
+            {
+                possiblePosition.x = roomPositions[i].x;
+            }
+            if (possiblePosition.y < Math.Abs(roomPositions[i].y))
+            {
+                possiblePosition.y = roomPositions[i].y;
+            }
+        }
+        positionInRoom[0] = possiblePosition;
+        return positionInRoom;
+    }
+
+    // ********************************************************************** //
+
     private Vector3[] ChooseNUnoccupiedPresentPositions(int trial, int nPresents, Vector3[] roomPositions)
     {
         Vector3[] positionsInRoom = new Vector3[nPresents];
@@ -687,10 +712,19 @@ public class ExperimentConfig
         }
         // select reward positions based on ones that have not yet been occupied
         // ...but if there isn't a space in the room that hasnt been occupied, just spawn wherever in the room
+        /*
         greenPresentPositions = ChooseNUnoccupiedPresentPositions(trial, numberPresentsPerRoom, greenRoomPositions);
         redPresentPositions = ChooseNUnoccupiedPresentPositions(trial, numberPresentsPerRoom, redRoomPositions);
         yellowPresentPositions = ChooseNUnoccupiedPresentPositions(trial, numberPresentsPerRoom, yellowRoomPositions);
         bluePresentPositions = ChooseNUnoccupiedPresentPositions(trial, numberPresentsPerRoom, blueRoomPositions);
+        */
+
+        // HRS for having a single consistent present position per room
+        greenPresentPositions = ChooseSingleCornerPresentPosition(greenRoomPositions);
+        redPresentPositions = ChooseSingleCornerPresentPosition(redRoomPositions);
+        yellowPresentPositions = ChooseSingleCornerPresentPosition(yellowRoomPositions);
+        bluePresentPositions = ChooseSingleCornerPresentPosition(blueRoomPositions);
+
 
         // concatenate all the positions of generated presents 
         greenPresentPositions.CopyTo(presentPositions[trial], 0);
