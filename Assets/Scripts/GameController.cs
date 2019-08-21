@@ -177,7 +177,7 @@ public class GameController : MonoBehaviour
     public string controlState;
     public int controlStateIndex = 0;
     public string[] controlStateOrder;                      // specified transition pattern for control (e.g. human -> computer)
-    public string previousControlState;        
+    public string previousControlState;
     public List<string> controlStateTransitions = new List<string>();   // recorded control-state transitions (in sync with the player data)
 
     public bool playersTurn;      // for moving in discrete steps on a 2D grid
@@ -392,26 +392,22 @@ public class GameController : MonoBehaviour
 
             case STATE_MOVING1:
 
-                if ( (controlState == CONTROL_HUMAN) || (controlState == CONTROL_COMPUTER))
-                { 
+                if (!Player.GetComponent<PlayerController>().enabled)
+                {
+                    Player.GetComponent<PlayerController>().enabled = true; // let the player move again
+                }
 
-                    if (!Player.GetComponent<PlayerController>().enabled)
-                    {
-                        Player.GetComponent<PlayerController>().enabled = true; // let the player move again
-                    }
+                if (movementTimer.ElapsedSeconds() > maxMovementTime)  // the trial should timeout
+                {
+                    StateNext(STATE_TIMEOUT);
+                }
 
-                    if (movementTimer.ElapsedSeconds() > maxMovementTime)  // the trial should timeout
-                    {
-                        StateNext(STATE_TIMEOUT);
-                    }
-
-                    if (boulderLifted) 
-                    {
-                        Debug.Log("Boulder lifted now.");
-                        previousState = State;
-                        movementTime = movementTimer.ElapsedSeconds();
-                        StateNext(STATE_SHOWREWARD);  // go to blank screen
-                    }
+                if (boulderLifted) 
+                {
+                    Debug.Log("Boulder lifted now.");
+                    previousState = State;
+                    movementTime = movementTimer.ElapsedSeconds();
+                    StateNext(STATE_SHOWREWARD);  // go to blank screen
                 }
                 break;
 
@@ -492,26 +488,24 @@ public class GameController : MonoBehaviour
 
             case STATE_MOVING2:
 
-                if ((controlState == CONTROL_HUMAN) || (controlState == CONTROL_COMPUTER))
+                if (!Player.GetComponent<PlayerController>().enabled)
                 {
-                    if (!Player.GetComponent<PlayerController>().enabled)
-                    {
-                        Player.GetComponent<PlayerController>().enabled = true; // let the player move again
-                    }
-
-                    if (movementTimer.ElapsedSeconds() > maxMovementTime)  // the trial should timeout
-                    {
-                        StateNext(STATE_TIMEOUT);
-                    }
-
-                    if (boulderLifted)
-                    {
-                        Debug.Log("Boulder lifted now.");
-                        previousState = State;
-                        movementTime = movementTimer.ElapsedSeconds();
-                        StateNext(STATE_SHOWREWARD);  // go to blank screen
-                    }
+                    Player.GetComponent<PlayerController>().enabled = true; // let the player move again
                 }
+
+                if (movementTimer.ElapsedSeconds() > maxMovementTime)  // the trial should timeout
+                {
+                    StateNext(STATE_TIMEOUT);
+                }
+
+                if (boulderLifted)
+                {
+                    Debug.Log("Boulder lifted now.");
+                    previousState = State;
+                    movementTime = movementTimer.ElapsedSeconds();
+                    StateNext(STATE_SHOWREWARD);  // go to blank screen
+                }
+            
                 break;
 
             case STATE_STAR2FOUND:
@@ -975,7 +969,6 @@ public class GameController : MonoBehaviour
         controlStateIndex = (controlStateIndex+1 + controlStateOrder.Length) % controlStateOrder.Length;
         controlState = controlStateOrder[controlStateIndex];
         Debug.Log("Switching control state to: " + controlState);
-
     }
 
     // ********************************************************************** //
@@ -1077,6 +1070,7 @@ public class GameController : MonoBehaviour
                 break;
 
         }
+
     }
 
     // ********************************************************************** //

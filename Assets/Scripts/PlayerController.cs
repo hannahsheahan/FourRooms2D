@@ -11,15 +11,20 @@ public class PlayerController : MovingObject
 
     private Animator animator;
     private Timer playerControllerTimer;     // use this to discretize movement input
+    private Vector2 currentPlayerPosition;
+    private Vector2 goalPosition;
     private float minTimeBetweenMoves;
     private string animateHow;
     private bool jumpingNow = false;
 
-    // control input values
+    // human control input values
     private int horizontal = 0;
     private int vertical = 0;
-    private int jump = 0;
-    
+    private int jump = 0;                // currently disabled
+
+    // computer control input values
+    private int[] shortestStep;
+
     // ********************************************************************** //
     //Start overrides the Start function of MovingObject
     protected override void Start()
@@ -27,7 +32,8 @@ public class PlayerController : MovingObject
         animator = GetComponent<Animator>();
         playerControllerTimer = new Timer();
         playerControllerTimer.Reset();
-        minTimeBetweenMoves = GameController.control.minTimeBetweenMoves; 
+        minTimeBetweenMoves = GameController.control.minTimeBetweenMoves;
+        goalPosition = new Vector2();
 
         base.Start(); // trigger the Start function from the MovingObject parent class
     }
@@ -36,19 +42,54 @@ public class PlayerController : MovingObject
 
     void Update()
     {
-        horizontal = (int) (Input.GetAxisRaw("Horizontal"));
-        vertical = (int) (Input.GetAxisRaw("Vertical"));
-        //jump = (int)(Input.GetAxisRaw("Jump"));
-        jump = 0;   // remove jump control for this version of the experiment
+        jump = 0;   // disabling jump control
 
-        // prevent player from moving diagonally
-        if (horizontal != 0) 
-        { 
-            vertical = 0;
+        switch (GameController.control.controlState)
+        {
+            case GameController.CONTROL_HUMAN:
+                // Get the control input from the keyboard/human player
+
+                horizontal = (int)(Input.GetAxisRaw("Horizontal"));
+                vertical = (int)(Input.GetAxisRaw("Vertical"));
+                //jump = (int)(Input.GetAxisRaw("Jump"));   // disabling jump control
+
+                // prevent player from moving diagonally
+                if (horizontal != 0)
+                {
+                    vertical = 0;
+                }
+
+                break;
+
+            case GameController.CONTROL_COMPUTER:
+                // Once we have a goal in mind, consider our current player state, 
+                // and implement the single allowable control move that takes us closer to our goal
+                horizontal = 0;
+                vertical = 0;    // currently just stay still in computer mode.
+
+                currentPlayerPosition = transform.position;
+                //Debug.Log("currentPlayerPosition: " + currentPlayerPosition.x + ", " + currentPlayerPosition.y);
+
+                goalPosition = new Vector2(1, 1);
+
+                // Take our current position and our goal position, and execute a shortest allowable path move towards the goal.
+                shortestStep = TakeOneStepToGoal(currentPlayerPosition, goalPosition);
+                horizontal = shortestStep[0];
+                vertical = shortestStep[1];
+
+                break;
+
+            default:
+                Debug.Log("ERROR: Control state not specified, avatar will not be controllable.");
+                horizontal = 0;
+                vertical = 0;
+
+                break;
         }
 
+
         //prevent player from jumping at same time as moving
-        if (jump != 0) 
+        if (jump != 0)
         {
             horizontal = 0;
             vertical = 0;
@@ -63,12 +104,12 @@ public class PlayerController : MovingObject
         }
 
         // if we are attempting to move, check that we can actually move there
-        if ((horizontal != 0) || (vertical != 0)) 
+        if ((horizontal != 0) || (vertical != 0))
         {
             if (playerControllerTimer.ElapsedSeconds() >= minTimeBetweenMoves)
             {
                 jumpingNow = false;
-                animateHow = (horizontal+1 <= 0) ? "left" : "right";
+                animateHow = (horizontal + 1 <= 0) ? "left" : "right";
                 AnimateNow();
                 playerControllerTimer.Reset();
                 AttemptMove<Wall>(horizontal, vertical);
@@ -78,7 +119,7 @@ public class PlayerController : MovingObject
 
     // ********************************************************************** //
 
-    private void AnimateNow() 
+    private void AnimateNow()
     {
         // Start the appropriate player animation
         switch (animateHow)
@@ -100,7 +141,7 @@ public class PlayerController : MovingObject
 
     // ********************************************************************** //
     // OnCantMove currently doesnt do anything and I dont think we care but its a good placeholder. We just dont want to move off the grid
-    protected override void OnCantMove <T> (T component) 
+    protected override void OnCantMove<T>(T component)
     {
         Wall hitWall = component as Wall; // cast component that we hit as a Wall
         // do nothing
@@ -109,23 +150,23 @@ public class PlayerController : MovingObject
 
     // ********************************************************************** //
 
-    private void OnTriggerEnter2D (Collider2D other) 
-    { 
-        if (other.tag == "boulder") 
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.tag == "boulder")
         {
             //Debug.Log("You just hit a boulder! Yay!");
             // GameController.control.OpenBoxQuestion(true); // Ask player to confirm if they want to open the box (space bar)
             GameController.control.OpenBox();                // Just make the opening sound
         }
-        else if (other.tag == "reward") 
+        else if (other.tag == "reward")
         {
             //Debug.Log("You just hit a reward! Yay!");
         }
-        else if (other.tag == "bridge") 
+        else if (other.tag == "bridge")
         {
             //Debug.Log("Passing over a bridge. Woohoo!");
         }
-        else 
+        else
         {
             Debug.Log("You just hit a mystery object");
         }
@@ -151,7 +192,7 @@ public class PlayerController : MovingObject
             // If we want player to open box on contact
             GameController.control.LiftingBoulder();                // transition the state machine
             GameController.control.giftWrapState[other.gameObject.GetComponent<PresentRevealScript>().presentIndex] = 0; // effectively a bool, but shorter to write as string to file 
-            GameController.control.SwitchControlState(); 
+            GameController.control.SwitchControlState();
             GameController.control.RecordGiftStates();              // save a timestamp and the gift states
             GameController.control.RecordControlStates();           // save a timestamp and the control states
             other.gameObject.SetActive(false);
@@ -160,7 +201,8 @@ public class PlayerController : MovingObject
     }
 
     // ********************************************************************** //
-
+    // Only used when player has to press space bar/jump to open box
+    /*
     private void OnTriggerExit2D(Collider2D other)
     {
         if (other.tag == "boulder")
@@ -168,8 +210,20 @@ public class PlayerController : MovingObject
             GameController.control.OpenBoxQuestion(false);
         }
     }
-
+    */
     // ********************************************************************** //
+
+    private int[] TakeOneStepToGoal(Vector2 startPosition, Vector2 endPosition)
+    {
+        // Calculate the shortest allowable path between the start/current position and the desired end position,
+        // then take one step along this path.
+
+        int[] step = new int[2] { -1, 0 };
+
+
+
+        return step;
+    }
 
 
 }
