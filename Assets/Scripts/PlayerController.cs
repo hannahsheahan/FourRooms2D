@@ -25,6 +25,7 @@ public class PlayerController : MovingObject
 
     // computer control input values
     private int[] shortestStep;
+    private bool previousStepHorizontal; 
 
     // ********************************************************************** //
     //Start overrides the Start function of MovingObject
@@ -35,6 +36,7 @@ public class PlayerController : MovingObject
         playerControllerTimer.Reset();
         minTimeBetweenMoves = GameController.control.minTimeBetweenMoves;
         goalPosition = new Vector2();
+        previousStepHorizontal = false;
 
         base.Start(); // trigger the Start function from the MovingObject parent class
     }
@@ -71,12 +73,15 @@ public class PlayerController : MovingObject
                 currentPlayerPosition = transform.position;
                 //Debug.Log("currentPlayerPosition: " + currentPlayerPosition.x + ", " + currentPlayerPosition.y);
 
-                goalPosition = new Vector2(1, 1);
+                goalPosition = new Vector2(2, 1);
 
                 // Take our current position and our goal position, and execute a shortest allowable path move towards the goal.
                 shortestStep = TakeOneStepToGoal(currentPlayerPosition, goalPosition);
                 horizontal = shortestStep[0];
                 vertical = shortestStep[1];
+
+                // remember the direction of our last move so that we move mostly straight
+                previousStepHorizontal = (horizontal != 0); 
 
                 break;
 
@@ -216,26 +221,52 @@ public class PlayerController : MovingObject
 
     private int[] TakeOneStepToGoal(Vector2 startPosition, Vector2 endPosition)
     {
-        // Calculate the shortest allowable path between the start/current position and the desired end position,
-        // then take one step along this path.
-
         int[] step = new int[2] { -1, 0 };
         Vector2 continuousStep = new Vector2();
 
         // get x,y coordinates of the beeline movement direction
         continuousStep = Vector2.MoveTowards(startPosition, endPosition, 1) - startPosition; 
 
-        // we can only take discretised steps in x OR y, so choose the max
+        // Method for moving mostly in straight discrete steps
+        if (Math.Abs(continuousStep.x) < 0.01f) 
+        {
+            step[1] = Math.Sign(continuousStep.y); // move vertically only
+            step[0] = 0;
+        }
+        else if (Math.Abs(continuousStep.y) < 0.01f) 
+        {
+            step[0] = Math.Sign(continuousStep.x); // move horizontally only
+            step[1] = 0;
+        }
+        else // bias our movements to remain in the same direction
+        { 
+            if (previousStepHorizontal) 
+            {
+                step[0] = Math.Sign(continuousStep.x); // move horizontally only
+                step[1] = 0;
+            }
+            else 
+            {
+                step[1] = Math.Sign(continuousStep.y); // move vertically only
+                step[0] = 0;
+            }
+        }
+
+
+        // Method for moving in discrete zig-zag steps every time
+        /*
         if (Math.Abs(continuousStep.x) >= Math.Abs(continuousStep.y))  // break diagonal ties by moving horizontally
         {
             step[0] = Math.Sign(continuousStep.x); // move horizontally only
             step[1] = 0;
         }
-        else 
+        else if (Math.Abs(continuousStep.x) < Math.Abs(continuousStep.y))
         {
             step[1] = Math.Sign(continuousStep.y); // move vertically only
             step[0] = 0;
         }
+        */
+
         return step;
     }
 
