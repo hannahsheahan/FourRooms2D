@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -219,11 +220,26 @@ public class PlayerController : MovingObject
         // then take one step along this path.
 
         int[] step = new int[2] { -1, 0 };
+        Vector2 continuousStep = new Vector2();
 
+        // get x,y coordinates of the beeline movement direction
+        continuousStep = Vector2.MoveTowards(startPosition, endPosition, 1) - startPosition; 
 
-
+        // we can only take discretised steps in x OR y, so choose the max
+        if (Math.Abs(continuousStep.x) >= Math.Abs(continuousStep.y))  // break diagonal ties by moving horizontally
+        {
+            step[0] = Math.Sign(continuousStep.x); // move horizontally only
+            step[1] = 0;
+        }
+        else 
+        {
+            step[1] = Math.Sign(continuousStep.y); // move vertically only
+            step[0] = 0;
+        }
         return step;
     }
+
+    // ********************************************************************** //
 
 
 }
