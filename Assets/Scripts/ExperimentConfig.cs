@@ -832,7 +832,7 @@ public class ExperimentConfig
         // H-C
         // C-H
         // And this will be balanced appropriately across trials
-        controlStateOrder[trial] = new string[2] { "Human", "Computer" };
+        controlStateOrder[trial] = new string[2] { "Computer", "Human" };
 
         // whether the agent chooses the closest correct or incorrect box (after searching in the first room)
         computerAgentCorrect[trial] = true;
