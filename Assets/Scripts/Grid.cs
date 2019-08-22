@@ -44,18 +44,34 @@ public class Grid : MonoBehaviour
             for (int y = 0; y < gridSizeY; y++) 
             {
                 Vector3 worldPoint = bottomLeft + Vector3.right * (x * nodeDiameter + nodeRadius) + Vector3.up * (y * nodeDiameter + nodeRadius);
-                bool Wall = false;
+                bool Wall = true;
 
-                // check if this is a walkable node
+                // check if this is a walkable node (if there is a collision this statement returns false)
                 if (Physics.CheckSphere(worldPoint, nodeRadius, wallMask)) 
                 {
-                    Wall = true;
+                    Wall = false;
                     Debug.Log("something should be turning yellow");
                 }
 
                 grid[x, y] = new Node(Wall, worldPoint, x, y);
             }
         }
+    }
+
+    // ********************************************************************** //
+
+    public Node NodeFromWorldPosition(Vector3 a_worldPosition) 
+    { 
+        float xpoint = ((a_worldPosition.x + gridWorldSize.x / 2) / gridWorldSize.x);
+        float ypoint = ((a_worldPosition.y + gridWorldSize.y / 2) / gridWorldSize.y);
+
+        xpoint = Mathf.Clamp01(xpoint);
+        ypoint = Mathf.Clamp01(ypoint);
+
+        int x = Mathf.RoundToInt((gridSizeX - 1) * xpoint);
+        int y = Mathf.RoundToInt((gridSizeY - 1) * ypoint);
+
+        return grid[x, y];
     }
 
     // ********************************************************************** //
@@ -68,7 +84,7 @@ public class Grid : MonoBehaviour
         { 
             foreach(Node node in grid) 
             { 
-                if (!node.IsWall) // if its not a wall make it white
+                if (node.IsWall) // if its not a wall make it white
                 {
                     Gizmos.color = Color.white;
                 }
@@ -77,16 +93,78 @@ public class Grid : MonoBehaviour
                     Gizmos.color = Color.yellow; // walls are yellow
                 }
 
-                if (finalPath != null) 
+                if (finalPath != null)
                 {
-                    Gizmos.color = Color.red;    // colour our final path red
+                    if (finalPath.Contains(node))
+                    {
+                        Gizmos.color = Color.red;    // colour our final path red
+                    }
                 }
 
                 Gizmos.DrawCube(node.Position, Vector3.one * (nodeDiameter - distance));
             }
         }
     }
+
     // ********************************************************************** //
 
+    public List<Node> GetNeighbouringNodes(Node a_Node) 
+    {
+        List<Node> neighbouringNodes = new List<Node>();
+        int xCheck;
+        int yCheck;
+
+        // right side
+        xCheck = a_Node.gridX + 1;
+        yCheck = a_Node.gridY;
+
+        if (xCheck >= 0 && xCheck < gridSizeX) 
+        { 
+            if (yCheck >= 0 && yCheck < gridSizeY) 
+            {
+                neighbouringNodes.Add(grid[xCheck, yCheck]);
+            }
+        }
+
+        // left side
+        xCheck = a_Node.gridX - 1;
+        yCheck = a_Node.gridY;
+
+        if (xCheck >= 0 && xCheck < gridSizeX)
+        {
+            if (yCheck >= 0 && yCheck < gridSizeY)
+            {
+                neighbouringNodes.Add(grid[xCheck, yCheck]);
+            }
+        }
+
+        // top side
+        xCheck = a_Node.gridX;
+        yCheck = a_Node.gridY + 1;
+
+        if (xCheck >= 0 && xCheck < gridSizeX)
+        {
+            if (yCheck >= 0 && yCheck < gridSizeY)
+            {
+                neighbouringNodes.Add(grid[xCheck, yCheck]);
+            }
+        }
+
+        // bottom side
+        xCheck = a_Node.gridX;
+        yCheck = a_Node.gridY - 1;
+
+        if (xCheck >= 0 && xCheck < gridSizeX)
+        {
+            if (yCheck >= 0 && yCheck < gridSizeY)
+            {
+                neighbouringNodes.Add(grid[xCheck, yCheck]);
+            }
+        }
+
+        return neighbouringNodes;
+    }
+
+    // ********************************************************************** //
 
 }
