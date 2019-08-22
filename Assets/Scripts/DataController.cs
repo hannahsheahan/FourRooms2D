@@ -186,6 +186,7 @@ public class DataController : MonoBehaviour {
             gameData.allTrialData[trial].presentPositions = config.presentPositions[trial];
             gameData.allTrialData[trial].bridgeStates = config.bridgeStates[trial];
             gameData.allTrialData[trial].controlStateOrder = config.controlStateOrder[trial];
+            gameData.allTrialData[trial].computerAgentCorrect = config.computerAgentCorrect[trial];
 
             // Rewards
             gameData.allTrialData[trial].rewardType = config.GetRewardType(trial);

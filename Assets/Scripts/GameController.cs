@@ -177,6 +177,7 @@ public class GameController : MonoBehaviour
     public string controlState;
     public int controlStateIndex = 0;
     public string[] controlStateOrder;                      // specified transition pattern for control (e.g. human -> computer)
+    public bool computerAgentCorrect;
     public string previousControlState;
     public List<string> controlStateTransitions = new List<string>();   // recorded control-state transitions (in sync with the player data)
 
@@ -733,6 +734,7 @@ public class GameController : MonoBehaviour
         bridgeStates = currentTrialData.bridgeStates;
         questionData = currentTrialData.debriefQuestion;
         controlStateOrder = currentTrialData.controlStateOrder;
+        computerAgentCorrect = currentTrialData.computerAgentCorrect;
 
         // Deal with the free-foraging multi-reward case, (HRS can make elegant later)
         rewardsRemaining = 1;           // default
@@ -1144,7 +1146,7 @@ public class GameController : MonoBehaviour
 
     // ********************************************************************** //
 
-    private string PlayerInWhichRoom(Vector2 playerPosition)
+    public string PlayerInWhichRoom(Vector2 playerPosition)
     {
         // Checks which of the four rooms (or a hallway) the player is currently in (having just taken a movement)
         string room = "hallway";

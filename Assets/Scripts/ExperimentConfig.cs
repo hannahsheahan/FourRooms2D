@@ -40,6 +40,7 @@ public class ExperimentConfig
 
     // Control state ordering (human/computer)
     public string[][] controlStateOrder;
+    public bool[] computerAgentCorrect;
 
     // Positions and orientations
     private Vector3 mazeCentre;
@@ -237,6 +238,7 @@ public class ExperimentConfig
         maxMovementTime = new float[totalTrials];
         bridgeStates = new bool[totalTrials][];
         controlStateOrder = new string[totalTrials][];
+        computerAgentCorrect = new bool[totalTrials];
 
         // make space for the debriefing questions and answers at the end
         debriefQuestions = new QuestionData[totalTrials];
@@ -830,9 +832,11 @@ public class ExperimentConfig
         // H-C
         // C-H
         // And this will be balanced appropriately across trials
-
-        // presents can be at any position in the room now
         controlStateOrder[trial] = new string[2] { "Human", "Computer" };
+
+        // whether the agent chooses the closest correct or incorrect box (after searching in the first room)
+        computerAgentCorrect[trial] = true;
+
     }
 
     // ********************************************************************** //

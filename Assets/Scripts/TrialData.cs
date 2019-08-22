@@ -31,6 +31,7 @@ public class TrialData
     public Vector3[] rewardPositions;
     public Vector3[] presentPositions;
     public string[] controlStateOrder;
+    public bool computerAgentCorrect;
 
     // trial event times
     public float maxMovementTime;
