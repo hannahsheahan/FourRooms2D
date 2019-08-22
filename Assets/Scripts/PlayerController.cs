@@ -10,12 +10,11 @@ using System.Linq;
 
 public class PlayerController : MovingObject
 {
-
+    public GameObject gridManager;
+    private Grid grid;
     private Animator animator;
     private Timer playerControllerTimer;     // use this to discretize movement input
     private Vector2 currentPlayerPosition;
-    private Vector2 goalPosition;
-    private Vector2 subgoalPosition; 
     private float minTimeBetweenMoves;
     private string animateHow;
     private bool jumpingNow = false;
@@ -27,17 +26,30 @@ public class PlayerController : MovingObject
 
     // computer control input values
     private int[] shortestStep;
-    private bool previousStepHorizontal; 
+    private Pathfinder pathfinder;         // implements A* pathfinding
+    private string controlState;
+    private string previousControlState;
+    private List<Node> plannedPath;
+    private List<Node> possiblePath;
+    private int pathStep;
+    private Vector2 targetPosition;
+    private Vector2 nextPosition;
 
     // ********************************************************************** //
     //Start overrides the Start function of MovingObject
     protected override void Start()
     {
         animator = GetComponent<Animator>();
+        grid = gridManager.GetComponent<Grid>();
+
         playerControllerTimer = new Timer();
         playerControllerTimer.Reset();
         minTimeBetweenMoves = GameController.control.minTimeBetweenMoves;
-        previousStepHorizontal = false;
+
+        // initialize computer control variables
+        controlState = "Human"; // to make sure we plan the first loop under computer control
+        previousControlState = controlState;
+        pathfinder = new Pathfinder(grid);
 
         base.Start(); // trigger the Start function from the MovingObject parent class
     }
@@ -47,8 +59,10 @@ public class PlayerController : MovingObject
     void Update()
     {
         jump = 0;   // disabling jump control
+        controlState = GameController.control.controlState; // only update this once per loop
+        currentPlayerPosition = transform.position;
 
-        switch (GameController.control.controlState)
+        switch (controlState)
         {
             case GameController.CONTROL_HUMAN:
                 // Get the control input from the keyboard/human player
@@ -63,37 +77,52 @@ public class PlayerController : MovingObject
                     vertical = 0;
                 }
 
+                nextPosition = new Vector2(currentPlayerPosition.x + horizontal, currentPlayerPosition.y + vertical);
+
                 break;
 
             case GameController.CONTROL_COMPUTER:
                 // Once we have a goal in mind, consider our current player state, 
                 // and implement the single allowable control move that takes us closer to our goal
-                horizontal = 0;
-                vertical = 0;    // currently just stay still in computer mode.
 
-                currentPlayerPosition = transform.position;
+                // When we first switch control states to computer control, compute the desired goals
+                if (previousControlState == GameController.CONTROL_HUMAN)
+                {
+                    targetPosition = DetermineGoal(currentPlayerPosition);
+                    Debug.Log("Computer agent goal position: " + targetPosition.x + ", " + targetPosition.y);
 
-                // Figure out where we want the agent to get to
-                subgoalPosition = DetermineGoal(currentPlayerPosition);
-                Debug.Log("Computer agent goal position: " + subgoalPosition.x + ", " + subgoalPosition.y);
+                    // Create an A* pathfinder to plan our path to goal
+                    plannedPath = pathfinder.FindPath(currentPlayerPosition, targetPosition);
+                    pathStep = 0;
+                    for (int i=0; i < plannedPath.Count; i++) 
+                    {
+                        Debug.Log("path step: " + plannedPath[i].Position.x + ", " + plannedPath[i].Position.y);
+                    }
+                }
 
-                // ***HRS change this so that it uses navmesh to control it towards the final goal. We can still use TakeOneStepToGoal but just make it discretise.
+                // Determine the next step to take along our planned path
+                Debug.Log("pathstep: " + pathStep);
+                if (pathStep < plannedPath.Count) 
+                { 
+                    nextPosition = new Vector2(plannedPath[pathStep].Position.x, plannedPath[pathStep].Position.y);
 
-                // Take our current position and our goal position in same room, and move towards the goal.
-                shortestStep = TakeOneStepToGoal(currentPlayerPosition, subgoalPosition);
-                horizontal = shortestStep[0];
-                vertical = shortestStep[1];
-
-                // remember the direction of our last move so that we move mostly straight
-                previousStepHorizontal = (horizontal != 0); 
-
+                    // Take our current position and our goal position in same room, and move towards the goal.
+                    shortestStep = TakeOneStepToGoal(currentPlayerPosition, nextPosition);
+                    horizontal = shortestStep[0];
+                    vertical = shortestStep[1];
+                }
+                else
+                {
+                    horizontal = 0;
+                    vertical = 0;
+                    Debug.Log("Computer agent has reached goal! Yay!");   
+                }
                 break;
 
             default:
                 Debug.Log("ERROR: Control state not specified, avatar will not be controllable.");
                 horizontal = 0;
                 vertical = 0;
-
                 break;
         }
 
@@ -118,6 +147,8 @@ public class PlayerController : MovingObject
         {
             if (playerControllerTimer.ElapsedSeconds() >= minTimeBetweenMoves)
             {
+                Debug.Log("Computer agent moving to position "+ nextPosition.x + ", " + nextPosition.y);
+
                 jumpingNow = false;
                 animateHow = (horizontal + 1 <= 0) ? "left" : "right";
                 AnimateNow();
@@ -125,6 +156,7 @@ public class PlayerController : MovingObject
                 AttemptMove<Wall>(horizontal, vertical);
             }
         }
+        previousControlState = controlState;
     }
 
     // ********************************************************************** //
@@ -146,6 +178,11 @@ public class PlayerController : MovingObject
                 animator.SetTrigger("playerStepRight");
                 GameController.control.PlayMovementSound();
                 break;
+        }
+
+        if ((currentPlayerPosition - nextPosition).magnitude < 0.05f)
+        {
+            pathStep++;   // HRS to be careful of this! If the pathstep is updated at the wrong time then our planned policy wont take us all the way there.
         }
     }
 
@@ -225,28 +262,13 @@ public class PlayerController : MovingObject
 
     private int[] TakeOneStepToGoal(Vector2 startPosition, Vector2 endPosition)
     {
-        int[] step = new int[2] { -1, 0 };
+        int[] step = new int[2] { 0, 0 };
         Vector2 continuousStep = new Vector2();
 
         // get x,y coordinates of the beeline movement direction
-        continuousStep = Vector2.MoveTowards(startPosition, endPosition, 1) - startPosition; 
-
-        // Method for moving mostly in straight discrete steps
-        if (Math.Abs(continuousStep.x) < 0.01f) 
-        {
-            step = moveVertical(continuousStep); // move vertically only
-        }
-        else if (Math.Abs(continuousStep.y) < 0.01f) 
-        {
-            step = moveHorizontal(continuousStep); // move horizontally only
-        }
-        else // bias our movements to remain in the same direction
-        {
-            step = previousStepHorizontal ? moveHorizontal(continuousStep) : moveVertical(continuousStep);
-        }
+        continuousStep = Vector2.MoveTowards(startPosition, endPosition, 2) - startPosition; 
 
         // Method for moving in discrete zig-zag steps every time
-        /*
         if (Math.Abs(continuousStep.x) >= Math.Abs(continuousStep.y))  // break diagonal ties by moving horizontally
         {
             step[0] = Math.Sign(continuousStep.x); // move horizontally only
@@ -257,8 +279,6 @@ public class PlayerController : MovingObject
             step[1] = Math.Sign(continuousStep.y); // move vertically only
             step[0] = 0;
         }
-        */
-
         return step;
     }
 
@@ -284,15 +304,15 @@ public class PlayerController : MovingObject
 
     // ********************************************************************** //
 
-    private Vector2 DetermineGoal(Vector2 currentPlayerPosition) 
+    private Vector2 DetermineGoal(Vector2 playerPosition) 
     {
-
-        // ***HRS should really make this so that it just chooses the final goal
-        // and then we use navmesh and automatic pathplanning so that it takes us to that final goal (dont hard code the subgoals)
-
+        // This just determines the final goal for the computer agent
         string currentRoom;
         int boxesLeft;
+        int shortestPathIndex;
+
         Vector2 goalPosition = new Vector2();
+        boxesLeft = GameController.control.giftWrapState.Sum();
 
         // Define the possible boulder locations (same index order as giftWrapState array)
         Vector2[] boulderLocations = new Vector2[4];
@@ -301,28 +321,57 @@ public class PlayerController : MovingObject
         boulderLocations[2] = new Vector2(-4, 4);  // top left
         boulderLocations[3] = new Vector2(4, 4);   // top right
 
-        // Define the actual reward locations
-        Vector2[] rewardLocations = new Vector2[2];
-        rewardLocations[0] = new Vector2(GameController.control.rewardSpawnLocations[0].x, GameController.control.rewardSpawnLocations[0].y);
-        rewardLocations[1] = new Vector2(GameController.control.rewardSpawnLocations[1].x, GameController.control.rewardSpawnLocations[1].y);
+        // Define the actual reward locations that may be remaining
+        Vector2[] possRewardLocations = new Vector2[2];
+        possRewardLocations[0] = new Vector2(GameController.control.rewardSpawnLocations[0].x, GameController.control.rewardSpawnLocations[0].y);
+        possRewardLocations[1] = new Vector2(GameController.control.rewardSpawnLocations[1].x, GameController.control.rewardSpawnLocations[1].y);
 
-        // Determine the boulder positions that dont have rewards in them
-        Vector2[] nonrewardLocations = new Vector2[2];
+        // Determine the possible remaining boulder positions that dont have rewards in them
+        Vector2[] possNonRewardLocations = new Vector2[2];
         int count = 0;
         for (int i = 0; i < boulderLocations.Length; i++)
         {
-            if (!Array.Exists(rewardLocations, element => element == boulderLocations[i]))
+            if (!Array.Exists(possRewardLocations, element => element == boulderLocations[i]))
             {
-                nonrewardLocations[count] = boulderLocations[i];
+                possNonRewardLocations[count] = boulderLocations[i];
                 count++;
             }
         }
 
-        currentRoom = GameController.control.PlayerInWhichRoom(currentPlayerPosition);
-        boxesLeft = GameController.control.giftWrapState.Sum();
+        List<Vector2> rewardLocations = new List<Vector2>();
+        List<Vector2> nonRewardLocations = new List<Vector2>();
+
+        // Consider now only the unexplored boulders (that do and dont contain rewards)
+        for (int i=0; i < boulderLocations.Length; i++) 
+        { 
+            if (GameController.control.giftWrapState[i] != 0) 
+            {
+                // Add the unopened reward locations to a final list of them
+                for (int j=0; j < possRewardLocations.Length; j++) 
+                { 
+                    if (possRewardLocations[j] == boulderLocations[i]) 
+                    {
+                        rewardLocations.Add(possRewardLocations[j]);
+                        // Debug.Log("reward location: " + possRewardLocations[j].x + ", " + possRewardLocations[j].y);
+                    }
+                }
+
+                // Add the unopened nonreward locations to a final list of them
+                for (int j = 0; j < possNonRewardLocations.Length; j++)
+                {
+                    if (possNonRewardLocations[j] == boulderLocations[i])
+                    {
+                        nonRewardLocations.Add(possNonRewardLocations[j]);
+                        // Debug.Log("nonreward location: " + possNonRewardLocations[j].x + ", " + possNonRewardLocations[j].y);
+                    }
+                }
+            }
+        }
 
         if (boxesLeft == GameController.control.giftWrapState.Length)
-        { 
+        {
+            currentRoom = GameController.control.PlayerInWhichRoom(currentPlayerPosition);
+
             // Just search the current room because no boxes have been opened yet :)
             switch (currentRoom) 
             {
@@ -355,27 +404,44 @@ public class PlayerController : MovingObject
             if (GameController.control.computerAgentCorrect) 
             {
                 // Determine which correct reward is closest
-                // compute path distance to rewardLocations[0]...
-
-                // computer path distance to rewardLocations[1] ...
-
-                // set whichever is closest as the goal
-                // HRS to do...
-
+                // compute path distance to rewardLocations[0] and rewardLocations[1]...
+                if (rewardLocations.Count > 0) 
+                { 
+                    int[] pathLength = new int[rewardLocations.Count];
+                    for (int i=0; i < rewardLocations.Count; i++) 
+                    { 
+                        possiblePath = pathfinder.FindPath(currentPlayerPosition, rewardLocations[i]);
+                        pathLength[i] = possiblePath.Count;
+                    }
+                    shortestPathIndex = Array.IndexOf(pathLength, pathLength.Min());
+                    goalPosition = rewardLocations[shortestPathIndex];
+                }
+                else 
+                {
+                    goalPosition = new Vector2(0, 0); // This should never be triggered
+                    Debug.Log("ERROR: Computer agent target position incorrectly specified - attempted to go to reward location but none left.");
+                }
             }
             else 
             {
-                // Determine which correct reward is closest
-                // compute path distance to nonrewardLocations[0]...
-
-                // computer path distance to nonrewardLocations[1] ...
-
-                // set whichever is closest as the goal
-                // HRS to do...
+                if (nonRewardLocations.Count > 0)
+                {
+                    // compute path distance to nonrewardLocations[0] and nonrewardLocations[1]...
+                    int[] pathLength = new int[nonRewardLocations.Count];
+                    for (int i = 0; i < nonRewardLocations.Count; i++)
+                    {
+                        possiblePath = pathfinder.FindPath(currentPlayerPosition, nonRewardLocations[i]);
+                        pathLength[i] = possiblePath.Count;
+                    }
+                    shortestPathIndex = Array.IndexOf(pathLength, pathLength.Min());
+                    goalPosition = nonRewardLocations[shortestPathIndex];
+                }
+                else 
+                {
+                    goalPosition = new Vector2(0, 0); // This should never be triggered
+                    Debug.Log("ERROR: Computer agent target position incorrectly specified - attempted to go to non-reward location but none left.");
+                }
             }
-
-            // ... just for now HRS
-            goalPosition = new Vector2(1,1);
         }
         return goalPosition;
     }

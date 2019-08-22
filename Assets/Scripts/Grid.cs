@@ -8,7 +8,6 @@ public class Grid : MonoBehaviour
     /// Date: 22/08/2019
     /// For our A* computer pathfinding
    
-    public Transform startPosition;
     public LayerMask wallMask;       // for finding obstructions on map
     public Vector2 gridWorldSize;
     public float nodeRadius;         // node size
@@ -50,7 +49,6 @@ public class Grid : MonoBehaviour
                 if (Physics.CheckSphere(worldPoint, nodeRadius, wallMask)) 
                 {
                     Wall = false;
-                    Debug.Log("something should be turning yellow");
                 }
 
                 grid[x, y] = new Node(Wall, worldPoint, x, y);

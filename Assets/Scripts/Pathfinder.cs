@@ -2,33 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pathfinding : MonoBehaviour
+public class Pathfinder
 {
     /// Source: Unity tutorial https://www.youtube.com/watch?v=AKKpPmxx07w
     /// Date: 22/08/2019
     /// For our A* computer pathfinding
+    /// Edited by HRS into plain class
 
     Grid grid;
-    public Transform startPosition;
-    public Transform targetPosition;
+    List<Node> bestPath = new List<Node>();
 
     // ********************************************************************** //
 
-    private void Awake()
+    public Pathfinder(Grid a_grid)
     {
-        grid = GetComponent<Grid>();
+        grid = a_grid; 
     }
 
     // ********************************************************************** //
 
-    private void Update()
-    {
-        FindPath(startPosition.position, targetPosition.position);
-    }
-
-    // ********************************************************************** //
-
-    void FindPath(Vector3 a_startPos, Vector3 a_targetPos) 
+    public List<Node> FindPath(Vector3 a_startPos, Vector3 a_targetPos) 
     {
         Node startNode = grid.NodeFromWorldPosition(a_startPos);
         Node targetNode = grid.NodeFromWorldPosition(a_targetPos);
@@ -55,7 +48,7 @@ public class Pathfinding : MonoBehaviour
             if (currentNode == targetNode) 
             {
                 GetFinalPath(startNode, targetNode);
-                //break;
+                break;
             }
 
             foreach (Node neighbourNode in grid.GetNeighbouringNodes(currentNode)) 
@@ -82,6 +75,7 @@ public class Pathfinding : MonoBehaviour
                 }
             }
         }
+        return bestPath;
     }
     // ********************************************************************** //
 
@@ -95,13 +89,10 @@ public class Pathfinding : MonoBehaviour
         {
             finalPath.Add(currentNode);
             currentNode = currentNode.Parent;
-            Debug.Log("Node on final path: " + currentNode.gridX + ", " + currentNode.gridY);
         }
         finalPath.Reverse();
-
         grid.finalPath = finalPath;
-
-
+        bestPath = finalPath;
     }
 
     // ********************************************************************** //
