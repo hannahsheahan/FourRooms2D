@@ -34,6 +34,7 @@ public class PlayerController : MovingObject
     private int pathStep;
     private Vector2 targetPosition;
     private Vector2 nextPosition;
+    private float stepTolerance = 0.05f;      // tolerate sub-threshold differences between desired and actual agent positions  
 
     // ********************************************************************** //
     //Start overrides the Start function of MovingObject
@@ -60,7 +61,7 @@ public class PlayerController : MovingObject
     {
         jump = 0;   // disabling jump control
         controlState = GameController.control.controlState; // only update this once per loop
-        currentPlayerPosition = transform.position;
+        currentPlayerPosition = new Vector2(transform.position.x, transform.position.y);
 
         switch (controlState)
         {
@@ -78,7 +79,6 @@ public class PlayerController : MovingObject
                 }
 
                 nextPosition = new Vector2(currentPlayerPosition.x + horizontal, currentPlayerPosition.y + vertical);
-
                 break;
 
             case GameController.CONTROL_COMPUTER:
@@ -98,14 +98,14 @@ public class PlayerController : MovingObject
                     {
                         Debug.Log("path step: " + plannedPath[i].Position.x + ", " + plannedPath[i].Position.y);
                     }
+                    LoadNextNode();
                 }
 
                 // Determine the next step to take along our planned path
-                Debug.Log("pathstep: " + pathStep);
+                // Debug.Log("pathstep: " + pathStep);
+
                 if (pathStep < plannedPath.Count) 
                 { 
-                    nextPosition = new Vector2(plannedPath[pathStep].Position.x, plannedPath[pathStep].Position.y);
-
                     // Take our current position and our goal position in same room, and move towards the goal.
                     shortestStep = TakeOneStepToGoal(currentPlayerPosition, nextPosition);
                     horizontal = shortestStep[0];
@@ -141,19 +141,26 @@ public class PlayerController : MovingObject
                 playerControllerTimer.Reset();
             }
         }
-
+       
         // if we are attempting to move, check that we can actually move there
-        if ((horizontal != 0) || (vertical != 0))
+        if (playerControllerTimer.ElapsedSeconds() >= minTimeBetweenMoves)
         {
-            if (playerControllerTimer.ElapsedSeconds() >= minTimeBetweenMoves)
+            if ((horizontal != 0) || (vertical != 0))
             {
-                Debug.Log("Computer agent moving to position "+ nextPosition.x + ", " + nextPosition.y);
-
                 jumpingNow = false;
                 animateHow = (horizontal + 1 <= 0) ? "left" : "right";
                 AnimateNow();
                 playerControllerTimer.Reset();
                 AttemptMove<Wall>(horizontal, vertical);
+            }
+
+            if (controlState == GameController.CONTROL_COMPUTER)
+            { 
+                if ((currentPlayerPosition - nextPosition).magnitude < stepTolerance)
+                {
+                    pathStep++;   // HRS to be careful of this! If the pathstep is updated at the wrong time then our planned policy wont take us all the way there.
+                    LoadNextNode();
+                }
             }
         }
         previousControlState = controlState;
@@ -178,11 +185,6 @@ public class PlayerController : MovingObject
                 animator.SetTrigger("playerStepRight");
                 GameController.control.PlayMovementSound();
                 break;
-        }
-
-        if ((currentPlayerPosition - nextPosition).magnitude < 0.05f)
-        {
-            pathStep++;   // HRS to be careful of this! If the pathstep is updated at the wrong time then our planned policy wont take us all the way there.
         }
     }
 
@@ -266,39 +268,24 @@ public class PlayerController : MovingObject
         Vector2 continuousStep = new Vector2();
 
         // get x,y coordinates of the beeline movement direction
-        continuousStep = Vector2.MoveTowards(startPosition, endPosition, 2) - startPosition; 
+        continuousStep = Vector2.MoveTowards(startPosition, endPosition, 2) - startPosition;
 
-        // Method for moving in discrete zig-zag steps every time
-        if (Math.Abs(continuousStep.x) >= Math.Abs(continuousStep.y))  // break diagonal ties by moving horizontally
-        {
-            step[0] = Math.Sign(continuousStep.x); // move horizontally only
-            step[1] = 0;
+
+        // We need a check in here that prevents taking another step if the difference is < epsilon
+        if ((currentPlayerPosition - nextPosition).magnitude >= stepTolerance)
+        { 
+            // Method for moving in discrete zig-zag steps every time
+            if (Math.Abs(continuousStep.x) >= Math.Abs(continuousStep.y))  // break diagonal ties by moving horizontally
+            {
+                step[0] = Math.Sign(continuousStep.x); // move horizontally only
+                step[1] = 0;
+            }
+            else if (Math.Abs(continuousStep.x) < Math.Abs(continuousStep.y))
+            {
+                step[1] = Math.Sign(continuousStep.y); // move vertically only
+                step[0] = 0;
+            }
         }
-        else if (Math.Abs(continuousStep.x) < Math.Abs(continuousStep.y))
-        {
-            step[1] = Math.Sign(continuousStep.y); // move vertically only
-            step[0] = 0;
-        }
-        return step;
-    }
-
-    // ********************************************************************** //
-
-    private int[] moveVertical(Vector2 direction) 
-    {
-        int[] step = new int[2] { 0, 0 };
-        step[1] = Math.Sign(direction.y); // move vertically only
-        step[0] = 0;
-        return step;
-    }
-
-    // ********************************************************************** //
-
-    private int[] moveHorizontal(Vector2 direction)
-    {
-        int[] step = new int[2] { 0, 0 };
-        step[0] = Math.Sign(direction.x); // move horizontally only
-        step[1] = 0;
         return step;
     }
 
@@ -444,6 +431,33 @@ public class PlayerController : MovingObject
             }
         }
         return goalPosition;
+    }
+
+    // ********************************************************************** //
+
+    void LoadNextNode() 
+    {
+        nextPosition = new Vector2(plannedPath[pathStep].Position.x, plannedPath[pathStep].Position.y);
+    }
+
+    // ********************************************************************** //
+
+    private int[] moveVertical(Vector2 direction)
+    {
+        int[] step = new int[2] { 0, 0 };
+        step[1] = Math.Sign(direction.y); // move vertically only
+        step[0] = 0;
+        return step;
+    }
+
+    // ********************************************************************** //
+
+    private int[] moveHorizontal(Vector2 direction)
+    {
+        int[] step = new int[2] { 0, 0 };
+        step[0] = Math.Sign(direction.x); // move horizontally only
+        step[1] = 0;
+        return step;
     }
 
     // ********************************************************************** //

@@ -196,11 +196,11 @@ public class ExperimentConfig
 
         // Note that when used, jitters ADD to these values - hence they are minimums
         //maxMovementTime        = 60.0f;   // changed to be a function of trial number. Time allowed to collect both rewards, incl. wait after hitting first one
-        preDisplayCueTime      = 1.5f;    // will take a TR during this period
+        preDisplayCueTime      = 1.5f;    //
         displayCueTime         = 2.0f;
-        goCueDelay             = 1.5f;    // will take a TR during this period
-        goalHitPauseTime       = 0.5f;    // we will take a TR during this period
-        finalGoalHitPauseTime  = 2.0f;    // we will take a TR during this period (but should be independent of first goal hit time in case we want to jitter)
+        goCueDelay             = 1.5f;    //
+        goalHitPauseTime       = 1.0f;    // 
+        finalGoalHitPauseTime  = 2.0f;    // 
         minDwellAtReward       = 0.2f;
         preRewardAppearTime    = 0.3f;    
         displayMessageTime     = 1.5f;     
@@ -213,7 +213,7 @@ public class ExperimentConfig
 
        // physical movement times
         oneSquareMoveTime = 0.1f;         // Time it will take player to move from one square to next (sec)
-        minTimeBetweenMoves = 0.15f;      // How much time between each allowable move (from movement trigger) (sec) (must be greater than oneSquareMoveTime or position moves off board - weird exception)
+        minTimeBetweenMoves = 0.25f;      // How much time between each allowable move (from movement trigger) (sec) (must be greater than oneSquareMoveTime or position moves off board - weird exception)
 
         // These variables define the environment (are less likely to be played with)
         roomSize = 4;              // rooms are each 4x4 grids. If this changes, you will need to change this code
