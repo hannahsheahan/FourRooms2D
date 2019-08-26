@@ -35,6 +35,8 @@ public class PlayerController : MovingObject
     private Vector2 targetPosition;
     private Vector2 nextPosition;
     private float stepTolerance = 0.05f;      // tolerate sub-threshold differences between desired and actual agent positions  
+    private float minAgentPlanningTime = 2.5f;
+    private Timer agentPlanningTimer;         // use this to give our computer agent some fake 'planning' pause time when control switches to the computer agent
 
     // ********************************************************************** //
     //Start overrides the Start function of MovingObject
@@ -52,6 +54,9 @@ public class PlayerController : MovingObject
         previousControlState = controlState;
         pathfinder = new Pathfinder(grid);
 
+        agentPlanningTimer = new Timer();
+        agentPlanningTimer.Reset();
+
         base.Start(); // trigger the Start function from the MovingObject parent class
     }
 
@@ -59,111 +64,124 @@ public class PlayerController : MovingObject
 
     void Update()
     {
-        jump = 0;   // disabling jump control
-        controlState = GameController.control.controlState; // only update this once per loop
-        currentPlayerPosition = new Vector2(transform.position.x, transform.position.y);
-
-        switch (controlState)
+        if (GameController.control.State >= GameController.STATE_GO)
         {
-            case GameController.CONTROL_HUMAN:
-                // Get the control input from the keyboard/human player
+            jump = 0;   // disabling jump control
+            controlState = GameController.control.controlState; // only update this once per loop
+            currentPlayerPosition = new Vector2(transform.position.x, transform.position.y);
 
-                horizontal = (int)(Input.GetAxisRaw("Horizontal"));
-                vertical = (int)(Input.GetAxisRaw("Vertical"));
-                //jump = (int)(Input.GetAxisRaw("Jump"));   // disabling jump control
+            switch (controlState)
+            {
+                case GameController.CONTROL_HUMAN:
+                    // Get the control input from the keyboard/human player
 
-                // prevent player from moving diagonally
-                if (horizontal != 0)
-                {
-                    vertical = 0;
-                }
+                    horizontal = (int)(Input.GetAxisRaw("Horizontal"));
+                    vertical = (int)(Input.GetAxisRaw("Vertical"));
+                    //jump = (int)(Input.GetAxisRaw("Jump"));   // disabling jump control
 
-                nextPosition = new Vector2(currentPlayerPosition.x + horizontal, currentPlayerPosition.y + vertical);
-                break;
-
-            case GameController.CONTROL_COMPUTER:
-                // Once we have a goal in mind, consider our current player state, 
-                // and implement the single allowable control move that takes us closer to our goal
-
-                // When we first switch control states to computer control, compute the desired goals
-                if (previousControlState == GameController.CONTROL_HUMAN)
-                {
-                    targetPosition = DetermineGoal(currentPlayerPosition);
-                    Debug.Log("Computer agent goal position: " + targetPosition.x + ", " + targetPosition.y);
-
-                    // Create an A* pathfinder to plan our path to goal
-                    plannedPath = pathfinder.FindPath(currentPlayerPosition, targetPosition);
-                    pathStep = 0;
-                    for (int i=0; i < plannedPath.Count; i++) 
+                    // prevent player from moving diagonally
+                    if (horizontal != 0)
                     {
-                        Debug.Log("path step: " + plannedPath[i].Position.x + ", " + plannedPath[i].Position.y);
+                        vertical = 0;
                     }
-                    LoadNextNode();
-                }
 
-                // Determine the next step to take along our planned path
-                // Debug.Log("pathstep: " + pathStep);
+                    nextPosition = new Vector2(currentPlayerPosition.x + horizontal, currentPlayerPosition.y + vertical);
+                    break;
 
-                if (pathStep < plannedPath.Count) 
-                { 
-                    // Take our current position and our goal position in same room, and move towards the goal.
-                    shortestStep = TakeOneStepToGoal(currentPlayerPosition, nextPosition);
-                    horizontal = shortestStep[0];
-                    vertical = shortestStep[1];
-                }
-                else
-                {
+                case GameController.CONTROL_COMPUTER:
+                    // Once we have a goal in mind, consider our current player state, 
+                    // and implement the single allowable control move that takes us closer to our goal
+
+                    // When we first switch control states to computer control, compute the desired goals
+                    if (previousControlState == GameController.CONTROL_HUMAN)
+                    {
+                        targetPosition = DetermineGoal(currentPlayerPosition);
+                        Debug.Log("Computer agent goal position: " + targetPosition.x + ", " + targetPosition.y);
+
+                        // Create an A* pathfinder to plan our path to goal
+                        plannedPath = pathfinder.FindPath(currentPlayerPosition, targetPosition);
+                        pathStep = 0;
+                        for (int i=0; i < plannedPath.Count; i++) 
+                        {
+                            Debug.Log("path step: " + plannedPath[i].Position.x + ", " + plannedPath[i].Position.y);
+                        }
+                        LoadNextNode();
+                        agentPlanningTimer.Reset();
+                    }
+
+                    // Determine the next step to take along our planned path
+                    // Debug.Log("pathstep: " + pathStep);
+
+                    if (pathStep < plannedPath.Count) 
+                    { 
+                        if (agentPlanningTimer.ElapsedSeconds() >= minAgentPlanningTime) // give the agent some fake 'planning time' so it pauses at the start of control takeover
+                        { 
+                            // Take our current position and our goal position in same room, and move towards the goal.
+                            shortestStep = TakeOneStepToGoal(currentPlayerPosition, nextPosition);
+                            horizontal = shortestStep[0];
+                            vertical = shortestStep[1];
+                        }
+                        else 
+                        {
+                            horizontal = 0;
+                            vertical = 0;
+                        }
+
+                    }
+                    else
+                    {
+                        horizontal = 0;
+                        vertical = 0;
+                        Debug.Log("Computer agent has reached goal! Yay!");   
+                    }
+                    break;
+
+                default:
+                    Debug.Log("ERROR: Control state not specified, avatar will not be controllable.");
                     horizontal = 0;
                     vertical = 0;
-                    Debug.Log("Computer agent has reached goal! Yay!");   
-                }
-                break;
+                    break;
+            }
 
-            default:
-                Debug.Log("ERROR: Control state not specified, avatar will not be controllable.");
+
+            //prevent player from jumping at same time as moving
+            if (jump != 0)
+            {
                 horizontal = 0;
                 vertical = 0;
-                break;
-        }
 
-
-        //prevent player from jumping at same time as moving
-        if (jump != 0)
-        {
-            horizontal = 0;
-            vertical = 0;
-
-            if (playerControllerTimer.ElapsedSeconds() >= minTimeBetweenMoves)
-            {
-                jumpingNow = true;  // we do this because otherwise jump is updated too quick for the OnTriggerStay2D function and we could miss the boulder lifting action
-                animateHow = "jump";
-                AnimateNow();
-                playerControllerTimer.Reset();
-            }
-        }
-       
-        // if we are attempting to move, check that we can actually move there
-        if (playerControllerTimer.ElapsedSeconds() >= minTimeBetweenMoves)
-        {
-            if ((horizontal != 0) || (vertical != 0))
-            {
-                jumpingNow = false;
-                animateHow = (horizontal + 1 <= 0) ? "left" : "right";
-                AnimateNow();
-                playerControllerTimer.Reset();
-                AttemptMove<Wall>(horizontal, vertical);
-            }
-
-            if (controlState == GameController.CONTROL_COMPUTER)
-            { 
-                if ((currentPlayerPosition - nextPosition).magnitude < stepTolerance)
+                if (playerControllerTimer.ElapsedSeconds() >= minTimeBetweenMoves)
                 {
-                    pathStep++;   // HRS to be careful of this! If the pathstep is updated at the wrong time then our planned policy wont take us all the way there.
-                    LoadNextNode();
+                    jumpingNow = true;  // we do this because otherwise jump is updated too quick for the OnTriggerStay2D function and we could miss the boulder lifting action
+                    animateHow = "jump";
+                    AnimateNow();
+                    playerControllerTimer.Reset();
                 }
             }
+           
+            // if we are attempting to move, check that we can actually move there
+            if (playerControllerTimer.ElapsedSeconds() >= minTimeBetweenMoves)
+            {
+                if ((horizontal != 0) || (vertical != 0))
+                {
+                    jumpingNow = false;
+                    animateHow = (horizontal + 1 <= 0) ? "left" : "right";
+                    AnimateNow();
+                    playerControllerTimer.Reset();
+                    AttemptMove<Wall>(horizontal, vertical);
+                }
+
+                if (controlState == GameController.CONTROL_COMPUTER)
+                { 
+                    if ((currentPlayerPosition - nextPosition).magnitude < stepTolerance)
+                    {
+                        pathStep++;   // HRS to be careful of this! If the pathstep is updated at the wrong time then our planned policy wont take us all the way there.
+                        LoadNextNode();
+                    }
+                }
+            }
+            previousControlState = controlState;
         }
-        previousControlState = controlState;
     }
 
     // ********************************************************************** //
@@ -339,7 +357,6 @@ public class PlayerController : MovingObject
                     if (possRewardLocations[j] == boulderLocations[i]) 
                     {
                         rewardLocations.Add(possRewardLocations[j]);
-                        // Debug.Log("reward location: " + possRewardLocations[j].x + ", " + possRewardLocations[j].y);
                     }
                 }
 
@@ -349,17 +366,17 @@ public class PlayerController : MovingObject
                     if (possNonRewardLocations[j] == boulderLocations[i])
                     {
                         nonRewardLocations.Add(possNonRewardLocations[j]);
-                        // Debug.Log("nonreward location: " + possNonRewardLocations[j].x + ", " + possNonRewardLocations[j].y);
                     }
                 }
             }
         }
 
+        // No boxes have been opened yet (i.e computer makes first move)
         if (boxesLeft == GameController.control.giftWrapState.Length)
         {
             currentRoom = GameController.control.PlayerInWhichRoom(currentPlayerPosition);
 
-            // Just search the current room because no boxes have been opened yet :)
+            // Just search the current room because no boxes have been opened yet
             switch (currentRoom) 
             {
                 case "blue":     // bottom left
@@ -402,6 +419,7 @@ public class PlayerController : MovingObject
                     }
                     shortestPathIndex = Array.IndexOf(pathLength, pathLength.Min());
                     goalPosition = rewardLocations[shortestPathIndex];
+                    Debug.Log("Computer agent is picking a boulder that will be rewarded.");
                 }
                 else 
                 {
@@ -422,6 +440,7 @@ public class PlayerController : MovingObject
                     }
                     shortestPathIndex = Array.IndexOf(pathLength, pathLength.Min());
                     goalPosition = nonRewardLocations[shortestPathIndex];
+                    Debug.Log("Computer agent is picking a boulder that will not be rewarded.");
                 }
                 else 
                 {

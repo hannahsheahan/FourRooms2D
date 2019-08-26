@@ -62,7 +62,7 @@ public class DisplayRewardCue : MonoBehaviour
 
             if (GameController.control.showCanvasReward) 
             {
-                transform.localScale = 2 * originalRewardScale;
+                transform.localScale = 1.3f * originalRewardScale;
             }
             else 
             {

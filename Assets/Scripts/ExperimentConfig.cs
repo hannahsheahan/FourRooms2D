@@ -199,13 +199,13 @@ public class ExperimentConfig
         preDisplayCueTime      = 1.5f;    //
         displayCueTime         = 2.0f;
         goCueDelay             = 1.5f;    //
-        goalHitPauseTime       = 1.0f;    // 
+        goalHitPauseTime       = 1.5f;    // This will also be the amount of time between computer vs human control handovers (+ minDwellAtReward + preRewardAppearTime)
         finalGoalHitPauseTime  = 2.0f;    // 
         minDwellAtReward       = 0.2f;
         preRewardAppearTime    = 0.3f;    
         displayMessageTime     = 1.5f;     
         errorDwellTime         = 1.5f;    // Note: should be at least as long as displayMessageTime
-        hallwayFreezeTime      = 5.0f;    // amount of time player is stuck in place with each hallway traversal
+        hallwayFreezeTime      = 4.0f;    // amount of time player is stuck in place with each hallway traversal
         preFreezeTime          = 0.3f;    // should be about the same, maybe slightly longer than oneSquareMoveTime
         blankTime              = 2.0f;    // Note: ***HRS should be jittered (blank screen time prior to trial starting)
         animationTime          = 1.0f;    // how long the reward grows for when it appears (mainly for visuals)
