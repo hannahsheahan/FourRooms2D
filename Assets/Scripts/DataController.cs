@@ -347,6 +347,9 @@ public class DataController : MonoBehaviour {
                 gameData.allTrialData[currentTrialNumber].controlStateTransitions.Add(trackedControlStateData[i]);
             }
 
+            // Add in the global timstamped scanner state transition data (is scanner on/off)
+            gameData.scannerTriggerTimes = GameController.control.scannerTriggerTimes;
+
             // Add in the player tracking data
             List<string> trackedTrialData = new List<string>(); // We stop collecting data here, just it case it keeps incrementing with another timestep
             trackedTrialData = Player.GetComponent<TrackingScript>().getCoords();

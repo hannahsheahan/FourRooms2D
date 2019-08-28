@@ -191,7 +191,7 @@ public class ExperimentConfig
         totalTrials = totalTrials + nbreaks;
        
         // Timer variables (measured in seconds) - these can later be changed to be different per trial for jitter etc
-        dataRecordFrequency = 0.06f;
+        dataRecordFrequency = 0.04f;
         getReadyDuration = 5.0f;    // how long do we have to 'get ready' after the practice, before main experiment begins?
 
         // Note that when used, jitters ADD to these values - hence they are minimums

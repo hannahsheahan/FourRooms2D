@@ -181,8 +181,11 @@ public class GameController : MonoBehaviour
     public string previousControlState;
     public List<string> controlStateTransitions = new List<string>();   // recorded control-state transitions (in sync with the player data)
 
-    public bool playersTurn;      // for moving in discrete steps on a 2D grid
+    public bool waitingForScannerStart = false;
+    public bool continueRecordingScanner = false;
+    public List<float> scannerTriggerTimes = new List<float>();
 
+    public bool playersTurn;      // for moving in discrete steps on a 2D grid
     public int[] giftWrapState;
     public List<string> giftWrapStateTransitions = new List<string>();   // recorded state of the giftboxes (in sync with the player data)
 
@@ -248,13 +251,32 @@ public class GameController : MonoBehaviour
         scaleUpReward = new bool[maxNRewards];
 
         StartExperiment();
-
     }
 
     // ********************************************************************** //
 
     private void Update()     // Update() executes once per frame
     {
+
+        // Wait for the scanner to trigger the experient to start (after all consent, participant info etc), then log each subsequent trigger
+        if (waitingForScannerStart) 
+        {
+            if (Input.GetKeyDown(KeyCode.T))  // the scanner triggers the experiment to start (and start logging time)
+            {
+                StartGame(); 
+                waitingForScannerStart = false;
+                continueRecordingScanner = true;
+            }
+        }
+        else if (continueRecordingScanner)
+        {
+            if (Input.GetKeyDown(KeyCode.T))  // log any subsequent 't' code presses (according to Sam)
+            {
+                scannerTriggerTimes.Add(experimentTimer.ElapsedSeconds());
+            }
+        }
+
+
         UpdateText();
 
         // Check that everything is working properly
@@ -266,6 +288,7 @@ public class GameController : MonoBehaviour
         {
             currentMovementTime = movementTimer.ElapsedSeconds();
         }
+
 
         switch (State)
         {
@@ -820,9 +843,15 @@ public class GameController : MonoBehaviour
 
     // ********************************************************************** //
 
+    public void WaitForScannerStart() 
+    {
+        waitingForScannerStart = true;
+    }
+
+    // ********************************************************************** //
+
     public void StartExperiment()
     {
-        experimentTimer.Reset();
         NextScene();
         TrialSetup();           // start the experiment participant menu etc
     }
@@ -832,8 +861,10 @@ public class GameController : MonoBehaviour
     public void StartGame()
     {
         Debug.Log("The game has started now and into the FSM!");
+        experimentTimer.Reset();
+        scannerTriggerTimes.Add(experimentTimer.ElapsedSeconds());  // should be 0.00f seconds
         NextScene();
-        gameStarted = true;     // start the game rolling!
+        gameStarted = true;
         Cursor.visible = false;
     }
 

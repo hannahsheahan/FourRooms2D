@@ -20,6 +20,7 @@ public class GameData
     public float totalExperimentTime;
 
     public List<int> trialList = new List<int>();
+    public List<float> scannerTriggerTimes = new List<float>();
 
     public TrialData[] allTrialData;
 

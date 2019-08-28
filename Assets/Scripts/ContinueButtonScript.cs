@@ -55,7 +55,7 @@ public class ContinueButtonScript : MonoBehaviour
     public void StartGameOnClick()
     {
         source.PlayOneShot(buttonClickSound, 1F);
-        GameController.control.StartGame();   // Launch first real trial
+        GameController.control.WaitForScannerStart();   // Launch first real trial
     }
 
     // ********************************************************************** //
