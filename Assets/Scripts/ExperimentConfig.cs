@@ -206,7 +206,7 @@ public class ExperimentConfig
         displayCueTime         = 2.0f;
         goCueDelay             = 1.5f;    //
         goalHitPauseTime       = 1.5f;    // This will also be the amount of time between computer vs human control handovers (+ minDwellAtReward + preRewardAppearTime)
-        finalGoalHitPauseTime  = 2.0f;    // 
+        finalGoalHitPauseTime  = 4.0f;    // We get a neural signal for the final reward-recieved state here
         minDwellAtReward       = 0.2f;
         preRewardAppearTime    = 0.3f;    
         displayMessageTime     = 1.5f;     
@@ -219,7 +219,7 @@ public class ExperimentConfig
 
        // physical movement times
         oneSquareMoveTime = 0.1f;         // Time it will take player to move from one square to next (sec)
-        minTimeBetweenMoves = 0.2f; //0.7f;      // How much time between each allowable move (from movement trigger) (sec) (must be greater than oneSquareMoveTime or position moves off board - weird exception)
+        minTimeBetweenMoves = 0.7f; //0.7f;      // How much time between each allowable move (from movement trigger) (sec) (must be >> than oneSquareMoveTime or position moves off board and path planned execution doesnt work - weird exception)
 
         // These variables define the environment (are less likely to be played with)
         roomSize = 4;              // rooms are each 4x4 grids. If this changes, you will need to change this code

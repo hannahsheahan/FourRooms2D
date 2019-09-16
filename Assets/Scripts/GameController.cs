@@ -546,7 +546,7 @@ public class GameController : MonoBehaviour
                 {
                     UpdateScore();  // update the total score and flash it on the screen
                 }
-                if (stateTimer.ElapsedSeconds() > finalGoalHitPauseTime)
+                if (stateTimer.ElapsedSeconds() > finalGoalHitPauseTime) // we get an extra neural signal in this state
                 {
                     flashTotalScore = false;
                     flashCongratulations = false;
