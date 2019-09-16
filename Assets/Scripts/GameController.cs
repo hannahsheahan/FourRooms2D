@@ -580,7 +580,7 @@ public class GameController : MonoBehaviour
                 if (FLAG_trialError == false)
                 {
                     source.PlayOneShot(errorSound, 1F);
-                    displayMessage = "restartTrialMessage";
+                    //displayMessage = "restartTrialMessage";
                     UpdateScore();   // take -20 points off total score
                 }
                 FLAG_trialError = true;
@@ -598,7 +598,12 @@ public class GameController : MonoBehaviour
 
                     // Re-insert the trial further in the sequence for trying again later
                     // NextAttempt();   // Don't restart the trial immediately
-                    RepeatTrialAgainLater();
+
+                    // if we want to repeat this trial again late (for learning experiments)
+                    //RepeatTrialAgainLater();
+
+                    // If we're scanning neural data and dont want experiment to extend too long, dont bother repeating trial later
+                    NextScene();  // Just move on to the next trial in the sequence. HRS to check this is saving properly
                     StateNext(STATE_SETUP);
 
                     // reset the error flags so the trial can correctly restart

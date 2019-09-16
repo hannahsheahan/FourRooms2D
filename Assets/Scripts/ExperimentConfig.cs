@@ -63,6 +63,12 @@ public class ExperimentConfig
     private Vector3[] greenRoomPositions;
     private Vector3[] spawnedPresentPositions;
 
+    private Vector3[] blueRoomStartPositions;
+    private Vector3[] redRoomStartPositions;
+    private Vector3[] yellowRoomStartPositions;
+    private Vector3[] greenRoomStartPositions;
+
+
     private Vector3[] bluePresentPositions;
     private Vector3[] redPresentPositions;
     private Vector3[] yellowPresentPositions;
@@ -213,7 +219,7 @@ public class ExperimentConfig
 
        // physical movement times
         oneSquareMoveTime = 0.1f;         // Time it will take player to move from one square to next (sec)
-        minTimeBetweenMoves = 0.25f;      // How much time between each allowable move (from movement trigger) (sec) (must be greater than oneSquareMoveTime or position moves off board - weird exception)
+        minTimeBetweenMoves = 0.2f; //0.7f;      // How much time between each allowable move (from movement trigger) (sec) (must be greater than oneSquareMoveTime or position moves off board - weird exception)
 
         // These variables define the environment (are less likely to be played with)
         roomSize = 4;              // rooms are each 4x4 grids. If this changes, you will need to change this code
@@ -598,6 +604,32 @@ public class ExperimentConfig
 
     // ********************************************************************** //
 
+    private Vector3[] ChooseSingleCornerStartPosition(Vector3[] roomPositions)
+    {
+        Vector3[] positionInRoom = new Vector3[1];
+        Vector3 possiblePosition = new Vector3();
+
+        // generate a single start position from the vector (the one in the centre-most corner)
+        possiblePosition = roomPositions[0];
+        for (int i = 0; i < roomPositions.Length; i++)
+        {
+
+            // the way our room positions are designed we always want the square with x,y = [1|-1,1|-1]
+            if (possiblePosition.x > Math.Abs(roomPositions[i].x))
+            {
+                possiblePosition.x = roomPositions[i].x;
+            }
+            if (possiblePosition.y > Math.Abs(roomPositions[i].y))
+            {
+                possiblePosition.y = roomPositions[i].y;
+            }
+        }
+        positionInRoom[0] = possiblePosition;
+        return positionInRoom;
+    }
+
+    // ********************************************************************** //
+
     private Vector3[] ChooseNUnoccupiedPresentPositions(int trial, int nPresents, Vector3[] roomPositions)
     {
         Vector3[] positionsInRoom = new Vector3[nPresents];
@@ -731,6 +763,11 @@ public class ExperimentConfig
         yellowPresentPositions = ChooseSingleCornerPresentPosition(yellowRoomPositions);
         bluePresentPositions = ChooseSingleCornerPresentPosition(blueRoomPositions);
 
+        // HRS for having a single consistent start position in each room (in the corner opposite the present)
+        greenRoomStartPositions = ChooseSingleCornerStartPosition(greenRoomPositions);
+        redRoomStartPositions = ChooseSingleCornerStartPosition(redRoomPositions);
+        yellowRoomStartPositions = ChooseSingleCornerStartPosition(yellowRoomPositions);
+        blueRoomStartPositions = ChooseSingleCornerStartPosition(blueRoomPositions);
 
         // concatenate all the positions of generated presents 
         greenPresentPositions.CopyTo(presentPositions[trial], 0);
@@ -1349,7 +1386,7 @@ public class ExperimentConfig
 
             // select start location as random position in given room
             playerStartRooms[trial] = startRoom;
-            playerStartPositions[trial] = RandomPositionInRoom(startRoom);
+            playerStartPositions[trial] = RandomStartPositionInRoom(startRoom);
             iterationCounter = 0;
 
             // make sure the player doesn't spawn on one of the rewards
@@ -1357,7 +1394,7 @@ public class ExperimentConfig
             {
                 iterationCounter++;
                 collisionInSpawnLocations = false;   // benefit of the doubt
-                playerStartPositions[trial] = RandomPositionInRoom(startRoom);
+                playerStartPositions[trial] = RandomStartPositionInRoom(startRoom);
                
                 // make sure player doesnt spawn on a present box
                 for (int k = 0; k < presentPositions[trial].Length; k++)
@@ -1399,6 +1436,30 @@ public class ExperimentConfig
             case "yellow":
                 return yellowRoomPositions[UnityEngine.Random.Range(0, yellowRoomPositions.Length - 1)];
             
+            default:
+                return new Vector3(0.0f, 0.0f, 0.0f);  // this should never happen
+        }
+    }
+
+    // ********************************************************************** //
+
+    private Vector3 RandomStartPositionInRoom(string roomColour)
+    {
+        // We will use this to restrict the start positions to be in the corner opposite each boulder, in each room
+        switch (roomColour)
+        {
+            case "blue":
+                return blueRoomStartPositions[UnityEngine.Random.Range(0, blueRoomStartPositions.Length - 1)];
+
+            case "red":
+                return redRoomStartPositions[UnityEngine.Random.Range(0, redRoomStartPositions.Length - 1)];
+
+            case "green":
+                return greenRoomStartPositions[UnityEngine.Random.Range(0, greenRoomStartPositions.Length - 1)];
+
+            case "yellow":
+                return yellowRoomStartPositions[UnityEngine.Random.Range(0, yellowRoomStartPositions.Length - 1)];
+
             default:
                 return new Vector3(0.0f, 0.0f, 0.0f);  // this should never happen
         }
@@ -1561,6 +1622,7 @@ public class ExperimentConfig
 
     private void GenerateRandomTrialPositions(int trial)
     {
+        // HRS not currently used
         int iterationCounter = 0;
 
         // Generate a trial that randomly positions the player and reward/s
