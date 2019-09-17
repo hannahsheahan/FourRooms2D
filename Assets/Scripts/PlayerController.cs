@@ -309,6 +309,45 @@ public class PlayerController : MovingObject
 
     // ********************************************************************** //
 
+    private Vector2 PickRewardLocation(List<Vector2> rewardLocations) 
+    {
+        int[] pathLength = new int[rewardLocations.Count];
+        Vector2 goalPosition;
+
+        for (int i = 0; i < rewardLocations.Count; i++)
+        {
+            possiblePath = pathfinder.FindPath(currentPlayerPosition, rewardLocations[i]);
+            pathLength[i] = possiblePath.Count;
+        }
+        int shortestPathIndex = Array.IndexOf(pathLength, pathLength.Min());
+        goalPosition = rewardLocations[shortestPathIndex];
+        Debug.Log("Computer agent is picking a boulder that will be rewarded.");
+
+        return goalPosition;
+    }
+
+    // ********************************************************************** //
+
+        private Vector2 PickNonRewardLocation(List<Vector2> nonRewardLocations) 
+        {
+        // compute path distance to nonrewardLocations[0] and nonrewardLocations[1]...
+        int[] pathLength = new int[nonRewardLocations.Count];
+        Vector2 goalPosition;
+
+        for (int i = 0; i < nonRewardLocations.Count; i++)
+        {
+            possiblePath = pathfinder.FindPath(currentPlayerPosition, nonRewardLocations[i]);
+            pathLength[i] = possiblePath.Count;
+        }
+        int shortestPathIndex = Array.IndexOf(pathLength, pathLength.Min());
+        goalPosition = nonRewardLocations[shortestPathIndex];
+        Debug.Log("Computer agent is picking a boulder that will not be rewarded.");
+
+        return goalPosition;
+    }
+
+    // ********************************************************************** //
+
     private Vector2 DetermineGoal(Vector2 playerPosition) 
     {
         // This just determines the final goal for the computer agent
@@ -410,21 +449,13 @@ public class PlayerController : MovingObject
                 // Determine which correct reward is closest
                 // compute path distance to rewardLocations[0] and rewardLocations[1]...
                 if (rewardLocations.Count > 0) 
-                { 
-                    int[] pathLength = new int[rewardLocations.Count];
-                    for (int i=0; i < rewardLocations.Count; i++) 
-                    { 
-                        possiblePath = pathfinder.FindPath(currentPlayerPosition, rewardLocations[i]);
-                        pathLength[i] = possiblePath.Count;
-                    }
-                    shortestPathIndex = Array.IndexOf(pathLength, pathLength.Min());
-                    goalPosition = rewardLocations[shortestPathIndex];
-                    Debug.Log("Computer agent is picking a boulder that will be rewarded.");
+                {
+                    goalPosition = PickRewardLocation(rewardLocations);
                 }
                 else 
                 {
-                    goalPosition = new Vector2(0, 0); // This should never be triggered
-                    Debug.Log("ERROR: Computer agent target position incorrectly specified - attempted to go to reward location but none left.");
+                    Debug.Log("Computer agent wanted to go to reward location but none left, so going to a non-reward location.");
+                    goalPosition = PickNonRewardLocation(nonRewardLocations);
                 }
             }
             else 
@@ -432,20 +463,12 @@ public class PlayerController : MovingObject
                 if (nonRewardLocations.Count > 0)
                 {
                     // compute path distance to nonrewardLocations[0] and nonrewardLocations[1]...
-                    int[] pathLength = new int[nonRewardLocations.Count];
-                    for (int i = 0; i < nonRewardLocations.Count; i++)
-                    {
-                        possiblePath = pathfinder.FindPath(currentPlayerPosition, nonRewardLocations[i]);
-                        pathLength[i] = possiblePath.Count;
-                    }
-                    shortestPathIndex = Array.IndexOf(pathLength, pathLength.Min());
-                    goalPosition = nonRewardLocations[shortestPathIndex];
-                    Debug.Log("Computer agent is picking a boulder that will not be rewarded.");
+                    goalPosition = PickNonRewardLocation(nonRewardLocations);
                 }
                 else 
                 {
-                    goalPosition = new Vector2(0, 0); // This should never be triggered
-                    Debug.Log("ERROR: Computer agent target position incorrectly specified - attempted to go to non-reward location but none left.");
+                    Debug.Log("Computer agent wanted to go to non-reward location but none left, so going to a reward location.");
+                    goalPosition = PickRewardLocation(rewardLocations);
                 }
             }
         }
