@@ -238,8 +238,8 @@ public class ExperimentConfig
         numberPresentsPerRoom  = 1;       //
 
        // physical movement times
-        oneSquareMoveTime = 0.1f;         // Time it will take player to move from one square to next (sec)
-        minTimeBetweenMoves = 0.7f;      // How much time between each allowable move (from movement trigger) (sec) (must be >> than oneSquareMoveTime or position moves off board and path planned execution doesnt work - weird exception)
+        oneSquareMoveTime = 0.4f;        // Time it will take player to move from one square to next (sec) for animation
+        minTimeBetweenMoves = 1.0f;      // How much time between each allowable move (from movement trigger) (sec) (must be >> than oneSquareMoveTime or position moves off board and path planned execution doesnt work - weird exception)
 
         // These variables define the environment (are less likely to be played with)
         roomSize = 4;              // rooms are each 4x4 grids. If this changes, you will need to change this code
