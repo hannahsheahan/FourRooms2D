@@ -1590,7 +1590,7 @@ MonoBehaviour:
     It takes time to unlock each bridge the first time you use it, so choose your
     bridges carefully.  Once a bridge has been unlocked you may use it as much as
     you like on that trial with no further time penalties.\n\n10.   You will be paid
-    a bonus $0.001 for each point in your final score (this could be up to $2.50 if
+    a bonus $0.001 for each point in your final score (this could be up to $1.00 if
     you do well).\n\n11.  You will start with 2 practice trials. These won't count
     towards your total score.\n\n13.   Can you beat the high score? Good luck! "
 --- !u!222 &1631422236
