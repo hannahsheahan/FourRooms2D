@@ -1197,7 +1197,7 @@ Tilemap:
   - m_RefCount: 16
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_AnimationFrameRate: 1
-  m_Color: {r: 0.8773585, g: 0.78136414, b: 0.16140087, a: 1}
+  m_Color: {r: 0.7882353, g: 0.5254902, b: 1, a: 1}
   m_Origin: {x: -3, y: -4, z: 0}
   m_Size: {x: 14, y: 9, z: 1}
   m_TileAnchor: {x: 0, y: 0.5, z: 0}
@@ -5406,7 +5406,7 @@ Tilemap:
   - m_RefCount: 16
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_AnimationFrameRate: 1
-  m_Color: {r: 0.9150943, g: 0.33057064, b: 0.2978373, a: 1}
+  m_Color: {r: 0.7882353, g: 0.5254902, b: 1, a: 1}
   m_Origin: {x: -2, y: -4, z: 0}
   m_Size: {x: 13, y: 9, z: 1}
   m_TileAnchor: {x: 0, y: 0.5, z: 0}
@@ -5714,7 +5714,7 @@ Tilemap:
   - m_RefCount: 16
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_AnimationFrameRate: 1
-  m_Color: {r: 0.2891153, g: 0.59838915, b: 0.8396226, a: 1}
+  m_Color: {r: 0.7882353, g: 0.5254902, b: 1, a: 1}
   m_Origin: {x: -3, y: -4, z: 0}
   m_Size: {x: 14, y: 9, z: 1}
   m_TileAnchor: {x: 0, y: 0.5, z: 0}
@@ -6336,7 +6336,7 @@ Tilemap:
   - m_RefCount: 16
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_AnimationFrameRate: 1
-  m_Color: {r: 0.18970275, g: 0.8207547, b: 0.25110054, a: 1}
+  m_Color: {r: 0.7882353, g: 0.5254902, b: 1, a: 1}
   m_Origin: {x: -2, y: -4, z: 0}
   m_Size: {x: 13, y: 9, z: 1}
   m_TileAnchor: {x: 0, y: 0.5, z: 0}
