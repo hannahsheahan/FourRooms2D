@@ -50,11 +50,11 @@ public class TrialData
     public float errorDwellTime;
     public float goalHitPauseTime;
     public float finalGoalHitPauseTime;
-    public float hallwayFreezeTime;
+    public float[] hallwayFreezeTime;     // jittered & different for each doorway
     public float preFreezeTime;
     public float oneSquareMoveTime; 
     public float minTimeBetweenMoves;
-    public float blankTime;
+    public float blankTime;               // jittered
     public float animationTime;
 
     // trial error flags

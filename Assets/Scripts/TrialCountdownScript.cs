@@ -30,20 +30,20 @@ public class TrialCountdownScript : MonoBehaviour {
         {
             frozenSecondsLeft = secondsLeft - subtractTime;
             // make sure it freezes for AT LEAST hallwayFreezeTime
-            if ((frozenSecondsLeft >= 0) && (frozenSecondsLeft <= GameController.control.hallwayFreezeTime-1))
+            if ((frozenSecondsLeft >= 0) && (frozenSecondsLeft <= GameController.control.hallwayFreezeTime[GameController.control.hallwaysTraversed] -1))
             {
                 FrozenCountdownTime.text = (frozenSecondsLeft).ToString();
 
             }
             else
             {
-                FrozenCountdownTime.text = ((int)Mathf.Round(GameController.control.hallwayFreezeTime)).ToString();
+                FrozenCountdownTime.text = ((int)Mathf.Round(GameController.control.hallwayFreezeTime[GameController.control.hallwaysTraversed])).ToString();
             }
         }
         else
         {
             FrozenCountdownTime.text = "";
-            subtractTime = (int)Mathf.Round(timeLeft - GameController.control.hallwayFreezeTime); 
+            subtractTime = (int)Mathf.Round(timeLeft - GameController.control.hallwayFreezeTime[GameController.control.hallwaysTraversed]); 
         }
 
     }

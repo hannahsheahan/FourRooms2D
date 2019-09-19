@@ -101,7 +101,7 @@ public class GameController : MonoBehaviour
     public float totalMovementTime;
     public float totalExperimentTime;
     public float currentMovementTime;
-    public float hallwayFreezeTime;
+    public float[] hallwayFreezeTime;
     public float preFreezeTime;
     public float currentFrozenTime;
     public bool displayTimeLeft;
@@ -188,6 +188,7 @@ public class GameController : MonoBehaviour
     public bool playersTurn;      // for moving in discrete steps on a 2D grid
     public int[] giftWrapState;
     public List<string> giftWrapStateTransitions = new List<string>();   // recorded state of the giftboxes (in sync with the player data)
+    public int hallwaysTraversed = 0;
 
     private bool gameStarted = false;
 
@@ -664,15 +665,16 @@ public class GameController : MonoBehaviour
                 Player.GetComponent<PlayerController>().enabled = false;
                 currentFrozenTime = currentMovementTime - firstFrozenTime; // dont think this is being used for anything (HRS 14/05/2019)
 
-                if ( (stateTimer.ElapsedSeconds() > preFreezeTime) && (stateTimer.ElapsedSeconds() <= hallwayFreezeTime) )
+                if ( (stateTimer.ElapsedSeconds() > preFreezeTime) && (stateTimer.ElapsedSeconds() <= hallwayFreezeTime[hallwaysTraversed]) )
                 {
                     displayMessage = "traversingHallway";
                 }
 
-                if (stateTimer.ElapsedSeconds() > hallwayFreezeTime)
+                if (stateTimer.ElapsedSeconds() > hallwayFreezeTime[hallwaysTraversed])
                 {
                     Player.GetComponent<PlayerController>().enabled = true;
                     displayMessage = "noMessage";
+                    hallwaysTraversed++;
                     StateNext(previousState);
                 }
                 break;
@@ -742,6 +744,7 @@ public class GameController : MonoBehaviour
         debriefResponseTime = 0f;
         showCanvasReward = false;
         controlStateIndex = 0;
+        hallwaysTraversed = 0;
 
         for (int i = 0; i < scaleUpReward.Length; i++)
         {
