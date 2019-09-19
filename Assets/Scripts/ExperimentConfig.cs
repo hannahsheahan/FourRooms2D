@@ -127,13 +127,14 @@ public class ExperimentConfig
     {
         // Experiments with training blocked by context
 
-        //experimentVersion = "mturk2D_cheesewine";     // ***HRS note that if you do wacky colours youll have to change the debrief question text which mentions room colours
+        //experimentVersion = "mturk2D_cheesewatermelon";     // ***HRS note that if you do wacky colours youll have to change the debrief question text which mentions room colours
         //experimentVersion = "mturk2D_peanutmartini";
-        //experimentVersion = "mturk2D_cheesewine_wackycolours";  
+        //experimentVersion = "mturk2D_cheesewatermelon_wackycolours";  
         //experimentVersion = "mturk2D_peanutmartini_wackycolours";
         //experimentVersion = "micro2D_debug"; 
-        experimentVersion = "scannertask_cheese";   // be careful with adding extra practice trials between scan runs though (dont have extra practice)
+        //experimentVersion = "scannertask_cheese";   // be careful with adding extra practice trials between scan runs though (dont have extra practice)
         //experimentVersion = "scannertask_peanut";
+        experimentVersion = "scannertask_banana";
 
         // ------------------------------------------
 
@@ -156,10 +157,18 @@ public class ExperimentConfig
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
                 transferCounterbalance = false;                                     // this does nothing
-                wackyColours = true;                                                // peanut/martini fMRI task has diff coloured floors
                 break;
 
-            case "mturk2D_cheesewine":       // ----Full 4 block learning experiment-----
+            case "scannertask_banana":       // ---- The fMRI scanning task: 32 trial run B ----//
+                nDebreifQuestions = 0;
+                practiceTrials = 0 + getReadyTrial;
+                totalTrials = 32 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
+                restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
+                restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
+                transferCounterbalance = false;                                     // this does nothing
+                break;
+
+            case "mturk2D_cheesewatermelon":       // ----Full 4 block learning experiment-----
                 nDebreifQuestions = 0; 
                 practiceTrials = 2 + getReadyTrial;
                 totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
@@ -168,7 +177,7 @@ public class ExperimentConfig
                 transferCounterbalance = false;                                     // this does nothing
                 break;
             
-            case "mturk2D_cheesewine_wackycolours":       // ----Full 4 block learning experiment-----
+            case "mturk2D_cheesewatermelon_wackycolours":       // ----Full 4 block learning experiment-----
                 nDebreifQuestions = 0; 
                 practiceTrials = 2 + getReadyTrial;
                 totalTrials = 16 * 4 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
@@ -305,7 +314,7 @@ public class ExperimentConfig
                 nextTrial = RestBreakHere(nextTrial);
 
                 //---- test context A2
-                nextTrial = AddfMRITrainingBlock(nextTrial, "wine");
+                nextTrial = AddfMRITrainingBlock(nextTrial, "watermelon");
 
                 break;
 
@@ -319,8 +328,19 @@ public class ExperimentConfig
                 nextTrial = AddfMRITrainingBlock(nextTrial, "martini");
                 break;
 
-            case "mturk2D_cheesewine":       // ----Full 4 block learning experiment-----
-            case "mturk2D_cheesewine_wackycolours":  
+
+            case "scannertask_banana":
+                //---- test context B1
+                nextTrial = AddfMRITrainingBlock(nextTrial, "banana");
+                nextTrial = RestBreakHere(nextTrial);
+
+                //---- test context B2
+                nextTrial = AddfMRITrainingBlock(nextTrial, "mushroom");
+                break;
+
+
+            case "mturk2D_cheesewatermelon":       // ----Full 4 block learning experiment-----
+            case "mturk2D_cheesewatermelon_wackycolours":  
                    
                 //---- training block 1
                 nextTrial = AddTrainingBlock(nextTrial);
@@ -442,7 +462,7 @@ public class ExperimentConfig
         else
         {
             rewards[0] = "cheese";
-            rewards[1] = "wine bottle";
+            rewards[1] = "watermelon";
         }
 
         if (wackyColours) 
@@ -892,7 +912,7 @@ public class ExperimentConfig
         }
 
         // Possible reward types
-        possibleRewardTypes = new string[] { "wine", "cheese", "banana", "watermelon" };  // ***HRS dont think this gets used
+        possibleRewardTypes = new string[] { "watermelon", "cheese", "banana", "peanut" };  // ***HRS dont think this gets used
     }
 
     // ********************************************************************** //
@@ -972,15 +992,15 @@ public class ExperimentConfig
         // Add a 16 trial training block to the trial list. Trials are randomised within each context, but not between contexts 
         bool freeForageFLAG = false;
 
-        if (rand.Next(2) == 0)   // randomise whether the wine or cheese sub-block happens first
+        if (rand.Next(2) == 0)   // randomise whether the watermelon or cheese sub-block happens first
         {
-            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine", freeForageFLAG);
+            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "watermelon", freeForageFLAG);
             nextTrial = SingleContextDoubleRewardBlock(nextTrial, "cheese", freeForageFLAG);
         }
         else
         {
             nextTrial = SingleContextDoubleRewardBlock(nextTrial, "cheese", freeForageFLAG);
-            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine", freeForageFLAG);
+            nextTrial = SingleContextDoubleRewardBlock(nextTrial, "watermelon", freeForageFLAG);
         }
         return nextTrial;
     }
@@ -993,7 +1013,7 @@ public class ExperimentConfig
         int firstTrial = nextTrial;
         bool freeForageFLAG = false;
         nextTrial = SingleContextDoubleRewardBlock(nextTrial, "cheese", freeForageFLAG);
-        nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine", freeForageFLAG);
+        nextTrial = SingleContextDoubleRewardBlock(nextTrial, "watermelon", freeForageFLAG);
 
         // reshuffle the trial ordering so they are intermingled but preserve the previous arrangement of things
         ReshuffleTrialOrder(firstTrial, nextTrial-firstTrial );
@@ -1044,17 +1064,17 @@ public class ExperimentConfig
         // Add a 16 trial free-foraging block in which all boxes are rewarded, to the trial list. Trials are randomised within each context, but not between contexts. 
         bool freeForageFLAG = true;
 
-        if (rewardSet == "cheeseandwine") 
+        if (rewardSet == "cheeseandwatermelon") 
         { 
-            if (rand.Next(2) == 0)   // randomise whether the wine or cheese sub-block happens first
+            if (rand.Next(2) == 0)   // randomise whether the watermelon or cheese sub-block happens first
             {
-                nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine", freeForageFLAG);
+                nextTrial = SingleContextDoubleRewardBlock(nextTrial, "watermelon", freeForageFLAG);
                 nextTrial = SingleContextDoubleRewardBlock(nextTrial, "cheese", freeForageFLAG);
             }
             else
             {
                 nextTrial = SingleContextDoubleRewardBlock(nextTrial, "cheese", freeForageFLAG);
-                nextTrial = SingleContextDoubleRewardBlock(nextTrial, "wine", freeForageFLAG);
+                nextTrial = SingleContextDoubleRewardBlock(nextTrial, "watermelon", freeForageFLAG);
             }
         }
 
@@ -1066,7 +1086,7 @@ public class ExperimentConfig
     {
         // Add a 16 trial training block to the trial list. Trials are randomised within each context, but not between contexts 
 
-        nextTrial = DoubleRewardBlock_micro(nextTrial, "wine", numberOfTrials);
+        nextTrial = DoubleRewardBlock_micro(nextTrial, "watermelon", numberOfTrials);
 
         return nextTrial;
     }
@@ -1307,7 +1327,7 @@ public class ExperimentConfig
         // This function specifies the reward covariance
 
         // Note the variable 'contextSide' specifies whether the two rooms containing the reward will be located on the left or right of the environment
-        // e.g. if cheese context: the y/b side, vs the g/r side. if wine context: the y/g side, vs the b/r side.
+        // e.g. if cheese context: the y/b side, vs the g/r side. if watermelon context: the y/g side, vs the b/r side.
         // When the trial is a free foraging trial however, the 'contextSide' variable is used to specify which of the bridges is blocked, to control CW and CCW turns from the start room (since rewards are in all rooms).
 
 
@@ -1332,7 +1352,7 @@ public class ExperimentConfig
                 }
                 break;
 
-            case "wine":   // horizontal
+            case "watermelon":   // horizontal
 
                 if (contextSide == 1)
                 {
@@ -1346,7 +1366,7 @@ public class ExperimentConfig
                 }
                 break;
 
-            case "watermelon":
+            //case "watermelon":
             case "peanut":
 
                 if (transferCounterbalance) 

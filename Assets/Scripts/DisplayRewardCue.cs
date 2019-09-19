@@ -15,6 +15,8 @@ public class DisplayRewardCue : MonoBehaviour
     public Sprite watermelonImage;
     public Sprite peanutImage;
     public Sprite pineappleImage;
+    public Sprite cherryImage;
+    public Sprite mushroomImage;
     private string cue;
     private Vector3 originalRewardScale;
 
@@ -58,6 +60,13 @@ public class DisplayRewardCue : MonoBehaviour
                 case "pineapple":
                     rewardImage.sprite = pineappleImage;
                     break;
+                case "cherries":
+                    rewardImage.sprite = cherryImage;
+                    break;
+                case "mushroom":
+                    rewardImage.sprite = mushroomImage;
+                    break;
+
             }
 
             if (GameController.control.showCanvasReward) 

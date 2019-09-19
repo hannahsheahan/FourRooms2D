@@ -57,6 +57,18 @@ EditorBuildSettings:
     path: Assets/Scenes/FourRooms_wackycolours_peanut.unity
     guid: 6140436847d614c6db87bdcc714ba72d
   - enabled: 1
+    path: Assets/Scenes/FourRooms_banana.unity
+    guid: 874e9355a3c964bc283a402e54975d81
+  - enabled: 1
+    path: Assets/Scenes/FourRooms_mushroom.unity
+    guid: d00a69521f9b542dcb25311160726674
+  - enabled: 1
+    path: Assets/Scenes/FourRooms_cherries.unity
+    guid: fe631f4e7bbf9485ebd1825dbec2d39d
+  - enabled: 1
+    path: Assets/Scenes/FourRooms_watermelon.unity
+    guid: e898bd6e74cb149bc8cf95d58911f673
+  - enabled: 1
     path: Assets/Scenes/RestBreak.unity
     guid: 127d00453e8d144728db204b33f39c57
   - enabled: 1
