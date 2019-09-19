@@ -142,7 +142,7 @@ public class ExperimentConfig
         {
             case "scannertask_cheese":       // ---- The fMRI scanning task: 32 trial run A ----//
                 nDebreifQuestions = 0;
-                practiceTrials = 2 + getReadyTrial;
+                practiceTrials = 0;
                 totalTrials = 32 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
@@ -151,7 +151,7 @@ public class ExperimentConfig
 
             case "scannertask_peanut":       // ---- The fMRI scanning task: 32 trial run B ----//
                 nDebreifQuestions = 0;
-                practiceTrials = 2 + getReadyTrial;
+                practiceTrials = 0;
                 totalTrials = 32 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
@@ -409,13 +409,13 @@ public class ExperimentConfig
             {
                 controlType[0] = "Human";
                 controlType[1] = "Computer";
-                SetDoubleRewardTrial(trial, trialInBlock, "pineapple", "blue", "red", "yellow", contextSide, controlType, controlCorrect, freeForageFLAG);
+                SetDoubleRewardTrial(trial, trialInBlock, "pineapple", "blue", "yellow", "green", contextSide, controlType, controlCorrect, freeForageFLAG);
             }
             else
             {
                 controlType[0] = "Computer";
                 controlType[1] = "Human";
-                SetDoubleRewardTrial(trial, trialInBlock, "pineapple", "red", "green", "blue", contextSide, controlType, controlCorrect, freeForageFLAG);
+                SetDoubleRewardTrial(trial, trialInBlock, "pineapple", "red", "red", "blue", contextSide, controlType, controlCorrect, freeForageFLAG);
             }
             trialMazes[trial] = "Practice";   // reset the maze for a practice trial
         }
