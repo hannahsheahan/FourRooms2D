@@ -261,12 +261,12 @@ public class GameController : MonoBehaviour
         // Wait for the scanner to trigger the experient to start (after all consent, participant info etc), then log each subsequent trigger
         if (waitingForScannerStart) 
         {
-            if (Input.GetKeyDown(KeyCode.T))  // the scanner triggers the experiment to start (and start logging time)
-            {
+            //if (Input.GetKeyDown(KeyCode.T))  // the scanner triggers the experiment to start (and start logging time)
+            //{
                 StartGame(); 
                 waitingForScannerStart = false;
                 continueRecordingScanner = true;
-            }
+            //}
         }
         else if (continueRecordingScanner)
         {
