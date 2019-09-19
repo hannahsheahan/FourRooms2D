@@ -134,7 +134,8 @@ public class ExperimentConfig
         //experimentVersion = "micro2D_debug"; 
         //experimentVersion = "scannertask_cheese";   // be careful with adding extra practice trials between scan runs though (dont have extra practice)
         //experimentVersion = "scannertask_peanut";
-        experimentVersion = "scannertask_banana";
+        //experimentVersion = "scannertask_banana";
+        experimentVersion = "scannertask_avocado";
 
         // ------------------------------------------
 
@@ -160,6 +161,15 @@ public class ExperimentConfig
                 break;
 
             case "scannertask_banana":       // ---- The fMRI scanning task: 32 trial run B ----//
+                nDebreifQuestions = 0;
+                practiceTrials = 0 + getReadyTrial;
+                totalTrials = 32 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
+                restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
+                restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
+                transferCounterbalance = false;                                     // this does nothing
+                break;
+
+            case "scannertask_avocado":       // ---- The fMRI scanning task: 32 trial run A ----//
                 nDebreifQuestions = 0;
                 practiceTrials = 0 + getReadyTrial;
                 totalTrials = 32 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
@@ -330,14 +340,22 @@ public class ExperimentConfig
 
 
             case "scannertask_banana":
-                //---- test context B1
+                //---- test context C1
                 nextTrial = AddfMRITrainingBlock(nextTrial, "banana");
                 nextTrial = RestBreakHere(nextTrial);
 
-                //---- test context B2
+                //---- test context C2
                 nextTrial = AddfMRITrainingBlock(nextTrial, "mushroom");
                 break;
 
+            case "scannertask_avocado":
+                //---- test context D1
+                nextTrial = AddfMRITrainingBlock(nextTrial, "avocado");
+                nextTrial = RestBreakHere(nextTrial);
+
+                //---- test context D2
+                nextTrial = AddfMRITrainingBlock(nextTrial, "pineapple");
+                break;
 
             case "mturk2D_cheesewatermelon":       // ----Full 4 block learning experiment-----
             case "mturk2D_cheesewatermelon_wackycolours":  
@@ -1366,8 +1384,9 @@ public class ExperimentConfig
                 }
                 break;
 
-            //case "watermelon":
             case "peanut":
+            case "mushroom":
+            case "avocado":
 
                 if (transferCounterbalance) 
                 {
@@ -1400,6 +1419,7 @@ public class ExperimentConfig
 
             case "banana":
             case "martini":
+            case "pineapple":
 
                 if (transferCounterbalance)
                 {

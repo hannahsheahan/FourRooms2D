@@ -17,6 +17,7 @@ public class DisplayRewardCue : MonoBehaviour
     public Sprite pineappleImage;
     public Sprite cherryImage;
     public Sprite mushroomImage;
+    public Sprite avocadoImage;
     private string cue;
     private Vector3 originalRewardScale;
 
@@ -65,6 +66,9 @@ public class DisplayRewardCue : MonoBehaviour
                     break;
                 case "mushroom":
                     rewardImage.sprite = mushroomImage;
+                    break;
+                case "avocado":
+                    rewardImage.sprite = avocadoImage;
                     break;
 
             }
