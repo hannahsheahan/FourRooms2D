@@ -66,8 +66,10 @@ public class CameraController : MonoBehaviour
 
                 case "hallway":  
                     // Note: reason we are not zooming out on hallways is because we want to detect neural signals for over-representation of bottlenecks.
-                    cameraPosition = new Vector3(0f, 0f, zPosition); // don't update the camera position for hallways
-                    cameraZoom = 5f;
+                    //cameraPosition = new Vector3(0f, 0f, zPosition); // don't update the camera position for hallways
+                    //cameraZoom = 5f;
+
+                    // keep camera in previous position
                     break;
 
                 default:

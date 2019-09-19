@@ -142,7 +142,7 @@ public class ExperimentConfig
         {
             case "scannertask_cheese":       // ---- The fMRI scanning task: 32 trial run A ----//
                 nDebreifQuestions = 0;
-                practiceTrials = 0;
+                practiceTrials = 0 + getReadyTrial;
                 totalTrials = 32 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
@@ -151,7 +151,7 @@ public class ExperimentConfig
 
             case "scannertask_peanut":       // ---- The fMRI scanning task: 32 trial run B ----//
                 nDebreifQuestions = 0;
-                practiceTrials = 0;
+                practiceTrials = 0 + getReadyTrial;
                 totalTrials = 32 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
