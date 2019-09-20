@@ -135,13 +135,24 @@ public class ExperimentConfig
         //experimentVersion = "scannertask_cheese";   // be careful with adding extra practice trials between scan runs though (dont have extra practice)
         //experimentVersion = "scannertask_peanut";
         //experimentVersion = "scannertask_banana";
-        experimentVersion = "scannertask_avocado";
-
+        // experimentVersion = "scannertask_avocado";
+        experimentVersion = "mapping_practice";
         // ------------------------------------------
 
         // Set these variables to define your experiment:
         switch (experimentVersion)
         {
+
+            case "mapping_practice":         // ---- a 5 min practice during brain mapping ---- //
+                nDebreifQuestions = 0;
+                practiceTrials = 10 + getReadyTrial;
+                totalTrials = 0 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
+                restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
+                restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
+                transferCounterbalance = false;                                     // this does nothing
+                break;
+
+
             case "scannertask_cheese":       // ---- The fMRI scanning task: 32 trial run A ----//
                 nDebreifQuestions = 0;
                 practiceTrials = 0 + getReadyTrial;
@@ -308,15 +319,19 @@ public class ExperimentConfig
         trialMazes[totalTrials - 1] = "Exit";
 
 
-        // Add in the practice trials in an open practice arena with no colour on floors
-        AddPracticeTrials();
-
         // Generate the trial randomisation/list that we want.   Note: Ensure this is aligned with the total number of trials
         int nextTrial = System.Array.IndexOf(trialMazes, null);
+
+        // Add in the practice trials
+        AddPracticeTrials(nextTrial, practiceTrials);
+
+        // Find the next trial that hasnt been specified yet to start defining the rest of our trial sequence
+        nextTrial = System.Array.IndexOf(trialMazes, null);
 
         // Define the full trial sequence
         switch (experimentVersion)
         {
+
             case "scannertask_cheese":
 
                 //---- test context A1
@@ -429,33 +444,17 @@ public class ExperimentConfig
 
     // ********************************************************************** //
 
-    private void AddPracticeTrials()
+    private void AddPracticeTrials(int nextTrial, int numPracticeTrials)
     {
-        bool freeForageFLAG = false;
-        int trialInBlock;
-        int contextSide = 1;             // ...this doesn't actually matter for practice trials
-        bool controlCorrect = true;
+        if (numPracticeTrials > 0) 
+        { 
+            bool freeForageFLAG = false;
+            SingleContextfMRIPracticeBlock(nextTrial, numPracticeTrials, "pineapple", freeForageFLAG);
 
-        // Add in the practice/familiarisation trials in an open arena
-        for (int trial = setupTrials; trial < setupTrials + practiceTrials - 1; trial++)
-        {
-            trialInBlock = trial - setupTrials;
-            // just make the rewards on each side of the hallway/bridge
-            string[] controlType = new string[2];   // HRS important to have new memory for randomisation, otherwise just get a pointer (value gets overwritten)
-
-            if (trial % 2 == 0)
-            {
-                controlType[0] = "Human";
-                controlType[1] = "Computer";
-                SetDoubleRewardTrial(trial, trialInBlock, "pineapple", "blue", "yellow", "green", contextSide, controlType, controlCorrect, freeForageFLAG);
+            for (int trial = nextTrial; trial < practiceTrials+nextTrial; trial++) 
+            { 
+                trialMazes[trial] = "Practice";   // reset the maze for a practice trial (good for marking in our datafile too)
             }
-            else
-            {
-                controlType[0] = "Computer";
-                controlType[1] = "Human";
-                SetDoubleRewardTrial(trial, trialInBlock, "pineapple", "red", "red", "blue", contextSide, controlType, controlCorrect, freeForageFLAG);
-            }
-            trialMazes[trial] = "Practice";   // reset the maze for a practice trial
         }
     }
 
@@ -1110,6 +1109,93 @@ public class ExperimentConfig
     }
     // ********************************************************************** //
 
+    private int SingleContextfMRIPracticeBlock(int firstTrial, int blockLength, string context, bool freeForageFLAG)
+    {
+        // This function specifies a set of semi-balanced trials for practicing on. 
+        // This will be the familiarisation session for participants to get used to the new experiment pace, switching control etc of the test sessions, 
+        // and we will take MRI brain map during this time. 
+
+        string startRoom;
+        int contextSide;
+        bool controlCorrect;
+
+        string[] arrayContexts = new string[blockLength];
+        string[] arrayStartRooms = new string[blockLength];
+        int[] arrayContextSides = new int[blockLength];
+        string[][] arrayControlType = new string[blockLength][];
+        bool[] arrayControlCorrect = new bool[blockLength];
+
+        for (int i = 0; i < blockLength; i++)
+        {
+            // use a different start location for each trial
+            switch (i % 4)
+            {
+                case 0:
+                    startRoom = "yellow";
+                    break;
+                case 1:
+                    startRoom = "green";
+                    break;
+                case 2:
+                    startRoom = "red";
+                    break;
+                case 3:
+                    startRoom = "blue";
+                    break;
+                default:
+                    startRoom = "error";
+                    Debug.Log("Start room specified incorrectly");
+                    break;
+            }
+
+            // switch the side of the room the rewards are located on for each context
+            if (blockLength % 2 != 0)
+            {
+                Debug.Log("Error: Odd number of trials specified per block. Specify even number for proper counterbalancing");
+            }
+
+            // Note that the contextSide is important for the context training blocks, but irrelevant for the free-foraging blocks
+            if ((i % 8) < 4)
+            {
+                contextSide = 1;
+            }
+            else
+            {
+                contextSide = 2;
+            }
+
+            // Now mark whether human or computer control first for this trial
+            string[] controlType = new string[2];       // allocate new memory (HRS this is important for randomisation, otherwise we just have a pointer)
+            if (blockLength % 2 == 0)    // ***HRS note that for these practice trials this wont be perfectly balanced, but they will get some experience with computer v human starting first
+            {
+                controlType[0] = "Human";
+                controlType[1] = "Computer";
+            }
+            else
+            {
+                controlType[0] = "Computer";
+                controlType[1] = "Human";
+            }
+            // Mark whether the computer control moves the agent to the correct or incorrect boulder
+            controlCorrect = false;   // always have agent move to incorrect location to get good coverage (for now ***HRS)
+
+
+            // Store trial setup in array, for later randomisation
+            arrayContexts[i] = context;
+            arrayStartRooms[i] = startRoom;
+            arrayContextSides[i] = contextSide;
+            arrayControlType[i] = controlType;
+            arrayControlCorrect[i] = controlCorrect;
+        }
+
+        // Randomise the trial order and save it
+        ShuffleTrialOrderAndStoreBlock(firstTrial, blockLength, arrayContexts, arrayStartRooms, arrayContextSides, arrayControlType, arrayControlCorrect, freeForageFLAG);
+
+        return firstTrial + blockLength;
+    }
+
+    // ********************************************************************** //
+
     private int SingleContextfMRIBlock(int firstTrial, string context, bool freeForageFLAG)
     {
         // This function specifies the required trials in the block for a 16 trial single context fMRI block
@@ -1494,7 +1580,7 @@ public class ExperimentConfig
                 hallwayFreezeTime[trial] = new float[4];
                 for (int i = 0; i < nrooms; i++)
                 {
-                    hallwayFreezeTime[trial][i] = ExponentialJitter(2.5f, 2f, 8f);   // jitter times: mean, min, max, 
+                    hallwayFreezeTime[trial][i] = ExponentialJitter(3.5f, 2.5f, 8f);   // jitter times: mean, min, max, 
                 }
 
                 // select random locations in rooms 1 and 2 for the two rewards (one in each)
@@ -1588,7 +1674,7 @@ public class ExperimentConfig
                 hallwayFreezeTime[trial] = new float[4]; 
                 for (int i=0; i < nrooms; i++)
                 {
-                    hallwayFreezeTime[trial][i] = ExponentialJitter(2.5f, 1f, 8f);   // jitter times: mean, min, max, 
+                    hallwayFreezeTime[trial][i] = ExponentialJitter(3.5f, 2.5f, 8f);   // jitter times: mean, min, max, 
                 }
 
 
