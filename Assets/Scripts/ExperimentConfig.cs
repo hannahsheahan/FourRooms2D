@@ -132,8 +132,9 @@ public class ExperimentConfig
         //experimentVersion = "mturk2D_cheesewine_wackycolours";  
         //experimentVersion = "mturk2D_peanutmartini_wackycolours";
         //experimentVersion = "micro2D_debug"; 
-        experimentVersion = "scannertask_cheese";   // be careful with adding extra practice trials between scan runs though (dont have extra practice)
-        //experimentVersion = "scannertask_peanut";
+        //experimentVersion = "scannertask_cheese";   // be careful with adding extra practice trials between scan runs though (dont have extra practice)
+        experimentVersion = "scannertask_mturk_peanut";
+
 
         // ------------------------------------------
 
@@ -149,14 +150,14 @@ public class ExperimentConfig
                 transferCounterbalance = false;                                     // this does nothing
                 break;
 
-            case "scannertask_peanut":       // ---- The fMRI scanning task: 32 trial run B ----//
+            case "scannertask_mturk_peanut":       // ---- The fMRI scanning task: 32 trial run B ----//
                 nDebreifQuestions = 0;
                 practiceTrials = 2 + getReadyTrial;
-                totalTrials = 32 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
+                totalTrials = 64 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
-                restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
+                restbreakDuration = 20.0f;                                          // how long are the imposed rest breaks?
                 transferCounterbalance = false;                                     // this does nothing
-                wackyColours = true;                                                // peanut/martini fMRI task has diff coloured floors
+                wackyColours = false;                                               
                 break;
 
             case "mturk2D_cheesewine":       // ----Full 4 block learning experiment-----
@@ -309,7 +310,7 @@ public class ExperimentConfig
 
                 break;
 
-            case "scannertask_peanut":
+            case "scannertask_mturk_peanut":
 
                 //---- test context B1
                 nextTrial = AddfMRITrainingBlock(nextTrial, "peanut");
@@ -317,6 +318,14 @@ public class ExperimentConfig
 
                 //---- test context B2
                 nextTrial = AddfMRITrainingBlock(nextTrial, "martini");
+
+                //---- test context B1
+                nextTrial = AddfMRITrainingBlock(nextTrial, "peanut");
+                nextTrial = RestBreakHere(nextTrial);
+
+                //---- test context B2
+                nextTrial = AddfMRITrainingBlock(nextTrial, "martini");
+
                 break;
 
             case "mturk2D_cheesewine":       // ----Full 4 block learning experiment-----
