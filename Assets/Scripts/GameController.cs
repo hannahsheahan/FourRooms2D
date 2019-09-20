@@ -263,7 +263,7 @@ public class GameController : MonoBehaviour
         if (waitingForScannerStart) 
         {
             //if (Input.GetKeyDown(KeyCode.T))  // the scanner triggers the experiment to start (and start logging time)
-            //{
+            // {
                 StartGame(); 
                 waitingForScannerStart = false;
                 continueRecordingScanner = true;

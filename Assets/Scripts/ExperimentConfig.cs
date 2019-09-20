@@ -1349,8 +1349,6 @@ public class ExperimentConfig
         // When the trial is a free foraging trial however, the 'contextSide' variable is used to specify which of the bridges is blocked, to control CW and CCW turns from the start room (since rewards are in all rooms).
 
 
-        // HRS still to set control correct and control type array in here ***HRS
-
         bool trialSetCorrectly = false;
 
 
