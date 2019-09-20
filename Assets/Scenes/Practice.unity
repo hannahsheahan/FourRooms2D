@@ -6700,6 +6700,21 @@ PrefabInstance:
       propertyPath: targetPosition
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 6924345294433410377, guid: 196bfb754767646dfb0cc80de3c93869,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6924345294433410377, guid: 196bfb754767646dfb0cc80de3c93869,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6924345294433410377, guid: 196bfb754767646dfb0cc80de3c93869,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 196bfb754767646dfb0cc80de3c93869, type: 3}
 --- !u!224 &7969312230071600272
@@ -7168,6 +7183,9 @@ MonoBehaviour:
   watermelonImage: {fileID: 0}
   peanutImage: {fileID: 0}
   pineappleImage: {fileID: 21300010, guid: c2ce07b4cfe39e340b8238f75e7a21d2, type: 3}
+  cherryImage: {fileID: 0}
+  mushroomImage: {fileID: 0}
+  avocadoImage: {fileID: 0}
 --- !u!224 &7969312230905511814
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7567,6 +7585,9 @@ MonoBehaviour:
   watermelonImage: {fileID: 0}
   peanutImage: {fileID: 0}
   pineappleImage: {fileID: 21300000, guid: f9ea293bf11b84b4eac78bee7ebaa61c, type: 3}
+  cherryImage: {fileID: 0}
+  mushroomImage: {fileID: 0}
+  avocadoImage: {fileID: 0}
 --- !u!222 &7969312232073248786
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7737,6 +7758,9 @@ MonoBehaviour:
   watermelonImage: {fileID: 0}
   peanutImage: {fileID: 0}
   pineappleImage: {fileID: 21300000, guid: f9ea293bf11b84b4eac78bee7ebaa61c, type: 3}
+  cherryImage: {fileID: 0}
+  mushroomImage: {fileID: 0}
+  avocadoImage: {fileID: 0}
 --- !u!1 &7969312232172475813
 GameObject:
   m_ObjectHideFlags: 0

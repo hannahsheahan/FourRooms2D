@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5200508945754502757}
   - component: {fileID: 8325610520000856111}
   - component: {fileID: 1473807749081175195}
+  - component: {fileID: 3602518673158148218}
   m_Layer: 8
   m_Name: white_character
   m_TagString: Player
@@ -165,6 +166,7 @@ MonoBehaviour:
   blockingLayer:
     serializedVersion: 2
     m_Bits: 256
+  gridManager: {fileID: 0}
 --- !u!114 &1473807749081175195
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -178,3 +180,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   coords: []
+--- !u!114 &3602518673158148218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6924345294433410380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d496a7c345abd4b40a9a143bbb4b26ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

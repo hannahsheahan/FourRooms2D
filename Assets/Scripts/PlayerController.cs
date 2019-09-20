@@ -64,6 +64,7 @@ public class PlayerController : MovingObject
 
     void Update()
     {
+
         if (GameController.control.State >= GameController.STATE_GO)
         {
             jump = 0;   // disabling jump control

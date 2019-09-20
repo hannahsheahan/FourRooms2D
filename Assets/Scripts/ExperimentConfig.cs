@@ -135,8 +135,8 @@ public class ExperimentConfig
         //experimentVersion = "scannertask_cheese";   // be careful with adding extra practice trials between scan runs though (dont have extra practice)
         //experimentVersion = "scannertask_peanut";
         //experimentVersion = "scannertask_banana";
-        // experimentVersion = "scannertask_avocado";
-        experimentVersion = "mapping_practice";
+         experimentVersion = "scannertask_avocado";
+        //experimentVersion = "mapping_practice";
         // ------------------------------------------
 
         // Set these variables to define your experiment:
@@ -145,7 +145,7 @@ public class ExperimentConfig
 
             case "mapping_practice":         // ---- a 5 min practice during brain mapping ---- //
                 nDebreifQuestions = 0;
-                practiceTrials = 10 + getReadyTrial;
+                practiceTrials = 8 + getReadyTrial;
                 totalTrials = 0 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
@@ -323,7 +323,7 @@ public class ExperimentConfig
         int nextTrial = System.Array.IndexOf(trialMazes, null);
 
         // Add in the practice trials
-        AddPracticeTrials(nextTrial, practiceTrials);
+        AddPracticeTrials(nextTrial, practiceTrials-1);
 
         // Find the next trial that hasnt been specified yet to start defining the rest of our trial sequence
         nextTrial = System.Array.IndexOf(trialMazes, null);
@@ -418,7 +418,7 @@ public class ExperimentConfig
                 break;
 
             default:
-                Debug.Log("Warning: defining an untested trial sequence");
+                Debug.Log("Warning: defining either entirely practice trials, or an untested trial sequence");
                 break;
         }
 
@@ -451,8 +451,9 @@ public class ExperimentConfig
             bool freeForageFLAG = false;
             SingleContextfMRIPracticeBlock(nextTrial, numPracticeTrials, "pineapple", freeForageFLAG);
 
-            for (int trial = nextTrial; trial < practiceTrials+nextTrial; trial++) 
-            { 
+            for (int trial = nextTrial; trial < numPracticeTrials + nextTrial; trial++) 
+            {
+                Debug.Log("Adding another practice trial");
                 trialMazes[trial] = "Practice";   // reset the maze for a practice trial (good for marking in our datafile too)
             }
         }
