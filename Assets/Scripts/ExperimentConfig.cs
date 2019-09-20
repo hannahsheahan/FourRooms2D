@@ -238,8 +238,8 @@ public class ExperimentConfig
         numberPresentsPerRoom  = 1;       //
 
        // physical movement times
-        oneSquareMoveTime = 0.2f;        // Time it will take player to move from one square to next (sec) for animation
-        minTimeBetweenMoves = 0.5f;      // How much time between each allowable move (from movement trigger) (sec) (must be >> than oneSquareMoveTime or position moves off board and path planned execution doesnt work - weird exception)
+        oneSquareMoveTime = 0.1f;        // Time it will take player to move from one square to next (sec) for animation
+        minTimeBetweenMoves = 0.25f;      // How much time between each allowable move (from movement trigger) (sec) (must be >> than oneSquareMoveTime or position moves off board and path planned execution doesnt work - weird exception)
 
         // These variables define the environment (are less likely to be played with)
         roomSize = 4;              // rooms are each 4x4 grids. If this changes, you will need to change this code
@@ -408,14 +408,14 @@ public class ExperimentConfig
             if (trial % 2 == 0)
             {
                 controlType[0] = "Human";
-                controlType[1] = "Computer";
-                SetDoubleRewardTrial(trial, trialInBlock, "pineapple", "blue", "red", "yellow", contextSide, controlType, controlCorrect, freeForageFLAG);
+                controlType[1] = "Human";
+                SetDoubleRewardTrial(trial, trialInBlock, "pineapple", "blue", "red", "blue", contextSide, controlType, controlCorrect, freeForageFLAG);
             }
             else
             {
-                controlType[0] = "Computer";
+                controlType[0] = "Human";
                 controlType[1] = "Human";
-                SetDoubleRewardTrial(trial, trialInBlock, "pineapple", "red", "green", "blue", contextSide, controlType, controlCorrect, freeForageFLAG);
+                SetDoubleRewardTrial(trial, trialInBlock, "pineapple", "red", "green", "yellow", contextSide, controlType, controlCorrect, freeForageFLAG);
             }
             trialMazes[trial] = "Practice";   // reset the maze for a practice trial
         }
@@ -1132,11 +1132,11 @@ public class ExperimentConfig
             if (i < blockLength / 2) 
             {
                 controlType[0] = "Human";
-                controlType[1] = "Computer";
+                controlType[1] = "Human";
             }
             else 
             {
-                controlType[0] = "Computer";
+                controlType[0] = "Human";
                 controlType[1] = "Human";
             }
             // Mark whether the computer control moves the agent to the correct or incorrect boulder
@@ -1456,7 +1456,7 @@ public class ExperimentConfig
                 hallwayFreezeTime[trial] = new float[4];
                 for (int i = 0; i < nrooms; i++)
                 {
-                    hallwayFreezeTime[trial][i] = ExponentialJitter(2.5f, 2f, 8f);   // jitter times: mean, min, max, 
+                    hallwayFreezeTime[trial][i] = ExponentialJitter(3.5f, 2.5f, 8f);   // jitter times: mean, min, max, 
                 }
 
                 // select random locations in rooms 1 and 2 for the two rewards (one in each)
@@ -1545,12 +1545,12 @@ public class ExperimentConfig
                     trialMazes[trial] = "FourRooms_" + rewardTypes[trial];
                 }
                 freeForage[trial] = false;
-                maxMovementTime[trial] = 60.0f;        // 1 min to collect just the 2 rewards on covariance trials ***HRS changed from 60 on 4/06/2019
+                maxMovementTime[trial] = 40.0f;        // 1 min to collect just the 2 rewards on covariance trials ***HRS changed from 60 on 4/06/2019
                 blankTime[trial] = ExponentialJitter(4f, 3f, 8f);
                 hallwayFreezeTime[trial] = new float[4]; 
                 for (int i=0; i < nrooms; i++)
                 {
-                    hallwayFreezeTime[trial][i] = ExponentialJitter(2.5f, 1f, 8f);   // jitter times: mean, min, max, 
+                    hallwayFreezeTime[trial][i] = ExponentialJitter(3.5f, 2.5f, 8f);   // jitter times: mean, min, max, 
                 }
 
 
