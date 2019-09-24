@@ -36,14 +36,14 @@ public class TrialCountdownScript : MonoBehaviour {
 
             // Debug.Log("sec left: " + frozenSecondsLeft);
             // make sure it freezes for AT LEAST hallwayFreezeTime
-            if ((actualSecondsLeft >= 0f) && (actualSecondsLeft <= GameController.control.hallwayFreezeTime[GameController.control.hallwaysTraversed] -1))
+            if ((actualSecondsLeft >= 0f) && (actualSecondsLeft <= GameController.control.hallwayFreezeTime[GameController.control.hallwayTraversed] -1))
             {
                // FrozenCountdownTime.text = (frozenSecondsLeft).ToString();
                // Debug.Log("printed sec left: " + frozenSecondsLeft);
             }
             else
             {
-               // FrozenCountdownTime.text = ((int)Mathf.Round(GameController.control.hallwayFreezeTime[GameController.control.hallwaysTraversed])).ToString();
+               // FrozenCountdownTime.text = ((int)Mathf.Round(GameController.control.hallwayFreezeTime[GameController.control.hallwayTraversed])).ToString();
                // Debug.Log("printed sec left: " + frozenSecondsLeft);
             }
         }
@@ -53,8 +53,8 @@ public class TrialCountdownScript : MonoBehaviour {
 
             try 
             { 
-                subtractTime = (int)Mathf.Round(timeLeft - GameController.control.hallwayFreezeTime[GameController.control.hallwaysTraversed]);
-                actualSubtractTime = (timeLeft - GameController.control.hallwayFreezeTime[GameController.control.hallwaysTraversed]);
+                subtractTime = (int)Mathf.Round(timeLeft - GameController.control.hallwayFreezeTime[GameController.control.hallwayTraversed]);
+                actualSubtractTime = (timeLeft - GameController.control.hallwayFreezeTime[GameController.control.hallwayTraversed]);
             }
             catch (NullReferenceException e)
             {

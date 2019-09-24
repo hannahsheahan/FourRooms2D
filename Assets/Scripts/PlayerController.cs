@@ -15,6 +15,7 @@ public class PlayerController : MovingObject
     private Animator animator;
     private Timer playerControllerTimer;     // use this to discretize movement input
     private Vector2 currentPlayerPosition;
+    private Vector2 previousPlayerPosition;
     private float minTimeBetweenMoves;
     private string animateHow;
     private bool jumpingNow = false;
@@ -38,6 +39,9 @@ public class PlayerController : MovingObject
     private float minAgentPlanningTime = 1.0f;
     private Timer agentPlanningTimer;         // use this to give our computer agent some fake 'planning' pause time when control switches to the computer agent
 
+
+    Vector2[] bridgePositions = new Vector2[4];
+
     // ********************************************************************** //
     //Start overrides the Start function of MovingObject
     protected override void Start()
@@ -57,6 +61,11 @@ public class PlayerController : MovingObject
         agentPlanningTimer = new Timer();
         agentPlanningTimer.Reset();
 
+        bridgePositions[0] = new Vector2(0f, 3f);
+        bridgePositions[1] = new Vector2(0f, -3f);
+        bridgePositions[2] = new Vector2(3f, 0f);
+        bridgePositions[3] = new Vector2(-3f, 0f);
+
         base.Start(); // trigger the Start function from the MovingObject parent class
     }
 
@@ -70,6 +79,22 @@ public class PlayerController : MovingObject
             jump = 0;   // disabling jump control
             controlState = GameController.control.controlState; // only update this once per loop
             currentPlayerPosition = new Vector2(transform.position.x, transform.position.y);
+
+            // HRS hack for the triggering issue of freeze states on bridges (linecasting means we have to enable/disable player collidor with movement, triggering freeze state again whenever we try to move on bridge)
+            if ((previousPlayerPosition- currentPlayerPosition).magnitude > stepTolerance)
+            { 
+                for (int i=0; i < bridgePositions.Length; i++)
+                {
+                    Vector2 bridge = bridgePositions[i];
+                    if ((currentPlayerPosition-bridge).magnitude < stepTolerance) 
+                    {
+                        // just moved on to a bridge
+                        Debug.Log("Gonna freeze now");
+                        GameController.control.HallwayFreeze(i);
+                    }
+                }
+            }
+
 
             switch (controlState)
             {
@@ -127,7 +152,6 @@ public class PlayerController : MovingObject
                             horizontal = 0;
                             vertical = 0;
                         }
-
                     }
                     else
                     {
@@ -182,7 +206,9 @@ public class PlayerController : MovingObject
                 }
             }
             previousControlState = controlState;
+            previousPlayerPosition = currentPlayerPosition;
         }
+
     }
 
     // ********************************************************************** //
@@ -233,6 +259,7 @@ public class PlayerController : MovingObject
         else if (other.tag == "bridge")
         {
             //Debug.Log("Passing over a bridge. Woohoo!");
+            Debug.Log("triggered");
         }
         else
         {
@@ -266,6 +293,7 @@ public class PlayerController : MovingObject
             other.gameObject.SetActive(false);
 
         }
+
     }
 
     // ********************************************************************** //

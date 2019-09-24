@@ -392,6 +392,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a143fe2a7ab444f1882a7edec1cc8d49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hallway: 0
 --- !u!19719996 &122322958
 TilemapCollider2D:
   m_ObjectHideFlags: 0
@@ -656,6 +657,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a143fe2a7ab444f1882a7edec1cc8d49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hallway: 3
 --- !u!19719996 &388268723
 TilemapCollider2D:
   m_ObjectHideFlags: 0
@@ -5302,6 +5304,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a143fe2a7ab444f1882a7edec1cc8d49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hallway: 2
 --- !u!19719996 &1450094057
 TilemapCollider2D:
   m_ObjectHideFlags: 0
@@ -6232,6 +6235,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a143fe2a7ab444f1882a7edec1cc8d49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hallway: 1
 --- !u!19719996 &2113817613
 TilemapCollider2D:
   m_ObjectHideFlags: 0
@@ -6668,12 +6672,12 @@ PrefabInstance:
     - target: {fileID: 4729056459008004933, guid: 196bfb754767646dfb0cc80de3c93869,
         type: 3}
       propertyPath: m_Size.x
-      value: 1.6
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4729056459008004933, guid: 196bfb754767646dfb0cc80de3c93869,
         type: 3}
       propertyPath: m_Size.y
-      value: 1.6
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5200508945754502757, guid: 196bfb754767646dfb0cc80de3c93869,
         type: 3}

@@ -42,10 +42,9 @@ public abstract class MovingObject : MonoBehaviour
         
         //Disable the boxCollider so that linecast doesn't hit this object's own collider.
         boxCollider.enabled = false;
-        
         //Cast a line from start point to end point checking collision on blockingLayer.
         hit = Physics2D.Linecast (start, end, blockingLayer);
-        
+
         //Re-enable boxCollider after linecast
         boxCollider.enabled = true;
         

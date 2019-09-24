@@ -3247,7 +3247,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1735343587}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &484825961
 MonoBehaviour:
@@ -3261,6 +3261,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a143fe2a7ab444f1882a7edec1cc8d49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hallway: 1
 --- !u!19719996 &484825962
 TilemapCollider2D:
   m_ObjectHideFlags: 0
@@ -3718,7 +3719,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1735343587}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &568417367
 MonoBehaviour:
@@ -3732,6 +3733,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a143fe2a7ab444f1882a7edec1cc8d49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hallway: 0
 --- !u!19719996 &568417368
 TilemapCollider2D:
   m_ObjectHideFlags: 0
@@ -4610,7 +4612,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1735343587}
-  m_RootOrder: 4
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1074597218
 MonoBehaviour:
@@ -4624,6 +4626,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a143fe2a7ab444f1882a7edec1cc8d49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hallway: 3
 --- !u!19719996 &1074597219
 TilemapCollider2D:
   m_ObjectHideFlags: 0
@@ -5472,7 +5475,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1735343587}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1393126036
 MonoBehaviour:
@@ -5486,6 +5489,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a143fe2a7ab444f1882a7edec1cc8d49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hallway: 2
 --- !u!19719996 &1393126037
 TilemapCollider2D:
   m_ObjectHideFlags: 0
@@ -5953,10 +5957,10 @@ Transform:
   - {fileID: 1293849726}
   - {fileID: 557442946}
   - {fileID: 1979681064}
-  - {fileID: 1074597217}
   - {fileID: 568417366}
   - {fileID: 484825960}
   - {fileID: 1393126035}
+  - {fileID: 1074597217}
   - {fileID: 271333698}
   - {fileID: 2016190157}
   - {fileID: 1237637520}
@@ -7615,6 +7619,9 @@ MonoBehaviour:
   watermelonImage: {fileID: 0}
   peanutImage: {fileID: 0}
   pineappleImage: {fileID: 0}
+  cherryImage: {fileID: 0}
+  mushroomImage: {fileID: 0}
+  avocadoImage: {fileID: 0}
 --- !u!224 &7969312230905511814
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8014,6 +8021,9 @@ MonoBehaviour:
   watermelonImage: {fileID: 0}
   peanutImage: {fileID: 0}
   pineappleImage: {fileID: 0}
+  cherryImage: {fileID: 0}
+  mushroomImage: {fileID: 0}
+  avocadoImage: {fileID: 0}
 --- !u!222 &7969312232073248786
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8184,6 +8194,9 @@ MonoBehaviour:
   watermelonImage: {fileID: 0}
   peanutImage: {fileID: 0}
   pineappleImage: {fileID: 0}
+  cherryImage: {fileID: 0}
+  mushroomImage: {fileID: 0}
+  avocadoImage: {fileID: 0}
 --- !u!1 &7969312232172475813
 GameObject:
   m_ObjectHideFlags: 0

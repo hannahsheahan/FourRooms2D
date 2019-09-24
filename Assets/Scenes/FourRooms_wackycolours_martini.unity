@@ -4411,7 +4411,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1471407858}
-  m_RootOrder: 4
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1034020458
 MonoBehaviour:
@@ -4425,6 +4425,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a143fe2a7ab444f1882a7edec1cc8d49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hallway: 3
 --- !u!19719996 &1034020459
 TilemapCollider2D:
   m_ObjectHideFlags: 0
@@ -4813,7 +4814,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1471407858}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1159162512
 MonoBehaviour:
@@ -4827,6 +4828,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a143fe2a7ab444f1882a7edec1cc8d49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hallway: 2
 --- !u!19719996 &1159162513
 TilemapCollider2D:
   m_ObjectHideFlags: 0
@@ -5276,10 +5278,10 @@ Transform:
   - {fileID: 2047407109}
   - {fileID: 1930179544}
   - {fileID: 693998965}
-  - {fileID: 1034020457}
   - {fileID: 1742690574}
   - {fileID: 1903043749}
   - {fileID: 1159162511}
+  - {fileID: 1034020457}
   - {fileID: 33874556}
   - {fileID: 1020017794}
   - {fileID: 1848478255}
@@ -5627,7 +5629,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1471407858}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1742690575
 MonoBehaviour:
@@ -5641,6 +5643,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a143fe2a7ab444f1882a7edec1cc8d49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hallway: 0
 --- !u!19719996 &1742690576
 TilemapCollider2D:
   m_ObjectHideFlags: 0
@@ -5982,7 +5985,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1471407858}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1903043750
 MonoBehaviour:
@@ -5996,6 +5999,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a143fe2a7ab444f1882a7edec1cc8d49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hallway: 1
 --- !u!19719996 &1903043751
 TilemapCollider2D:
   m_ObjectHideFlags: 0
@@ -7631,6 +7635,9 @@ MonoBehaviour:
   watermelonImage: {fileID: 0}
   peanutImage: {fileID: 0}
   pineappleImage: {fileID: 0}
+  cherryImage: {fileID: 0}
+  mushroomImage: {fileID: 0}
+  avocadoImage: {fileID: 0}
 --- !u!224 &7969312230905511814
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8030,6 +8037,9 @@ MonoBehaviour:
   watermelonImage: {fileID: 0}
   peanutImage: {fileID: 0}
   pineappleImage: {fileID: 0}
+  cherryImage: {fileID: 0}
+  mushroomImage: {fileID: 0}
+  avocadoImage: {fileID: 0}
 --- !u!222 &7969312232073248786
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8200,6 +8210,9 @@ MonoBehaviour:
   watermelonImage: {fileID: 0}
   peanutImage: {fileID: 0}
   pineappleImage: {fileID: 0}
+  cherryImage: {fileID: 0}
+  mushroomImage: {fileID: 0}
+  avocadoImage: {fileID: 0}
 --- !u!1 &7969312232172475813
 GameObject:
   m_ObjectHideFlags: 0

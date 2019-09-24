@@ -189,7 +189,7 @@ public class GameController : MonoBehaviour
     public bool playersTurn;      // for moving in discrete steps on a 2D grid
     public int[] giftWrapState;
     public List<string> giftWrapStateTransitions = new List<string>();   // recorded state of the giftboxes (in sync with the player data)
-    public int hallwaysTraversed = 0;
+    public int hallwayTraversed = 0;
 
     private bool gameStarted = false;
 
@@ -667,17 +667,16 @@ public class GameController : MonoBehaviour
                 darkTintScreen = true;
                 currentFrozenTime = currentMovementTime - firstFrozenTime; // dont think this is being used for anything (HRS 14/05/2019)
 
-                if ( (stateTimer.ElapsedSeconds() > preFreezeTime) && (stateTimer.ElapsedSeconds() <= hallwayFreezeTime[hallwaysTraversed]) )
+                if ( (stateTimer.ElapsedSeconds() > preFreezeTime) && (stateTimer.ElapsedSeconds() <= hallwayFreezeTime[hallwayTraversed]) )
                 {
                     displayMessage = "traversingHallway";
                 }
 
-                if (stateTimer.ElapsedSeconds() > hallwayFreezeTime[hallwaysTraversed])
+                if (stateTimer.ElapsedSeconds() > hallwayFreezeTime[hallwayTraversed])
                 {
                     darkTintScreen = false;
                     Player.GetComponent<PlayerController>().enabled = true;
                     displayMessage = "noMessage";
-                    hallwaysTraversed++;
                     StateNext(previousState);
                 }
                 break;
@@ -748,7 +747,6 @@ public class GameController : MonoBehaviour
         debriefResponseTime = 0f;
         showCanvasReward = false;
         controlStateIndex = 0;
-        hallwaysTraversed = 0;
 
         for (int i = 0; i < scaleUpReward.Length; i++)
         {
@@ -1107,7 +1105,7 @@ public class GameController : MonoBehaviour
 
             case "traversingHallway":
                 //textMessage = "Crossing a bridge takes time. \n Continue in..."; // + ((int)Mathf.Round(hallwayFreezeTime-1f)).ToString() + " seconds";
-                textMessage = "Unlocking this bridge..."; // + ((int)Mathf.Round(hallwayFreezeTime-1f)).ToString() + " seconds";
+                textMessage = "Moving to next room..."; // + ((int)Mathf.Round(hallwayFreezeTime-1f)).ToString() + " seconds";
                 break;
 
             case "openBoxQuestion":
@@ -1180,10 +1178,11 @@ public class GameController : MonoBehaviour
 
     // ********************************************************************** //
 
-    public void HallwayFreeze()
+    public void HallwayFreeze(int hallway)
     {   // Display a message, and track the hallway traversal in the FSM and in the saved data
         previousState = State;
         firstFrozenTime = totalMovementTime;
+        hallwayTraversed = hallway;
         StateNext(STATE_HALLFREEZE);
     }
 
