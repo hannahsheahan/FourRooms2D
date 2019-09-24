@@ -35,7 +35,7 @@ public class PlayerController : MovingObject
     private Vector2 targetPosition;
     private Vector2 nextPosition;
     private float stepTolerance = 0.05f;      // tolerate sub-threshold differences between desired and actual agent positions  
-    private float minAgentPlanningTime = 2.5f;
+    private float minAgentPlanningTime = 1.0f;
     private Timer agentPlanningTimer;         // use this to give our computer agent some fake 'planning' pause time when control switches to the computer agent
 
     // ********************************************************************** //

@@ -353,7 +353,6 @@ public class ExperimentConfig
                 nextTrial = AddfMRITrainingBlock(nextTrial, "martini");
                 break;
 
-
             case "scannertask_banana":
                 //---- test context C1
                 nextTrial = AddfMRITrainingBlock(nextTrial, "banana");
@@ -362,6 +361,25 @@ public class ExperimentConfig
                 //---- test context C2
                 nextTrial = AddfMRITrainingBlock(nextTrial, "mushroom");
                 break;
+
+            case "scannertask_banana_interm":
+                //---- test context C1
+                int firstTrial = nextTrial;
+                nextTrial = AddfMRITrainingBlock(nextTrial, "banana");
+                int restBreakLocation = nextTrial;
+                nextTrial = RestBreakHere(nextTrial);
+
+                //---- test context C2
+                nextTrial = AddfMRITrainingBlock(nextTrial, "mushroom");
+
+                // reshuffle the trial ordering so they are intermingled but preserve the previous arrangement of things
+                ReshuffleTrialOrder(firstTrial, nextTrial - firstTrial);
+
+                // ***HRS now need to insert a restbreak like back where we wanted it and push all the set trials from there onwards up by 1
+               // MoveTrialsAndInsertRestBreak(restBreakLocation);
+
+                break;
+
 
             case "scannertask_avocado":
                 //---- test context D1
@@ -1577,11 +1595,11 @@ public class ExperimentConfig
                 trialMazes[trial] = "PrePostForage_" + rewardTypes[trial];
                 freeForage[trial] = true;
                 maxMovementTime[trial] = 120.0f;       // 2 mins to collect all rewards on freeforaging trials
-                blankTime[trial] = ExponentialJitter(4f, 3f, 8f);
+                blankTime[trial] = ExponentialJitter(4f, 2.5f, 8f);
                 hallwayFreezeTime[trial] = new float[4];
                 for (int i = 0; i < nrooms; i++)
                 {
-                    hallwayFreezeTime[trial][i] = ExponentialJitter(3.5f, 2.5f, 8f);   // jitter times: mean, min, max, 
+                    hallwayFreezeTime[trial][i] = ExponentialJitter(3f, 1.5f, 9f);   // jitter times: mean, min, max, 
                 }
 
                 // select random locations in rooms 1 and 2 for the two rewards (one in each)
@@ -1671,11 +1689,11 @@ public class ExperimentConfig
                 }
                 freeForage[trial] = false;
                 maxMovementTime[trial] = 60.0f;        // 1 min to collect just the 2 rewards on covariance trials ***HRS changed from 60 on 4/06/2019
-                blankTime[trial] = ExponentialJitter(4f, 3f, 8f);
+                blankTime[trial] = ExponentialJitter(4f, 2.5f, 8f);
                 hallwayFreezeTime[trial] = new float[4]; 
                 for (int i=0; i < nrooms; i++)
                 {
-                    hallwayFreezeTime[trial][i] = ExponentialJitter(3.5f, 2.5f, 8f);   // jitter times: mean, min, max, 
+                    hallwayFreezeTime[trial][i] = ExponentialJitter(3f, 1.5f, 9f);   // jitter times: mean, min, max, 
                 }
 
 
@@ -1959,6 +1977,89 @@ public class ExperimentConfig
     }
 
     // ********************************************************************** //
+    /*
+    private void MoveTrialsAndInsertRestBreak(int restBreakLocation) 
+    {
+        // Take all the trials from restBreakLocation onwards, make a copy of them, 
+        // overwrite the restBreakLocation trial in the trial array with a rest break, then overwrite the i+1:N trials with our original trials
+
+        // HRS Note that if the trials are shuffled you can really just move the one trial that you are replacing with a restbreak, but in case there is trial structure, shift them all
+
+        //HRS leave this for now, because we may not use it - prioritise the other things like always truncated dwell on bridge crossings ie the bridges do not get cancelled
+
+        int nextTrial = System.Array.IndexOf(trialMazes, null);       // the number of the next trial we havent specified yet
+        int N = nextTrial - restBreakLocation;                        // how many trials we will have to move
+
+        // All the shit we want to remember
+        // shuffle contexts / reward types
+        string[] tempRewardTypes = new string[N];
+        string[] tempPlayerStartRooms = new string[N];
+        Vector3[] tempStartPositions = new Vector3[N];
+        Vector3[] tempStartOrientations = new Vector3[N];
+        Vector3[][] tempRewardPositions = new Vector3[N][];
+
+        Array.Copy(rewardTypes, restBreakLocation, tempRewardTypes, 0, N);             // reward types
+        Array.Copy(playerStartRooms, restBreakLocation, tempPlayerStartRooms, 0, N);   // start rooms
+        Array.Copy(playerStartPositions, restBreakLocation, tempStartPositions, 0, N);   // start positions
+        Array.Copy(playerStartOrientations, restBreakLocation, tempStartOrientations, 0, N);   // start orientations
+        Array.Copy(rewardPositions, restBreakLocation, tempRewardPositions, 0, N);   // reward positions (HRS check this because 2d array)
+
+
+        //... continue
+
+        // shuffle present positions
+        Vector3[] tempPresentPositions = presentPositions[k + firstTrial];
+        presentPositions[k + firstTrial] = presentPositions[i + firstTrial];
+        presentPositions[i + firstTrial] = tempPresentPositions;
+
+        // reward room 1
+        string tempRewardRoom = star1Rooms[k + firstTrial];
+        star1Rooms[k + firstTrial] = star1Rooms[i + firstTrial];
+        star1Rooms[i + firstTrial] = tempRewardRoom;
+
+        // reward room 2
+        tempRewardRoom = star2Rooms[k + firstTrial];
+        star2Rooms[k + firstTrial] = star2Rooms[i + firstTrial];
+        star2Rooms[i + firstTrial] = tempRewardRoom;
+
+        // movement time
+        float tempMoveTime = maxMovementTime[k + firstTrial];
+        maxMovementTime[k + firstTrial] = maxMovementTime[i + firstTrial];
+        maxMovementTime[i + firstTrial] = tempMoveTime;
+
+        // ITI times
+        float tempblankTime = blankTime[k + firstTrial];
+        blankTime[k + firstTrial] = blankTime[i + firstTrial];
+        blankTime[i + firstTrial] = tempblankTime;
+
+        // hallwayfreeze times
+        float[] tempFreezeTimes = hallwayFreezeTime[k + firstTrial];
+        hallwayFreezeTime[k + firstTrial] = hallwayFreezeTime[i + firstTrial];
+        hallwayFreezeTime[i + firstTrial] = tempFreezeTimes;
+
+        // free forage flag
+        bool tempForage = freeForage[k + firstTrial];
+        freeForage[k + firstTrial] = freeForage[i + firstTrial];
+        freeForage[i + firstTrial] = tempForage;
+
+        // shuffle trialMazes
+        string tempTrialMazes = trialMazes[k + firstTrial];
+        trialMazes[k + firstTrial] = trialMazes[i + firstTrial];
+        trialMazes[i + firstTrial] = tempTrialMazes;
+
+        // shuffle trialMazes
+        bool tempDoubleReward = doubleRewardTask[k + firstTrial];
+        doubleRewardTask[k + firstTrial] = doubleRewardTask[i + firstTrial];
+        doubleRewardTask[i + firstTrial] = tempDoubleReward;
+
+        // shuffle bridge states
+        bool[] tempBridgeStates = bridgeStates[k + firstTrial];
+        bridgeStates[k + firstTrial] = bridgeStates[i + firstTrial];
+        bridgeStates[i + firstTrial] = tempBridgeStates;
+
+    }
+    */
+    // ********************************************************************** //
 
     private void GenerateRandomTrialPositions(int trial)
     {
@@ -2061,7 +2162,7 @@ public class ExperimentConfig
         {
             Debug.Log("ERROR: Problem specifying range of values for jitterin times. Max <= min. Using default values.");
             min = 1f;   // take some default values
-            max = 8f;
+            max = 7f;
         }
 
         rate = 1f / (mean-min);           // later we will shift the distribution so all values are greater than min, so need to remap the mean too

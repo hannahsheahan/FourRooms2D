@@ -32,7 +32,7 @@ public class AvatarActiveColour : MonoBehaviour
         // instead just make him look deactivated when crossing bridges
         if (GameController.control.displayMessage == "traversingHallway")
         {
-            avatarRenderer.color = new Color(1f,1f, 1f, .6f);  // make our little dude go transparent and 'inactive' looking on the bridge
+            //avatarRenderer.color = new Color(1f,1f, 1f, .6f);  // make our little dude go transparent and 'inactive' looking on the bridge
             //avatarRenderer.color = new Color(.2f,0.2f, 0.2f, 1f);  // make our little dude go transparent and 'inactive' looking on the bridge
 
         }

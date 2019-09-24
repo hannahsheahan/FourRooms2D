@@ -138,6 +138,7 @@ public class GameController : MonoBehaviour
     public bool FLAG_cliffFallError;
 
     public bool blankScreen = false;            // flag for indicating whether showing a between-trial blank screen
+    public bool darkTintScreen = false;         // for indicating the darkened screen tint when traversing hallways
 
     // Game-play state machine states
     public const int STATE_STARTSCREEN = 0;
@@ -663,6 +664,7 @@ public class GameController : MonoBehaviour
 
             case STATE_HALLFREEZE:
                 Player.GetComponent<PlayerController>().enabled = false;
+                darkTintScreen = true;
                 currentFrozenTime = currentMovementTime - firstFrozenTime; // dont think this is being used for anything (HRS 14/05/2019)
 
                 if ( (stateTimer.ElapsedSeconds() > preFreezeTime) && (stateTimer.ElapsedSeconds() <= hallwayFreezeTime[hallwaysTraversed]) )
@@ -672,6 +674,7 @@ public class GameController : MonoBehaviour
 
                 if (stateTimer.ElapsedSeconds() > hallwayFreezeTime[hallwaysTraversed])
                 {
+                    darkTintScreen = false;
                     Player.GetComponent<PlayerController>().enabled = true;
                     displayMessage = "noMessage";
                     hallwaysTraversed++;
@@ -725,7 +728,8 @@ public class GameController : MonoBehaviour
     public string TrialSetup()
     {
         // Start the trial with a clean-slate
-        blankScreen = false; 
+        blankScreen = false;
+        darkTintScreen = false;
         FLAG_trialError = false;
         FLAG_trialTimeout = false;
         FLAG_fullScreenModeError = false;
