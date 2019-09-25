@@ -26,25 +26,27 @@ public class TrialCountdownScript : MonoBehaviour {
 
         // display the frozen countdown
         //if (GameController.control.State == GameController.STATE_HALLFREEZE)
+        /*
         if (GameController.control.displayMessage == "traversingHallway")
         {
             frozenSecondsLeft = secondsLeft - subtractTime;
             // make sure it freezes for AT LEAST hallwayFreezeTime
-            if ((frozenSecondsLeft >= 0) && (frozenSecondsLeft <= GameController.control.hallwayFreezeTime[GameController.control.hallwaysTraversed] -1))
+            if ((frozenSecondsLeft >= 0) && (frozenSecondsLeft <= GameController.control.hallwayFreezeTime[GameController.control.hallwayTraversed] -1))
             {
                 FrozenCountdownTime.text = (frozenSecondsLeft).ToString();
 
             }
             else
             {
-                FrozenCountdownTime.text = ((int)Mathf.Round(GameController.control.hallwayFreezeTime[GameController.control.hallwaysTraversed])).ToString();
+                FrozenCountdownTime.text = ((int)Mathf.Round(GameController.control.hallwayFreezeTime[GameController.control.hallwayTraversed])).ToString();
             }
         }
         else
         {
             FrozenCountdownTime.text = "";
-            subtractTime = (int)Mathf.Round(timeLeft - GameController.control.hallwayFreezeTime[GameController.control.hallwaysTraversed]); 
+            subtractTime = (int)Mathf.Round(timeLeft - GameController.control.hallwayFreezeTime[GameController.control.hallwayTraversed]); 
         }
+        */
 
     }
     // ********************************************************************** //

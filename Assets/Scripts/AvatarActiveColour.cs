@@ -28,7 +28,7 @@ public class AvatarActiveColour : MonoBehaviour
         }
         */
 
-
+        /*
         // instead just make him look deactivated when crossing bridges
         if (GameController.control.displayMessage == "traversingHallway")
         {
@@ -40,7 +40,7 @@ public class AvatarActiveColour : MonoBehaviour
         {
             avatarRenderer.color = Color.white;
         }
-
+        */
 
     }
 }

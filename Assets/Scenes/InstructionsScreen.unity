@@ -778,7 +778,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 465109793}
   m_Direction: 0
   m_Value: 1
-  m_Size: 0.475
+  m_Size: 0.47499987
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1591,11 +1591,9 @@ MonoBehaviour:
     you start moving.\n\n8.  Try to find the cued items on each trial as quickly as
     possible and before the timer runs out! The faster you find them all, the more
     points you get. \n\n9.  Bridges connect different parts of the maze. It takes
-    time to unlock each bridge the first time you use it, so choose your bridges carefully.
-    \ Once a bridge has been unlocked you may use it as much as you like on that trial
-    with no further time penalties.\n\n10.   You will be paid a bonus $0.001 for each
-    point in your final score (this could be up to $2.50 if you do well).\n\nGood
-    luck!"
+    time to unlock each bridge, so choose your bridges carefully.  \n\n10.   You will
+    be paid a bonus $0.001 for each point in your final score (this could be up to
+    $2.50 if you do well).\n\nGood luck!"
 --- !u!222 &1631422236
 CanvasRenderer:
   m_ObjectHideFlags: 0

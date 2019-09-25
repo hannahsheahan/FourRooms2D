@@ -23,6 +23,12 @@ public class displayBlankScreen : MonoBehaviour
     {
         if (GameController.control.blankScreen)
         {
+            blankImage.color = Color.black;
+            blankImage.enabled = true;
+        }
+        else if (GameController.control.darkTintScreen)
+        {
+            blankImage.color = new Color(0f, 0f, 0f, 0.7f);
             blankImage.enabled = true;
         }
         else
