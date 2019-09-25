@@ -157,7 +157,7 @@ public class ExperimentConfig
                 nDebreifQuestions = 0;
                 practiceTrials = 0 + getReadyTrial;
                 totalTrials = 32 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
-                restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
+                restFrequency = 40 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
                 transferCounterbalance = false;                                     // this does nothing
                 break;
@@ -166,7 +166,7 @@ public class ExperimentConfig
                 nDebreifQuestions = 0;
                 practiceTrials = 0 + getReadyTrial;
                 totalTrials = 32 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
-                restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
+                restFrequency = 40 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
                 transferCounterbalance = false;                                     // this does nothing
                 break;
@@ -175,7 +175,7 @@ public class ExperimentConfig
                 nDebreifQuestions = 0;
                 practiceTrials = 0 + getReadyTrial;
                 totalTrials = 32 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
-                restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
+                restFrequency = 40 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
                 transferCounterbalance = false;                                     // this does nothing
                 break;
@@ -184,7 +184,7 @@ public class ExperimentConfig
                 nDebreifQuestions = 0;
                 practiceTrials = 0 + getReadyTrial;
                 totalTrials = 32 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
-                restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
+                restFrequency = 40 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
                 transferCounterbalance = false;                                     // this does nothing
                 break;
@@ -248,7 +248,7 @@ public class ExperimentConfig
        
         // Timer variables (measured in seconds) - these can later be changed to be different per trial for jitter etc
         dataRecordFrequency = 0.06f;
-        getReadyDuration = 4.0f;    // how long do we have to 'get ready' after the practice, before main experiment begins?
+        getReadyDuration = 3.0f;    // how long do we have to 'get ready' after the practice, before main experiment begins?
 
         // Note that when used, jitters ADD to these values - hence they are minimums
         //maxMovementTime        = 60.0f;   // changed to be a function of trial number. Time allowed to collect both rewards, incl. wait after hitting first one
@@ -256,7 +256,7 @@ public class ExperimentConfig
         displayCueTime         = 2.0f;
         goCueDelay             = 1.0f;    //
         goalHitPauseTime       = 1.0f;      // This will also be the amount of time between computer vs human control handovers (+ minDwellAtReward + preRewardAppearTime)
-        finalGoalHitPauseTime  = 3.0f;    // We get a neural signal for the final reward-recieved state here
+        finalGoalHitPauseTime  = 1.0f;      // We get a neural signal for the final reward-recieved state here - if we care!
         minDwellAtReward       = 0.2f;
         preRewardAppearTime    = 0.3f;    
         displayMessageTime     = 1.5f;     
@@ -333,10 +333,9 @@ public class ExperimentConfig
         {
 
             case "scannertask_cheese":
-
                 //---- test context A1
+                float firstTrial = nextTrial;
                 nextTrial = AddfMRITrainingBlock(nextTrial, "cheese");
-                nextTrial = RestBreakHere(nextTrial);
 
                 //---- test context A2
                 nextTrial = AddfMRITrainingBlock(nextTrial, "watermelon");
@@ -344,10 +343,8 @@ public class ExperimentConfig
                 break;
 
             case "scannertask_peanut":
-
                 //---- test context B1
                 nextTrial = AddfMRITrainingBlock(nextTrial, "peanut");
-                nextTrial = RestBreakHere(nextTrial);
 
                 //---- test context B2
                 nextTrial = AddfMRITrainingBlock(nextTrial, "martini");
@@ -356,35 +353,14 @@ public class ExperimentConfig
             case "scannertask_banana":
                 //---- test context C1
                 nextTrial = AddfMRITrainingBlock(nextTrial, "banana");
-                nextTrial = RestBreakHere(nextTrial);
 
                 //---- test context C2
                 nextTrial = AddfMRITrainingBlock(nextTrial, "mushroom");
                 break;
-
-            case "scannertask_banana_interm":
-                //---- test context C1
-                int firstTrial = nextTrial;
-                nextTrial = AddfMRITrainingBlock(nextTrial, "banana");
-                int restBreakLocation = nextTrial;
-                nextTrial = RestBreakHere(nextTrial);
-
-                //---- test context C2
-                nextTrial = AddfMRITrainingBlock(nextTrial, "mushroom");
-
-                // reshuffle the trial ordering so they are intermingled but preserve the previous arrangement of things
-                ReshuffleTrialOrder(firstTrial, nextTrial - firstTrial);
-
-                // ***HRS now need to insert a restbreak like back where we wanted it and push all the set trials from there onwards up by 1
-               // MoveTrialsAndInsertRestBreak(restBreakLocation);
-
-                break;
-
 
             case "scannertask_avocado":
                 //---- test context D1
                 nextTrial = AddfMRITrainingBlock(nextTrial, "avocado");
-                nextTrial = RestBreakHere(nextTrial);
 
                 //---- test context D2
                 nextTrial = AddfMRITrainingBlock(nextTrial, "pineapple");
@@ -1689,7 +1665,7 @@ public class ExperimentConfig
                 }
                 freeForage[trial] = false;
                 maxMovementTime[trial] = 60.0f;        // 1 min to collect just the 2 rewards on covariance trials ***HRS changed from 60 on 4/06/2019
-                blankTime[trial] = ExponentialJitter(4f, 2.5f, 8f);
+                blankTime[trial] = ExponentialJitter(3f, 2f, 8f);
                 hallwayFreezeTime[trial] = new float[4]; 
                 for (int i=0; i < nrooms; i++)
                 {

@@ -778,7 +778,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 465109793}
   m_Direction: 0
   m_Value: 1
-  m_Size: 0.475
+  m_Size: 0.47499987
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1575,21 +1575,25 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: "1.  We have left some items in a maze, hidden under some boulders. \n\n2.
-    \ There are also some boulders in the maze that don't have anything hidden under
-    them. Unfortunately, we can't remember which of the boulders we hid the items
-    under!  \n\n3.  Earn points by lifting up the boulders to find any items hidden
-    underneath.\n\n4.  Use the arrow keys to move around the maze.\n\n5.  An image
-    of an item will appear at the start of each trial to show you what item you need
-    to look for.\n    \n6.  There are two items of the same type to be collected on
-    each trial (e.g. two pineapples). You must collect both pineapples to progress.\n\n7.
-    \ Wait for the 'beep' sound on each trial before you start moving.\n\n8.  Try
-    to find the cued items on each trial as quickly as possible and before the timer
-    runs out! The faster you find them all, the more points you get. \n\n9.  Bridges
-    connect different parts of the maze. It takes time to move between different parts
-    of the maze, so choose your bridges carefully. \n\n10.   You will be paid a bonus
-    $0.001 for each point in your final score (this could be up to $1.00 if you do
-    well).\n\nGood luck! "
+  m_Text: "This version of the experiment is similar to the one you did yesterday,
+    however this time the computer will occasionally take over control of your avatar
+    and choose a boulder to lift up. You are on the same team as the computer, and
+    you still receive points based on how quickly you complete the trial together.\nHere
+    is a refresher of the rules:\n\n1.  We have left some items in a maze, hidden
+    under some boulders. \n\n2.  There are also some boulders in the maze that don't
+    have anything hidden under them. Unfortunately, we can't remember which of the
+    boulders we hid the items under!  \n\n3.  Earn points by lifting up the boulders
+    to find any items hidden underneath.\n\n4.  Use the arrow keys to move around
+    the maze.\n\n5.  An image of an item will appear at the start of each trial to
+    show you what item you need to look for.\n    \n6.  There are two items of the
+    same type to be collected on each trial (e.g. two pineapples). You must collect
+    both pineapples to progress.\n\n7.  Wait for the 'beep' sound on each trial before
+    you start moving.\n\n8.  Try to find the cued items on each trial as quickly as
+    possible and before the timer runs out! The faster you find them all, the more
+    points you get. \n\n9.  Bridges connect different parts of the maze. It takes
+    time to move between different parts of the maze, so choose your bridges carefully.
+    \n\n10.   You will be paid a bonus 0.003 Euro for each point in your final score
+    (this could be up to 10 Euro across both sessions if you do well).\n\nGood luck! "
 --- !u!222 &1631422236
 CanvasRenderer:
   m_ObjectHideFlags: 0
