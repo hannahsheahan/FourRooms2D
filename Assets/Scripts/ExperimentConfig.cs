@@ -92,7 +92,7 @@ public class ExperimentConfig
     // Timer variables (public since fewer things go wrong if these are changed externally, since this will be tracked in the data, but please don't...)
     public float[] maxMovementTime;
     public float preDisplayCueTime;
-    public float goalHitPauseTime;
+    public float[][] goalHitPauseTime;
     public float finalGoalHitPauseTime;
     public float displayCueTime;
     public float goCueDelay;
@@ -132,10 +132,10 @@ public class ExperimentConfig
         //experimentVersion = "mturk2D_cheesewatermelon_wackycolours";  
         //experimentVersion = "mturk2D_peanutmartini_wackycolours";
         //experimentVersion = "micro2D_debug"; 
-        //experimentVersion = "scannertask_cheese";   // be careful with adding extra practice trials between scan runs though (dont have extra practice)
+        experimentVersion = "scannertask_cheese";   // be careful with adding extra practice trials between scan runs though (dont have extra practice)
         //experimentVersion = "scannertask_peanut";
         //experimentVersion = "scannertask_banana";
-         experimentVersion = "scannertask_avocado";
+        //experimentVersion = "scannertask_avocado";
         //experimentVersion = "mapping_practice";
         // ------------------------------------------
 
@@ -255,10 +255,10 @@ public class ExperimentConfig
         preDisplayCueTime      = 3.0f;    //  Decode representation of room prior to cue here
         displayCueTime         = 2.0f;
         goCueDelay             = 1.0f;    //
-        goalHitPauseTime       = 1.0f;      // This will also be the amount of time between computer vs human control handovers (+ minDwellAtReward + preRewardAppearTime)
-        finalGoalHitPauseTime  = 1.0f;      // We get a neural signal for the final reward-recieved state here - if we care!
+        //goalHitPauseTime       = 1.0f;      // This will also be the amount of time between computer vs human control handovers (+ minDwellAtReward + preRewardAppearTime)
+        finalGoalHitPauseTime  = 1.5f;        // We could get a neural signal for the final reward-recieved state here - if we care!
         minDwellAtReward       = 0.2f;
-        preRewardAppearTime    = 0.3f;    
+        preRewardAppearTime    = 0.3f;      // I think this needs to be jittered to separate neural signals for same room diff states under a consistent policy
         displayMessageTime     = 1.5f;     
         errorDwellTime         = 1.5f;    // Note: should be at least as long as displayMessageTime
         // hallwayFreezeTime      = 4.0f;    // amount of time player is stuck in place with each hallway traversal. This will now be exponential-jittered
@@ -296,6 +296,7 @@ public class ExperimentConfig
         controlStateOrder = new string[totalTrials][];
         computerAgentCorrect = new bool[totalTrials];
         hallwayFreezeTime = new float[totalTrials][];
+        goalHitPauseTime = new float[totalTrials][];
         blankTime = new float[totalTrials];
 
         // make space for the debriefing questions and answers at the end
@@ -334,11 +335,14 @@ public class ExperimentConfig
 
             case "scannertask_cheese":
                 //---- test context A1
-                float firstTrial = nextTrial;
+                int firstTrial = nextTrial;
                 nextTrial = AddfMRITrainingBlock(nextTrial, "cheese");
 
                 //---- test context A2
                 nextTrial = AddfMRITrainingBlock(nextTrial, "watermelon");
+
+                // Reshuffle the order of the trials for these two contexts, keeping counterbalancing
+                ReshuffleTrialOrder(firstTrial, nextTrial - firstTrial);
 
                 break;
 
@@ -1571,11 +1575,14 @@ public class ExperimentConfig
                 trialMazes[trial] = "PrePostForage_" + rewardTypes[trial];
                 freeForage[trial] = true;
                 maxMovementTime[trial] = 120.0f;       // 2 mins to collect all rewards on freeforaging trials
-                blankTime[trial] = ExponentialJitter(4f, 2.5f, 8f);
+                blankTime[trial] = ExponentialJitter(3f, 2f, 7f);
                 hallwayFreezeTime[trial] = new float[4];
+                goalHitPauseTime[trial] = new float[4];
                 for (int i = 0; i < nrooms; i++)
                 {
-                    hallwayFreezeTime[trial][i] = ExponentialJitter(3f, 1.5f, 9f);   // jitter times: mean, min, max, 
+                    hallwayFreezeTime[trial][i] = ExponentialJitter(3f, 1.5f, 7f);   // jitter times: mean, min, max, 
+
+                    goalHitPauseTime[trial][i] = ExponentialJitter(1.5f, 0.5f, 5f);
                 }
 
                 // select random locations in rooms 1 and 2 for the two rewards (one in each)
@@ -1665,11 +1672,13 @@ public class ExperimentConfig
                 }
                 freeForage[trial] = false;
                 maxMovementTime[trial] = 60.0f;        // 1 min to collect just the 2 rewards on covariance trials ***HRS changed from 60 on 4/06/2019
-                blankTime[trial] = ExponentialJitter(3f, 2f, 8f);
-                hallwayFreezeTime[trial] = new float[4]; 
+                blankTime[trial] = ExponentialJitter(3f, 2f, 7f);
+                hallwayFreezeTime[trial] = new float[4];
+                goalHitPauseTime[trial] = new float[4];
                 for (int i=0; i < nrooms; i++)
                 {
-                    hallwayFreezeTime[trial][i] = ExponentialJitter(3f, 1.5f, 9f);   // jitter times: mean, min, max, 
+                    hallwayFreezeTime[trial][i] = ExponentialJitter(2.5f, 1.5f, 7f);   // jitter times: mean, min, max, 
+                    goalHitPauseTime[trial][i] = ExponentialJitter(1.5f, 0.5f, 5f);
                 }
 
 
@@ -1914,6 +1923,16 @@ public class ExperimentConfig
             star2Rooms[k + firstTrial] = star2Rooms[i + firstTrial];
             star2Rooms[i + firstTrial] = tempRewardRoom;
 
+            // shuffle control type
+            string[] tempControlType = controlStateOrder[k + firstTrial];
+            controlStateOrder[k + firstTrial] = controlStateOrder[i + firstTrial];
+            controlStateOrder[i + firstTrial] = tempControlType;
+
+            // shuffle whether computer control correct or not
+            bool tempControlCorrect = computerAgentCorrect[k + firstTrial];
+            computerAgentCorrect[k + firstTrial] = computerAgentCorrect[i + firstTrial];
+            computerAgentCorrect[i + firstTrial] = tempControlCorrect;
+
             // movement time
             float tempMoveTime = maxMovementTime[k + firstTrial];
             maxMovementTime[k + firstTrial] = maxMovementTime[i + firstTrial];
@@ -1929,6 +1948,11 @@ public class ExperimentConfig
             hallwayFreezeTime[k + firstTrial] = hallwayFreezeTime[i + firstTrial];
             hallwayFreezeTime[i + firstTrial] = tempFreezeTimes;
 
+            // prereward appear times
+            float[] tempgoalHitPauseTime = goalHitPauseTime[k + firstTrial];
+            goalHitPauseTime[k + firstTrial] = goalHitPauseTime[i + firstTrial];
+            goalHitPauseTime[i + firstTrial] = tempgoalHitPauseTime;
+
             // free forage flag
             bool tempForage = freeForage[k + firstTrial];
             freeForage[k + firstTrial] = freeForage[i + firstTrial];
@@ -1939,7 +1963,7 @@ public class ExperimentConfig
             trialMazes[k + firstTrial] = trialMazes[i + firstTrial];
             trialMazes[i + firstTrial] = tempTrialMazes;
 
-            // shuffle trialMazes
+            // shuffle whether double reward
             bool tempDoubleReward = doubleRewardTask[k + firstTrial];
             doubleRewardTask[k + firstTrial] = doubleRewardTask[i + firstTrial];
             doubleRewardTask[i + firstTrial] = tempDoubleReward;

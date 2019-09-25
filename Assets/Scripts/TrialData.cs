@@ -48,7 +48,7 @@ public class TrialData
     public float preRewardAppearTime;
     public float displayMessageTime;    
     public float errorDwellTime;
-    public float goalHitPauseTime;
+    public float[] goalHitPauseTime;
     public float finalGoalHitPauseTime;
     public float[] hallwayFreezeTime;     // jittered & different for each doorway
     public float preFreezeTime;

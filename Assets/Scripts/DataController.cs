@@ -197,7 +197,7 @@ public class DataController : MonoBehaviour {
             // Timer variables (can change these for each trial later e.g. with jitter)
             gameData.allTrialData[trial].maxMovementTime = config.maxMovementTime[trial];
             gameData.allTrialData[trial].hallwayFreezeTime = config.hallwayFreezeTime[trial];
-            gameData.allTrialData[trial].goalHitPauseTime = config.goalHitPauseTime;
+            gameData.allTrialData[trial].goalHitPauseTime = config.goalHitPauseTime[trial];
             gameData.allTrialData[trial].finalGoalHitPauseTime = config.finalGoalHitPauseTime;
             gameData.allTrialData[trial].preDisplayCueTime = config.preDisplayCueTime;
             gameData.allTrialData[trial].displayCueTime = config.displayCueTime;
@@ -206,7 +206,6 @@ public class DataController : MonoBehaviour {
             gameData.allTrialData[trial].preRewardAppearTime = config.preRewardAppearTime;
             gameData.allTrialData[trial].displayMessageTime = config.displayMessageTime;
             gameData.allTrialData[trial].errorDwellTime  = config.errorDwellTime;
-            gameData.allTrialData[trial].hallwayFreezeTime = config.hallwayFreezeTime[trial];
             gameData.allTrialData[trial].preFreezeTime = config.preFreezeTime;
             gameData.allTrialData[trial].blankTime = config.blankTime[trial];
             gameData.allTrialData[trial].oneSquareMoveTime = config.oneSquareMoveTime;

@@ -80,7 +80,7 @@ public class GameController : MonoBehaviour
     public bool pauseClock = false;
     public bool flashCongratulations = false;
     public bool congratulated = false;
-    private float beforeScoreUpdateTime = 1.2f;  // this is just for display (but maybe relevant for fMRI?)  ***HRS
+    private float beforeScoreUpdateTime = 0.7f;  // this is just for display (but maybe relevant for fMRI?)  ***HRS
     public float animationTime;
     public float preRewardAppearTime;
     public float blankTime;
@@ -112,7 +112,7 @@ public class GameController : MonoBehaviour
     private float preDisplayCueTime;
     private float goCueDelay;
     private float displayCueTime;
-    private float goalHitPauseTime;
+    private float[] goalHitPauseTime;
     private float finalGoalHitPauseTime;
     public float minDwellAtReward;
     public float displayMessageTime;
@@ -190,6 +190,7 @@ public class GameController : MonoBehaviour
     public int[] giftWrapState;
     public List<string> giftWrapStateTransitions = new List<string>();   // recorded state of the giftboxes (in sync with the player data)
     public int hallwayTraversed = 0;
+    private int bouldersExplored = 0;
 
     private bool gameStarted = false;
 
@@ -459,7 +460,7 @@ public class GameController : MonoBehaviour
                         }
 
                         // turn off the reward and transition state
-                        if (stateTimer.ElapsedSeconds() > (minDwellAtReward + preRewardAppearTime + goalHitPauseTime))
+                        if (stateTimer.ElapsedSeconds() > (minDwellAtReward + preRewardAppearTime + goalHitPauseTime[bouldersExplored]))
                         {
                             if (showCanvasReward)
                             {
@@ -482,6 +483,10 @@ public class GameController : MonoBehaviour
                             }
                             //blankScreen = false;
                             showCanvasReward = false;
+                            if (bouldersExplored < (goalHitPauseTime.Length-1))
+                            {
+                                bouldersExplored++;
+                            }
                         }
                     }
                     boulderLifted = false;
@@ -539,7 +544,7 @@ public class GameController : MonoBehaviour
                 // This is the state when the FINAL reward to be collected is found (in the case of 2 or multiple rewards)
                 displayTimeLeft = false;             // freeze the visible countdown
 
-                if (stateTimer.ElapsedSeconds() > goalHitPauseTime)
+                if (stateTimer.ElapsedSeconds() > goalHitPauseTime[bouldersExplored])
                 {
                     CongratulatePlayer();                // display a big congratulatory message
                 }
@@ -747,6 +752,7 @@ public class GameController : MonoBehaviour
         debriefResponseTime = 0f;
         showCanvasReward = false;
         controlStateIndex = 0;
+        bouldersExplored = 0;
 
         for (int i = 0; i < scaleUpReward.Length; i++)
         {
@@ -1247,6 +1253,7 @@ public class GameController : MonoBehaviour
                 {
                     trialScore = (int)Mathf.Round(maxMovementTime - totalMovementTime);
                 }
+                Debug.Log("Score updating.");
                 totalScore += trialScore;
                 scoreUpdated = true;
                 flashTotalScore = true;

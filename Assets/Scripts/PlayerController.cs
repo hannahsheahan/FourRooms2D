@@ -36,7 +36,7 @@ public class PlayerController : MovingObject
     private Vector2 targetPosition;
     private Vector2 nextPosition;
     private float stepTolerance = 0.05f;      // tolerate sub-threshold differences between desired and actual agent positions  
-    private float minAgentPlanningTime = 1.0f;
+    private float minAgentPlanningTime = 1.5f;
     private Timer agentPlanningTimer;         // use this to give our computer agent some fake 'planning' pause time when control switches to the computer agent
 
 
@@ -90,7 +90,7 @@ public class PlayerController : MovingObject
                     if ((currentPlayerPosition-bridge).magnitude < stepTolerance) 
                     {
                         // just moved on to a bridge
-                        Debug.Log("Gonna freeze now");
+                        //Debug.Log("Gonna freeze now");
                         GameController.control.HallwayFreeze(i);
                     }
                 }
@@ -260,7 +260,7 @@ public class PlayerController : MovingObject
         else if (other.tag == "bridge")
         {
             //Debug.Log("Passing over a bridge. Woohoo!");
-            Debug.Log("triggered");
+            //Debug.Log("triggered");
         }
         else
         {
@@ -471,34 +471,42 @@ public class PlayerController : MovingObject
         }
         else
         { 
-            // One box has been opened, so check the config file policy as to where to search next (take either correct or incorrect box)
-
-            // using the known locations of the correct vs incorrect boxes, move to open the closest one that satisfies the criteria
-            if (GameController.control.computerAgentCorrect) 
+            // no boxes left to be opened
+            if (boxesLeft == 0) 
             {
-                // Determine which correct reward is closest
-                // compute path distance to rewardLocations[0] and rewardLocations[1]...
-                if (rewardLocations.Count > 0) 
-                {
-                    goalPosition = PickRewardLocation(rewardLocations);
-                }
-                else 
-                {
-                    Debug.Log("Computer agent wanted to go to reward location but none left, so going to a non-reward location.");
-                    goalPosition = PickNonRewardLocation(nonRewardLocations);
-                }
+                goalPosition = new Vector2(0f,0f); // default, we wont actually go there though
             }
             else 
-            {
-                if (nonRewardLocations.Count > 0)
+            { 
+                // Check the config file policy as to where to search next (take either correct or incorrect box)
+
+                // using the known locations of the correct vs incorrect boxes, move to open the closest one that satisfies the criteria
+                if (GameController.control.computerAgentCorrect) 
                 {
-                    // compute path distance to nonrewardLocations[0] and nonrewardLocations[1]...
-                    goalPosition = PickNonRewardLocation(nonRewardLocations);
+                    // Determine which correct reward is closest
+                    // compute path distance to rewardLocations[0] and rewardLocations[1]...
+                    if (rewardLocations.Count > 0) 
+                    {
+                        goalPosition = PickRewardLocation(rewardLocations);
+                    }
+                    else 
+                    {
+                        Debug.Log("Computer agent wanted to go to reward location but none left, so going to a non-reward location.");
+                        goalPosition = PickNonRewardLocation(nonRewardLocations);
+                    }
                 }
                 else 
                 {
-                    Debug.Log("Computer agent wanted to go to non-reward location but none left, so going to a reward location.");
-                    goalPosition = PickRewardLocation(rewardLocations);
+                    if (nonRewardLocations.Count > 0)
+                    {
+                        // compute path distance to nonrewardLocations[0] and nonrewardLocations[1]...
+                        goalPosition = PickNonRewardLocation(nonRewardLocations);
+                    }
+                    else 
+                    {
+                        Debug.Log("Computer agent wanted to go to non-reward location but none left, so going to a reward location.");
+                        goalPosition = PickRewardLocation(rewardLocations);
+                    }
                 }
             }
         }
