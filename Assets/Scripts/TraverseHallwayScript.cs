@@ -10,7 +10,7 @@ public class TraverseHallwayScript : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("Entering collider");
+        //Debug.Log("Entering collider");
         // if (doorlocked)  // 'unlock' the door
         // {
         // run GameController function that freezes people for X seconds (can add this as a state later to make analysis easier later).
@@ -20,17 +20,6 @@ public class TraverseHallwayScript : MonoBehaviour {
        // }
     }
 
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        // if (doorlocked)  // 'unlock' the door
-        // {
-        // run GameController function that freezes people for X seconds (can add this as a state later to make analysis easier later).
-        //GameController.control.HallwayFreeze();
-        Debug.Log("Exiting collider.");
-        // }
-    }
-
-    // Every time you traverse a hallway it takes time
     /*
     private void OnTriggerExit2D(Collider2D other)
     {

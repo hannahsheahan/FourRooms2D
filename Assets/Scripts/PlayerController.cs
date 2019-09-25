@@ -61,10 +61,10 @@ public class PlayerController : MovingObject
         agentPlanningTimer = new Timer();
         agentPlanningTimer.Reset();
 
-        bridgePositions[0] = new Vector2(0f, 3f);
-        bridgePositions[1] = new Vector2(0f, -3f);
-        bridgePositions[2] = new Vector2(3f, 0f);
-        bridgePositions[3] = new Vector2(-3f, 0f);
+        bridgePositions[0] = new Vector2(0f, 3f);  // top bridge
+        bridgePositions[1] = new Vector2(3f, 0f);  // right bridge
+        bridgePositions[2] = new Vector2(0f, -3f); // bottom bridge
+        bridgePositions[3] = new Vector2(-3f, 0f); // left bridge
 
         base.Start(); // trigger the Start function from the MovingObject parent class
     }
@@ -80,8 +80,9 @@ public class PlayerController : MovingObject
             controlState = GameController.control.controlState; // only update this once per loop
             currentPlayerPosition = new Vector2(transform.position.x, transform.position.y);
 
-            // HRS hack for the triggering issue of freeze states on bridges (linecasting means we have to enable/disable player collidor with movement, triggering freeze state again whenever we try to move on bridge)
-            if ((previousPlayerPosition- currentPlayerPosition).magnitude > stepTolerance)
+            // HRS hack for the triggering issue of freeze states on bridges 
+            // (linecasting means we have to enable/disable player collidor with movement, triggering freeze state again (if using colliders) whenever we try to move on bridge)
+            if ((previousPlayerPosition - currentPlayerPosition).magnitude > stepTolerance)
             { 
                 for (int i=0; i < bridgePositions.Length; i++)
                 {
