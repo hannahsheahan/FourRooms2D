@@ -248,15 +248,15 @@ public class ExperimentConfig
        
         // Timer variables (measured in seconds) - these can later be changed to be different per trial for jitter etc
         dataRecordFrequency = 0.06f;
-        getReadyDuration = 5.0f;    // how long do we have to 'get ready' after the practice, before main experiment begins?
+        getReadyDuration = 4.0f;    // how long do we have to 'get ready' after the practice, before main experiment begins?
 
         // Note that when used, jitters ADD to these values - hence they are minimums
         //maxMovementTime        = 60.0f;   // changed to be a function of trial number. Time allowed to collect both rewards, incl. wait after hitting first one
         preDisplayCueTime      = 3.0f;    //  Decode representation of room prior to cue here
         displayCueTime         = 2.0f;
         goCueDelay             = 1.0f;    //
-        goalHitPauseTime       = 1.5f;    // This will also be the amount of time between computer vs human control handovers (+ minDwellAtReward + preRewardAppearTime)
-        finalGoalHitPauseTime  = 4.0f;    // We get a neural signal for the final reward-recieved state here
+        goalHitPauseTime       = 1.0f;      // This will also be the amount of time between computer vs human control handovers (+ minDwellAtReward + preRewardAppearTime)
+        finalGoalHitPauseTime  = 3.0f;    // We get a neural signal for the final reward-recieved state here
         minDwellAtReward       = 0.2f;
         preRewardAppearTime    = 0.3f;    
         displayMessageTime     = 1.5f;     

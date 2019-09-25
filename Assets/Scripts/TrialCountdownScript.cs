@@ -27,6 +27,7 @@ public class TrialCountdownScript : MonoBehaviour {
             }
         }
 
+        /*
         // display the frozen countdown
         //if (GameController.control.State == GameController.STATE_HALLFREEZE)
         if (GameController.control.displayMessage == "traversingHallway")
@@ -62,6 +63,7 @@ public class TrialCountdownScript : MonoBehaviour {
                 Debug.Log("Null reference exception in TrialCountdownScript. Not a big deal.");
             }
         }
+        */
 
     }
     // ********************************************************************** //
