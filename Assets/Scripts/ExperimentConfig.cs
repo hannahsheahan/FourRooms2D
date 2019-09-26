@@ -132,11 +132,11 @@ public class ExperimentConfig
         //experimentVersion = "mturk2D_cheesewatermelon_wackycolours";  
         //experimentVersion = "mturk2D_peanutmartini_wackycolours";
         //experimentVersion = "micro2D_debug"; 
-        experimentVersion = "scannertask_cheese";   // be careful with adding extra practice trials between scan runs though (dont have extra practice)
+        //experimentVersion = "scannertask_cheese";   // be careful with adding extra practice trials between scan runs though (dont have extra practice)
         //experimentVersion = "scannertask_peanut";
         //experimentVersion = "scannertask_banana";
         //experimentVersion = "scannertask_avocado";
-        //experimentVersion = "mapping_practice";
+        experimentVersion = "mapping_practice";
         // ------------------------------------------
 
         // Set these variables to define your experiment:
@@ -455,7 +455,7 @@ public class ExperimentConfig
         if (numPracticeTrials > 0) 
         { 
             bool freeForageFLAG = false;
-            SingleContextfMRIPracticeBlock(nextTrial, numPracticeTrials, "pineapple", freeForageFLAG);
+            SingleContextfMRIPracticeBlock(nextTrial, numPracticeTrials, "martini", freeForageFLAG);
 
             for (int trial = nextTrial; trial < numPracticeTrials + nextTrial; trial++) 
             {
