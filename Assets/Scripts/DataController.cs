@@ -31,8 +31,9 @@ public class DataController : MonoBehaviour {
     public bool questionAnswered = false;
 
     // Data file saving
-    private string baseFilePath = "/Users/hannahsheahan/Documents/Postdoc/Unity/FourRooms2D/data/";
-    //private string baseFilePath = "";  // HRS path (windows address syntax) for datafile on Berlin fMRI machine
+    //private string baseFilePath = "/Users/hannahsheahan/Documents/Postdoc/Unity/FourRooms2D/data/";
+
+    private string baseFilePath = @".\data\";  // for Berlin fMRI machine
     public DateTime dateTime = DateTime.Now;
     public string stringDateTime; 
     public string filePath;

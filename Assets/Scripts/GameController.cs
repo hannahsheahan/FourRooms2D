@@ -80,7 +80,7 @@ public class GameController : MonoBehaviour
     public bool pauseClock = false;
     public bool flashCongratulations = false;
     public bool congratulated = false;
-    private float beforeScoreUpdateTime = 0.7f;  // this is just for display (but maybe relevant for fMRI?)  ***HRS
+    private float beforeScoreUpdateTime = 0.2f;  // this is just for display (but maybe relevant for fMRI?)  ***HRS
     public float animationTime;
     public float preRewardAppearTime;
     public float blankTime;
@@ -603,14 +603,12 @@ public class GameController : MonoBehaviour
                     // stop recording the state transitions for this trial
                     CancelInvoke("RecordFSMState");
 
-                    // Re-insert the trial further in the sequence for trying again later
-                    // NextAttempt();   // Don't restart the trial immediately
+                    // if we want to repeat this trial again later (for learning experiments, or to make sure that fmri experiments remain balanced)
+                    RepeatTrialAgainLater();
 
-                    // if we want to repeat this trial again late (for learning experiments)
-                    //RepeatTrialAgainLater();
+                    // OR If we dont want experiment to extend too long, dont bother repeating trial later
+                    //NextScene();  // Just move on to the next trial in the sequence
 
-                    // If we're scanning neural data and dont want experiment to extend too long, dont bother repeating trial later
-                    NextScene();  // Just move on to the next trial in the sequence. HRS to check this is saving properly
                     StateNext(STATE_SETUP);
 
                     // reset the error flags so the trial can correctly restart

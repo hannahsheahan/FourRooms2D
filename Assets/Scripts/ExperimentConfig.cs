@@ -149,7 +149,7 @@ public class ExperimentConfig
                 totalTrials = 0 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
-                transferCounterbalance = false;                                     // this does nothing
+
                 break;
 
 
@@ -159,7 +159,6 @@ public class ExperimentConfig
                 totalTrials = 32 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 40 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
-                transferCounterbalance = false;                                     // this does nothing
                 break;
 
             case "scannertask_peanut":       // ---- The fMRI scanning task: 32 trial run B ----//
@@ -168,7 +167,6 @@ public class ExperimentConfig
                 totalTrials = 32 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 40 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
-                transferCounterbalance = false;                                     // this does nothing
                 break;
 
             case "scannertask_banana":       // ---- The fMRI scanning task: 32 trial run B ----//
@@ -177,7 +175,6 @@ public class ExperimentConfig
                 totalTrials = 32 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 40 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
-                transferCounterbalance = false;                                     // this does nothing
                 break;
 
             case "scannertask_avocado":       // ---- The fMRI scanning task: 32 trial run A ----//
@@ -186,7 +183,6 @@ public class ExperimentConfig
                 totalTrials = 32 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 40 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
-                transferCounterbalance = false;                                     // this does nothing
                 break;
 
             case "mturk2D_cheesewatermelon":       // ----Full 4 block learning experiment-----
@@ -247,7 +243,7 @@ public class ExperimentConfig
         totalTrials = totalTrials + nbreaks;
        
         // Timer variables (measured in seconds) - these can later be changed to be different per trial for jitter etc
-        dataRecordFrequency = 0.06f;
+        dataRecordFrequency = 0.04f;
         getReadyDuration = 3.0f;    // how long do we have to 'get ready' after the practice, before main experiment begins?
 
         // Note that when used, jitters ADD to these values - hence they are minimums
@@ -256,7 +252,7 @@ public class ExperimentConfig
         displayCueTime         = 2.0f;
         goCueDelay             = 1.0f;    //
         //goalHitPauseTime       = 1.0f;      // This will also be the amount of time between computer vs human control handovers (+ minDwellAtReward + preRewardAppearTime)
-        finalGoalHitPauseTime  = 1.5f;        // We could get a neural signal for the final reward-recieved state here - if we care!
+        finalGoalHitPauseTime  = 1.7f;        // We could get a neural signal for the final reward-recieved state here - if we care!
         minDwellAtReward       = 0.2f;
         preRewardAppearTime    = 0.3f;      // I think this needs to be jittered to separate neural signals for same room diff states under a consistent policy
         displayMessageTime     = 1.5f;     
@@ -334,6 +330,9 @@ public class ExperimentConfig
         {
 
             case "scannertask_cheese":
+
+                // vertical then horizontal
+
                 //---- test context A1
                 int firstTrial = nextTrial;
                 nextTrial = AddfMRITrainingBlock(nextTrial, "cheese");
@@ -342,11 +341,14 @@ public class ExperimentConfig
                 nextTrial = AddfMRITrainingBlock(nextTrial, "watermelon");
 
                 // Reshuffle the order of the trials for these two contexts, keeping counterbalancing
-                ReshuffleTrialOrder(firstTrial, nextTrial - firstTrial);
+                //ReshuffleTrialOrder(firstTrial, nextTrial - firstTrial);
 
                 break;
 
             case "scannertask_peanut":
+
+                // vertical then horizontal
+
                 //---- test context B1
                 nextTrial = AddfMRITrainingBlock(nextTrial, "peanut");
 
@@ -355,19 +357,25 @@ public class ExperimentConfig
                 break;
 
             case "scannertask_banana":
+
+                // vertical then horizontal
+
                 //---- test context C1
-                nextTrial = AddfMRITrainingBlock(nextTrial, "banana");
+                nextTrial = AddfMRITrainingBlock(nextTrial, "mushroom");
 
                 //---- test context C2
-                nextTrial = AddfMRITrainingBlock(nextTrial, "mushroom");
+                nextTrial = AddfMRITrainingBlock(nextTrial, "banana");
                 break;
 
             case "scannertask_avocado":
+
+                // vertical then horizontal
+
                 //---- test context D1
-                nextTrial = AddfMRITrainingBlock(nextTrial, "avocado");
+                nextTrial = AddfMRITrainingBlock(nextTrial, "pineapple");
 
                 //---- test context D2
-                nextTrial = AddfMRITrainingBlock(nextTrial, "pineapple");
+                nextTrial = AddfMRITrainingBlock(nextTrial, "avocado");
                 break;
 
             case "mturk2D_cheesewatermelon":       // ----Full 4 block learning experiment-----
@@ -1469,7 +1477,7 @@ public class ExperimentConfig
 
             case "peanut":
             case "mushroom":
-            case "avocado":
+            case "pineapple":
 
                 if (transferCounterbalance) 
                 {
@@ -1502,7 +1510,7 @@ public class ExperimentConfig
 
             case "banana":
             case "martini":
-            case "pineapple":
+            case "avocado":
 
                 if (transferCounterbalance)
                 {
