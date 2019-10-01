@@ -184,6 +184,7 @@ public class GameController : MonoBehaviour
 
     public bool waitingForScannerStart = false;
     public bool continueRecordingScanner = false;
+    public bool readyForSecondRun = false;
     public List<float> scannerTriggerTimes = new List<float>();
 
     public bool playersTurn;      // for moving in discrete steps on a 2D grid
@@ -273,7 +274,7 @@ public class GameController : MonoBehaviour
         }
         else if (continueRecordingScanner)
         {
-            if (Input.GetKeyDown(KeyCode.T))  // log any subsequent 't' code presses (according to Sam)
+            if (Input.GetKeyDown(KeyCode.T))  // log any subsequent 't' code presses
             {
                 scannerTriggerTimes.Add(experimentTimer.ElapsedSeconds());
             }
@@ -623,11 +624,20 @@ public class GameController : MonoBehaviour
 
                 elapsedRestbreakTime = restbreakTimer.ElapsedSeconds();
 
-                if (elapsedRestbreakTime > restbreakDuration)
+                // Wait for the human at the scanner to press the space bar to start things again
+                if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    NextScene();
-                    StateNext(STATE_SETUP);   // move on to the next trial
-                    break;
+                    readyForSecondRun = true;
+                }
+
+                if (readyForSecondRun) 
+                {
+                    if (Input.GetKeyDown(KeyCode.T))  // the scanner triggers the experiment to start (and start logging time)
+                    {
+                        NextScene();
+                        StateNext(STATE_SETUP);   // move on to the next trial
+                        break;
+                    }
                 }
                 break;
 

@@ -152,7 +152,6 @@ public class ExperimentConfig
 
                 break;
 
-
             case "scannertask_cheese":       // ---- The fMRI scanning task: 32 trial run A ----//
                 nDebreifQuestions = 0;
                 practiceTrials = 0 + getReadyTrial;
@@ -332,25 +331,25 @@ public class ExperimentConfig
             case "scannertask_cheese":
 
                 // shuffled contexts for 2 runs
-                AddTwoScannerRuns(nextTrial, "cheese", "watermelon");
+                nextTrial = AddTwoScannerRuns(nextTrial, "cheese", "watermelon");
                 break;
 
             case "scannertask_peanut":
                 // NOTE *HRS this context is used for day1 training so do not use it for testing
                 // shuffled contexts for 2 runs
-                AddTwoScannerRuns(nextTrial, "peanut", "martini");
+                nextTrial = AddTwoScannerRuns(nextTrial, "peanut", "martini");
                 break;
 
             case "scannertask_banana":
 
                 // shuffled contexts for 2 runs
-                AddTwoScannerRuns(nextTrial, "mushroom", "banana");
+                nextTrial = AddTwoScannerRuns(nextTrial, "mushroom", "banana");
                 break;
 
             case "scannertask_avocado":
 
                 // shuffled contexts for 2 runs
-                AddTwoScannerRuns(nextTrial, "pineapple", "avocado");
+                nextTrial = AddTwoScannerRuns(nextTrial, "pineapple", "avocado");
                 break;
 
             case "mturk2D_cheesewatermelon":       // ----Full 4 block learning experiment-----
