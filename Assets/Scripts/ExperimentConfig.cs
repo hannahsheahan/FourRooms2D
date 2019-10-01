@@ -133,10 +133,10 @@ public class ExperimentConfig
         //experimentVersion = "mturk2D_peanutmartini_wackycolours";
         //experimentVersion = "micro2D_debug"; 
         //experimentVersion = "scannertask_cheese";   // be careful with adding extra practice trials between scan runs though (dont have extra practice)
-        //experimentVersion = "scannertask_peanut";
+        //experimentVersion = "scannertask_peanut";   // HRS used for training on day1, so do not use for testing in scanner
         //experimentVersion = "scannertask_banana";
-        //experimentVersion = "scannertask_avocado";
-        experimentVersion = "mapping_practice";
+        experimentVersion = "scannertask_avocado";
+        //experimentVersion = "mapping_practice";
         // ------------------------------------------
 
         // Set these variables to define your experiment:
@@ -248,11 +248,11 @@ public class ExperimentConfig
 
         // Note that when used, jitters ADD to these values - hence they are minimums
         //maxMovementTime        = 60.0f;   // changed to be a function of trial number. Time allowed to collect both rewards, incl. wait after hitting first one
-        preDisplayCueTime      = 3.0f;    //  Decode representation of room prior to cue here
-        displayCueTime         = 2.0f;
+        preDisplayCueTime      = 2.5f;    //  Decode representation of room prior to cue here
+        displayCueTime         = 1.5f;
         goCueDelay             = 1.0f;    //
         //goalHitPauseTime       = 1.0f;      // This will also be the amount of time between computer vs human control handovers (+ minDwellAtReward + preRewardAppearTime)
-        finalGoalHitPauseTime  = 1.7f;        // We could get a neural signal for the final reward-recieved state here - if we care!
+        finalGoalHitPauseTime  = 1.5f;        // We could get a neural signal for the final reward-recieved state here - if we care!
         minDwellAtReward       = 0.2f;
         preRewardAppearTime    = 0.3f;      // I think this needs to be jittered to separate neural signals for same room diff states under a consistent policy
         displayMessageTime     = 1.5f;     
@@ -265,7 +265,7 @@ public class ExperimentConfig
 
        // physical movement times
         oneSquareMoveTime = 0.2f;        // Time it will take player to move from one square to next (sec) for animation
-        minTimeBetweenMoves = 0.5f;      // How much time between each allowable move (from movement trigger) (sec) (must be >> than oneSquareMoveTime or position moves off board and path planned execution doesnt work - weird exception)
+        minTimeBetweenMoves = 0.4f;      // How much time between each allowable move (from movement trigger) (sec) (must be >> than oneSquareMoveTime or position moves off board and path planned execution doesnt work - weird exception)
 
         // These variables define the environment (are less likely to be played with)
         roomSize = 4;              // rooms are each 4x4 grids. If this changes, you will need to change this code
@@ -331,51 +331,26 @@ public class ExperimentConfig
 
             case "scannertask_cheese":
 
-                // vertical then horizontal
-
-                //---- test context A1
-                int firstTrial = nextTrial;
-                nextTrial = AddfMRITrainingBlock(nextTrial, "cheese");
-
-                //---- test context A2
-                nextTrial = AddfMRITrainingBlock(nextTrial, "watermelon");
-
-                // Reshuffle the order of the trials for these two contexts, keeping counterbalancing
-                //ReshuffleTrialOrder(firstTrial, nextTrial - firstTrial);
-
+                // shuffled contexts for 2 runs
+                AddTwoScannerRuns(nextTrial, "cheese", "watermelon");
                 break;
 
             case "scannertask_peanut":
-
-                // vertical then horizontal
-
-                //---- test context B1
-                nextTrial = AddfMRITrainingBlock(nextTrial, "peanut");
-
-                //---- test context B2
-                nextTrial = AddfMRITrainingBlock(nextTrial, "martini");
+                // NOTE *HRS this context is used for day1 training so do not use it for testing
+                // shuffled contexts for 2 runs
+                AddTwoScannerRuns(nextTrial, "peanut", "martini");
                 break;
 
             case "scannertask_banana":
 
-                // vertical then horizontal
-
-                //---- test context C1
-                nextTrial = AddfMRITrainingBlock(nextTrial, "mushroom");
-
-                //---- test context C2
-                nextTrial = AddfMRITrainingBlock(nextTrial, "banana");
+                // shuffled contexts for 2 runs
+                AddTwoScannerRuns(nextTrial, "mushroom", "banana");
                 break;
 
             case "scannertask_avocado":
 
-                // vertical then horizontal
-
-                //---- test context D1
-                nextTrial = AddfMRITrainingBlock(nextTrial, "pineapple");
-
-                //---- test context D2
-                nextTrial = AddfMRITrainingBlock(nextTrial, "avocado");
+                // shuffled contexts for 2 runs
+                AddTwoScannerRuns(nextTrial, "pineapple", "avocado");
                 break;
 
             case "mturk2D_cheesewatermelon":       // ----Full 4 block learning experiment-----
@@ -433,6 +408,26 @@ public class ExperimentConfig
         // For debugging: print out the final trial sequence in readable text to check it looks ok
         PrintTrialSequence();
 
+    }
+
+    // ********************************************************************** //
+
+    private int AddTwoScannerRuns(int nextTrial, string contextA, string contextB) 
+    {
+        // vertical then horizontal
+
+        //---- test context A1
+        int firstTrial = nextTrial;
+        nextTrial = AddfMRITrainingBlock(nextTrial, contextA);
+        nextTrial = RestBreakHere(nextTrial);
+
+        //---- test context A2
+        nextTrial = AddfMRITrainingBlock(nextTrial, contextB);
+
+        // Reshuffle the order of the trials for these two contexts, keeping counterbalancing
+        ReshuffleTrialOrder(firstTrial, nextTrial - firstTrial);
+
+        return nextTrial;
     }
 
     // ********************************************************************** //
@@ -1583,14 +1578,13 @@ public class ExperimentConfig
                 trialMazes[trial] = "PrePostForage_" + rewardTypes[trial];
                 freeForage[trial] = true;
                 maxMovementTime[trial] = 120.0f;       // 2 mins to collect all rewards on freeforaging trials
-                blankTime[trial] = ExponentialJitter(3f, 2f, 7f);
+                blankTime[trial] = ExponentialJitter(2.5f, 1.5f, 7f);
                 hallwayFreezeTime[trial] = new float[4];
                 goalHitPauseTime[trial] = new float[4];
                 for (int i = 0; i < nrooms; i++)
                 {
-                    hallwayFreezeTime[trial][i] = ExponentialJitter(3f, 1.5f, 7f);   // jitter times: mean, min, max, 
-
-                    goalHitPauseTime[trial][i] = ExponentialJitter(1.5f, 0.5f, 5f);
+                    hallwayFreezeTime[trial][i] = ExponentialJitter(2.5f, 1.5f, 7f);   // jitter times: mean, min, max, 
+                    goalHitPauseTime[trial][i] = ExponentialJitter(2f, 1f, 5f);
                 }
 
                 // select random locations in rooms 1 and 2 for the two rewards (one in each)
@@ -1680,13 +1674,13 @@ public class ExperimentConfig
                 }
                 freeForage[trial] = false;
                 maxMovementTime[trial] = 60.0f;        // 1 min to collect just the 2 rewards on covariance trials ***HRS changed from 60 on 4/06/2019
-                blankTime[trial] = ExponentialJitter(3f, 2f, 7f);
+                blankTime[trial] = ExponentialJitter(2.5f, 1.5f, 7f);
                 hallwayFreezeTime[trial] = new float[4];
                 goalHitPauseTime[trial] = new float[4];
                 for (int i=0; i < nrooms; i++)
                 {
-                    hallwayFreezeTime[trial][i] = ExponentialJitter(2.5f, 1.5f, 7f);   // jitter times: mean, min, max, 
-                    goalHitPauseTime[trial][i] = ExponentialJitter(1.5f, 0.5f, 5f);
+                    hallwayFreezeTime[trial][i] = ExponentialJitter(2f, 1.5f, 7f);   // jitter times: mean, min, max, 
+                    goalHitPauseTime[trial][i] = ExponentialJitter(2f, 1f, 5f);
                 }
 
 
@@ -1882,191 +1876,149 @@ public class ExperimentConfig
     public void ReshuffleTrialOrder(int firstTrial, int blockLength)
     {
         // This function reshuffles the set prospective trials from firstTrial to firstTrial+blockLength and stores them.
-        // Bit ugly but ok for now (***HRS could have a function with a different or flexible return type that does this for each var)
+        // Bit ugly but ok for now (could have a function with a different or flexible return type that does this for each var)
 
         int n = blockLength;
-        // Perform the Fisher-Yates algorithm for shuffling array elements in place 
+
+        // Identify any rest breaks already scheduled, we will preserve their positions
+        List<int> preservedRestIndices = new List<int>();
+        for (int trial = firstTrial; trial < (blockLength + firstTrial); trial++) 
+        { 
+            if (trialMazes[trial] == "RestBreak") 
+            {
+                preservedRestIndices.Add(trial);
+            }
+        }
+
+        // Perform the Fisher-Yates algorithm for shuffling array elements in place, and shuffle all trials between firstTrial and firstTrial+blockLength 
         // (use same sample for each of the 3 arrays to keep order aligned across arrays)
         for (int i = 0; i < n; i++)
         {
             int k = i + rand.Next(n - i); // select random index in array, less than n-i
+            SwapTrials(k + firstTrial, i + firstTrial);  // swap the contents of these trials at indices k+firstTrial, and i+firstTrial
+        }
 
-            // shuffle contexts / reward types
-            string tempContext = rewardTypes[k + firstTrial];
-            rewardTypes[k + firstTrial] = rewardTypes[i + firstTrial];
-            rewardTypes[i + firstTrial] = tempContext;
+        // Now find where the restbreak trials have gone to, and swap them back with their correct original positions
+        int nRequiredSwaps = preservedRestIndices.Count;
+        int nSwaps = 0;
+        int checkedFlag = -1;
+        int[] uncheckedTrials = Enumerable.Range(firstTrial, blockLength).ToArray();
+        for (int i = 0; i < n; i++)
+        {
+            int trial = firstTrial+i;
 
-            // shuffle start room
-            string tempRoom = playerStartRooms[k + firstTrial];
-            playerStartRooms[k + firstTrial] = playerStartRooms[i + firstTrial];
-            playerStartRooms[i + firstTrial] = tempRoom;
-
-            // shuffle start position
-            Vector3 tempStartPosition = playerStartPositions[k + firstTrial];
-            playerStartPositions[k + firstTrial] = playerStartPositions[i + firstTrial];
-            playerStartPositions[i + firstTrial] = tempStartPosition;
-
-            // shuffle start orientation
-            Vector3 tempStartOrientation = playerStartOrientations[k + firstTrial];
-            playerStartOrientations[k + firstTrial] = playerStartOrientations[i + firstTrial];
-            playerStartOrientations[i + firstTrial] = tempStartOrientation;
-
-            // shuffle reward positions
-            Vector3[] tempRewardPosition = rewardPositions[k + firstTrial];
-            rewardPositions[k + firstTrial] = rewardPositions[i + firstTrial];
-            rewardPositions[i + firstTrial] = tempRewardPosition;
-
-            // shuffle present positions
-            Vector3[] tempPresentPositions = presentPositions[k + firstTrial];
-            presentPositions[k + firstTrial] = presentPositions[i + firstTrial];
-            presentPositions[i + firstTrial] = tempPresentPositions;
-
-            // reward room 1
-            string tempRewardRoom = star1Rooms[k + firstTrial];
-            star1Rooms[k + firstTrial] = star1Rooms[i + firstTrial];
-            star1Rooms[i + firstTrial] = tempRewardRoom;
-
-            // reward room 2
-            tempRewardRoom = star2Rooms[k + firstTrial];
-            star2Rooms[k + firstTrial] = star2Rooms[i + firstTrial];
-            star2Rooms[i + firstTrial] = tempRewardRoom;
-
-            // shuffle control type
-            string[] tempControlType = controlStateOrder[k + firstTrial];
-            controlStateOrder[k + firstTrial] = controlStateOrder[i + firstTrial];
-            controlStateOrder[i + firstTrial] = tempControlType;
-
-            // shuffle whether computer control correct or not
-            bool tempControlCorrect = computerAgentCorrect[k + firstTrial];
-            computerAgentCorrect[k + firstTrial] = computerAgentCorrect[i + firstTrial];
-            computerAgentCorrect[i + firstTrial] = tempControlCorrect;
-
-            // movement time
-            float tempMoveTime = maxMovementTime[k + firstTrial];
-            maxMovementTime[k + firstTrial] = maxMovementTime[i + firstTrial];
-            maxMovementTime[i + firstTrial] = tempMoveTime;
-
-            // ITI times
-            float tempblankTime = blankTime[k + firstTrial];
-            blankTime[k + firstTrial] = blankTime[i + firstTrial];
-            blankTime[i + firstTrial] = tempblankTime;
-
-            // hallwayfreeze times
-            float[] tempFreezeTimes = hallwayFreezeTime[k + firstTrial];
-            hallwayFreezeTime[k + firstTrial] = hallwayFreezeTime[i + firstTrial];
-            hallwayFreezeTime[i + firstTrial] = tempFreezeTimes;
-
-            // prereward appear times
-            float[] tempgoalHitPauseTime = goalHitPauseTime[k + firstTrial];
-            goalHitPauseTime[k + firstTrial] = goalHitPauseTime[i + firstTrial];
-            goalHitPauseTime[i + firstTrial] = tempgoalHitPauseTime;
-
-            // free forage flag
-            bool tempForage = freeForage[k + firstTrial];
-            freeForage[k + firstTrial] = freeForage[i + firstTrial];
-            freeForage[i + firstTrial] = tempForage;
-
-            // shuffle trialMazes
-            string tempTrialMazes = trialMazes[k + firstTrial];
-            trialMazes[k + firstTrial] = trialMazes[i + firstTrial];
-            trialMazes[i + firstTrial] = tempTrialMazes;
-
-            // shuffle whether double reward
-            bool tempDoubleReward = doubleRewardTask[k + firstTrial];
-            doubleRewardTask[k + firstTrial] = doubleRewardTask[i + firstTrial];
-            doubleRewardTask[i + firstTrial] = tempDoubleReward;
-
-            // shuffle bridge states
-            bool[] tempBridgeStates = bridgeStates[k + firstTrial];
-            bridgeStates[k + firstTrial] = bridgeStates[i + firstTrial];
-            bridgeStates[i + firstTrial] = tempBridgeStates;
-
+            if (uncheckedTrials[i] != checkedFlag) 
+            { 
+                if (trialMazes[trial] == "RestBreak")
+                {
+                    if (nRequiredSwaps > 0) 
+                    { 
+                        SwapTrials(trial, preservedRestIndices[nSwaps]);
+                        uncheckedTrials[preservedRestIndices[nSwaps]] = checkedFlag; // make sure we dont swap this element again!
+                        nSwaps++;
+                    }
+                }
+            }
         }
     }
 
     // ********************************************************************** //
-    /*
-    private void MoveTrialsAndInsertRestBreak(int restBreakLocation) 
+
+    private void SwapTrials(int indexA, int indexB) 
     {
-        // Take all the trials from restBreakLocation onwards, make a copy of them, 
-        // overwrite the restBreakLocation trial in the trial array with a rest break, then overwrite the i+1:N trials with our original trials
-
-        // HRS Note that if the trials are shuffled you can really just move the one trial that you are replacing with a restbreak, but in case there is trial structure, shift them all
-
-        //HRS leave this for now, because we may not use it - prioritise the other things like always truncated dwell on bridge crossings ie the bridges do not get cancelled
-
-        int nextTrial = System.Array.IndexOf(trialMazes, null);       // the number of the next trial we havent specified yet
-        int N = nextTrial - restBreakLocation;                        // how many trials we will have to move
-
-        // All the shit we want to remember
+        // This function serves to swap the scheduled trial contents of trials k and i
         // shuffle contexts / reward types
-        string[] tempRewardTypes = new string[N];
-        string[] tempPlayerStartRooms = new string[N];
-        Vector3[] tempStartPositions = new Vector3[N];
-        Vector3[] tempStartOrientations = new Vector3[N];
-        Vector3[][] tempRewardPositions = new Vector3[N][];
+        string tempContext = rewardTypes[indexA];
+        rewardTypes[indexA] = rewardTypes[indexB];
+        rewardTypes[indexB] = tempContext;
 
-        Array.Copy(rewardTypes, restBreakLocation, tempRewardTypes, 0, N);             // reward types
-        Array.Copy(playerStartRooms, restBreakLocation, tempPlayerStartRooms, 0, N);   // start rooms
-        Array.Copy(playerStartPositions, restBreakLocation, tempStartPositions, 0, N);   // start positions
-        Array.Copy(playerStartOrientations, restBreakLocation, tempStartOrientations, 0, N);   // start orientations
-        Array.Copy(rewardPositions, restBreakLocation, tempRewardPositions, 0, N);   // reward positions (HRS check this because 2d array)
+        // shuffle start room
+        string tempRoom = playerStartRooms[indexA];
+        playerStartRooms[indexA] = playerStartRooms[indexB];
+        playerStartRooms[indexB] = tempRoom;
 
+        // shuffle start position
+        Vector3 tempStartPosition = playerStartPositions[indexA];
+        playerStartPositions[indexA] = playerStartPositions[indexB];
+        playerStartPositions[indexB] = tempStartPosition;
 
-        //... continue
+        // shuffle start orientation
+        Vector3 tempStartOrientation = playerStartOrientations[indexA];
+        playerStartOrientations[indexA] = playerStartOrientations[indexB];
+        playerStartOrientations[indexB] = tempStartOrientation;
+
+        // shuffle reward positions
+        Vector3[] tempRewardPosition = rewardPositions[indexA];
+        rewardPositions[indexA] = rewardPositions[indexB];
+        rewardPositions[indexB] = tempRewardPosition;
 
         // shuffle present positions
-        Vector3[] tempPresentPositions = presentPositions[k + firstTrial];
-        presentPositions[k + firstTrial] = presentPositions[i + firstTrial];
-        presentPositions[i + firstTrial] = tempPresentPositions;
+        Vector3[] tempPresentPositions = presentPositions[indexA];
+        presentPositions[indexA] = presentPositions[indexB];
+        presentPositions[indexB] = tempPresentPositions;
 
         // reward room 1
-        string tempRewardRoom = star1Rooms[k + firstTrial];
-        star1Rooms[k + firstTrial] = star1Rooms[i + firstTrial];
-        star1Rooms[i + firstTrial] = tempRewardRoom;
+        string tempRewardRoom = star1Rooms[indexA];
+        star1Rooms[indexA] = star1Rooms[indexB];
+        star1Rooms[indexB] = tempRewardRoom;
 
         // reward room 2
-        tempRewardRoom = star2Rooms[k + firstTrial];
-        star2Rooms[k + firstTrial] = star2Rooms[i + firstTrial];
-        star2Rooms[i + firstTrial] = tempRewardRoom;
+        tempRewardRoom = star2Rooms[indexA];
+        star2Rooms[indexA] = star2Rooms[indexB];
+        star2Rooms[indexB] = tempRewardRoom;
+
+        // shuffle control type
+        string[] tempControlType = controlStateOrder[indexA];
+        controlStateOrder[indexA] = controlStateOrder[indexB];
+        controlStateOrder[indexB] = tempControlType;
+
+        // shuffle whether computer control correct or not
+        bool tempControlCorrect = computerAgentCorrect[indexA];
+        computerAgentCorrect[indexA] = computerAgentCorrect[indexB];
+        computerAgentCorrect[indexB] = tempControlCorrect;
 
         // movement time
-        float tempMoveTime = maxMovementTime[k + firstTrial];
-        maxMovementTime[k + firstTrial] = maxMovementTime[i + firstTrial];
-        maxMovementTime[i + firstTrial] = tempMoveTime;
+        float tempMoveTime = maxMovementTime[indexA];
+        maxMovementTime[indexA] = maxMovementTime[indexB];
+        maxMovementTime[indexB] = tempMoveTime;
 
         // ITI times
-        float tempblankTime = blankTime[k + firstTrial];
-        blankTime[k + firstTrial] = blankTime[i + firstTrial];
-        blankTime[i + firstTrial] = tempblankTime;
+        float tempblankTime = blankTime[indexA];
+        blankTime[indexA] = blankTime[indexB];
+        blankTime[indexB] = tempblankTime;
 
         // hallwayfreeze times
-        float[] tempFreezeTimes = hallwayFreezeTime[k + firstTrial];
-        hallwayFreezeTime[k + firstTrial] = hallwayFreezeTime[i + firstTrial];
-        hallwayFreezeTime[i + firstTrial] = tempFreezeTimes;
+        float[] tempFreezeTimes = hallwayFreezeTime[indexA];
+        hallwayFreezeTime[indexA] = hallwayFreezeTime[indexB];
+        hallwayFreezeTime[indexB] = tempFreezeTimes;
+
+        // prereward appear times
+        float[] tempgoalHitPauseTime = goalHitPauseTime[indexA];
+        goalHitPauseTime[indexA] = goalHitPauseTime[indexB];
+        goalHitPauseTime[indexB] = tempgoalHitPauseTime;
 
         // free forage flag
-        bool tempForage = freeForage[k + firstTrial];
-        freeForage[k + firstTrial] = freeForage[i + firstTrial];
-        freeForage[i + firstTrial] = tempForage;
+        bool tempForage = freeForage[indexA];
+        freeForage[indexA] = freeForage[indexB];
+        freeForage[indexB] = tempForage;
 
         // shuffle trialMazes
-        string tempTrialMazes = trialMazes[k + firstTrial];
-        trialMazes[k + firstTrial] = trialMazes[i + firstTrial];
-        trialMazes[i + firstTrial] = tempTrialMazes;
+        string tempTrialMazes = trialMazes[indexA];
+        trialMazes[indexA] = trialMazes[indexB];
+        trialMazes[indexB] = tempTrialMazes;
 
-        // shuffle trialMazes
-        bool tempDoubleReward = doubleRewardTask[k + firstTrial];
-        doubleRewardTask[k + firstTrial] = doubleRewardTask[i + firstTrial];
-        doubleRewardTask[i + firstTrial] = tempDoubleReward;
+        // shuffle whether double reward
+        bool tempDoubleReward = doubleRewardTask[indexA];
+        doubleRewardTask[indexA] = doubleRewardTask[indexB];
+        doubleRewardTask[indexB] = tempDoubleReward;
 
         // shuffle bridge states
-        bool[] tempBridgeStates = bridgeStates[k + firstTrial];
-        bridgeStates[k + firstTrial] = bridgeStates[i + firstTrial];
-        bridgeStates[i + firstTrial] = tempBridgeStates;
+        bool[] tempBridgeStates = bridgeStates[indexA];
+        bridgeStates[indexA] = bridgeStates[indexB];
+        bridgeStates[indexB] = tempBridgeStates;
 
     }
-    */
+
     // ********************************************************************** //
 
     private void GenerateRandomTrialPositions(int trial)

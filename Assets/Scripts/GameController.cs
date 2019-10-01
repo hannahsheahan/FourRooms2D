@@ -604,10 +604,10 @@ public class GameController : MonoBehaviour
                     CancelInvoke("RecordFSMState");
 
                     // if we want to repeat this trial again later (for learning experiments, or to make sure that fmri experiments remain balanced)
-                    RepeatTrialAgainLater();
+                    //RepeatTrialAgainLater();
 
                     // OR If we dont want experiment to extend too long, dont bother repeating trial later
-                    //NextScene();  // Just move on to the next trial in the sequence
+                    NextScene();  // Just move on to the next trial in the sequence
 
                     StateNext(STATE_SETUP);
 
