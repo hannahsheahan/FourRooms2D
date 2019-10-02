@@ -1126,7 +1126,8 @@ public class GameController : MonoBehaviour
 
             case "traversingHallway":
                 //textMessage = "Crossing a bridge takes time. \n Continue in..."; // + ((int)Mathf.Round(hallwayFreezeTime-1f)).ToString() + " seconds";
-                textMessage = "Moving to next room..."; // + ((int)Mathf.Round(hallwayFreezeTime-1f)).ToString() + " seconds";
+                //textMessage = "Moving to next room..."; // + ((int)Mathf.Round(hallwayFreezeTime-1f)).ToString() + " seconds";
+                textMessage = "Begebe dich ins nächste Zimmer...";
                 break;
 
             case "openBoxQuestion":

@@ -1690,11 +1690,11 @@ MonoBehaviour:
     beide Ananasse einsammeln, um fortzufahren. \n\n7.  Warte auf das Piep-Zeichen
     am Anfang jeden Durchgangs bevor Du losl\xE4ufst.\n\n8.  Versuche die Gegenst\xE4nde,
     auf die Du hingewiesen wurdest, in jedem Durchgang so schnell wie m\xF6glich zu
-    finden und bevor die Zeit abl\xE4uft. \n\n9.  Bridges connect different parts
-    of the maze. It takes time to move between different parts of the maze, so choose
-    your bridges carefully. \n\n10.   Dir wird ein Bonus von 0.003 Euro f\xFCr jeden
-    Punkt deines finalen Scores gezahlt (das kann bis zu 10 Euro betragen, wenn Du
-    gut bist)\n\nViel Gl\xFCck!"
+    finden und bevor die Zeit abl\xE4uft. \n\n9.  Br\xFCcken verbinden die verschiedenen
+    Teile des Labyrinths. Da es Zeit kostet sich zwischen den Teilen des Labyrinths
+    zu bewegen, solltest du genau \xFCberlegen welche Br\xFCcken du w\xE4hlst.\n\n10.
+    \  Dir wird ein Bonus von 0.003 Euro f\xFCr jeden Punkt deines finalen Scores
+    gezahlt (das kann bis zu 10 Euro betragen, wenn Du gut bist)\n\nViel Gl\xFCck!"
 --- !u!222 &1764869487
 CanvasRenderer:
   m_ObjectHideFlags: 0

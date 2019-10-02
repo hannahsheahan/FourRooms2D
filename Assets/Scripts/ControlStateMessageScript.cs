@@ -32,12 +32,12 @@ public class ControlStateMessageScript : MonoBehaviour
                 {
                     case GameController.CONTROL_HUMAN:
                         //controlStateMessage = "[Your turn]";
-                        controlStateMessage = "[Your turn]";
+                        controlStateMessage = "[Du bist dran]";
                         screenMessage.color = Color.green;
                         break;
                     case GameController.CONTROL_COMPUTER:
                         //controlStateMessage = "[Computer turn]";
-                        controlStateMessage = "[Computer turn]";
+                        controlStateMessage = "[Der Computer ist dran]";
                         screenMessage.color = Color.red;
                         break;
                     default:

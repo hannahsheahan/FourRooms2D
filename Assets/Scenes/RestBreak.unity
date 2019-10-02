@@ -1005,7 +1005,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Take a break
+  m_Text: Pause
 --- !u!222 &2063228059
 CanvasRenderer:
   m_ObjectHideFlags: 0
