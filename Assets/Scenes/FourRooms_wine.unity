@@ -303,7 +303,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -90, y: -41.471924}
+  m_AnchoredPosition: {x: -105, y: -41.471924}
   m_SizeDelta: {x: 160, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &102142666
@@ -339,7 +339,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Time left
+  m_Text: 'Verbleibende Zeit '
 --- !u!222 &102142667
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7658,7 +7658,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Total score
+  m_Text: Gesamtscore
 --- !u!222 &7969312230721262353
 CanvasRenderer:
   m_ObjectHideFlags: 0
