@@ -156,7 +156,7 @@ public class ExperimentConfig
                 nDebreifQuestions = 0;
                 practiceTrials = 0 + getReadyTrial;
                 totalTrials = 32 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
-                restFrequency = 40 + restbreakOffset;                               // Take a rest after this many normal trials
+                restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
                 break;
 
@@ -164,7 +164,7 @@ public class ExperimentConfig
                 nDebreifQuestions = 0;
                 practiceTrials = 0 + getReadyTrial;
                 totalTrials = 32 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
-                restFrequency = 40 + restbreakOffset;                               // Take a rest after this many normal trials
+                restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
                 break;
 
@@ -172,7 +172,7 @@ public class ExperimentConfig
                 nDebreifQuestions = 0;
                 practiceTrials = 0 + getReadyTrial;
                 totalTrials = 32 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
-                restFrequency = 40 + restbreakOffset;                               // Take a rest after this many normal trials
+                restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
                 break;
 
@@ -180,7 +180,7 @@ public class ExperimentConfig
                 nDebreifQuestions = 0;
                 practiceTrials = 0 + getReadyTrial;
                 totalTrials = 32 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
-                restFrequency = 40 + restbreakOffset;                               // Take a rest after this many normal trials
+                restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
                 break;
 
@@ -251,7 +251,7 @@ public class ExperimentConfig
         displayCueTime         = 1.5f;
         goCueDelay             = 1.0f;    //
         //goalHitPauseTime       = 1.0f;      // This will also be the amount of time between computer vs human control handovers (+ minDwellAtReward + preRewardAppearTime)
-        finalGoalHitPauseTime  = 1.5f;        // We could get a neural signal for the final reward-recieved state here - if we care!
+        finalGoalHitPauseTime  = 1f;        
         minDwellAtReward       = 0.2f;
         preRewardAppearTime    = 0.3f;      // I think this needs to be jittered to separate neural signals for same room diff states under a consistent policy
         displayMessageTime     = 1.5f;     
@@ -422,7 +422,8 @@ public class ExperimentConfig
 
         //---- test context A2
         nextTrial = AddfMRITrainingBlock(nextTrial, contextB);
-
+        Debug.Log("firstTrial: " + firstTrial);
+        Debug.Log("nextTrial: " + nextTrial);
         // Reshuffle the order of the trials for these two contexts, keeping counterbalancing
         ReshuffleTrialOrder(firstTrial, nextTrial - firstTrial);
 
@@ -1582,7 +1583,7 @@ public class ExperimentConfig
                 goalHitPauseTime[trial] = new float[4];
                 for (int i = 0; i < nrooms; i++)
                 {
-                    hallwayFreezeTime[trial][i] = ExponentialJitter(2.5f, 1.5f, 7f);   // jitter times: mean, min, max, 
+                    hallwayFreezeTime[trial][i] = ExponentialJitter(2f, 1.5f, 7f);   // jitter times: mean, min, max, 
                     goalHitPauseTime[trial][i] = ExponentialJitter(2f, 1f, 5f);
                 }
 
@@ -1672,7 +1673,7 @@ public class ExperimentConfig
                     trialMazes[trial] = "FourRooms_" + rewardTypes[trial];
                 }
                 freeForage[trial] = false;
-                maxMovementTime[trial] = 60.0f;        // 1 min to collect just the 2 rewards on covariance trials ***HRS changed from 60 on 4/06/2019
+                maxMovementTime[trial] = 50.0f;        // 1 min to collect just the 2 rewards on covariance trials ***HRS changed from 60 on 4/06/2019
                 blankTime[trial] = ExponentialJitter(2.5f, 1.5f, 7f);
                 hallwayFreezeTime[trial] = new float[4];
                 goalHitPauseTime[trial] = new float[4];
@@ -1889,6 +1890,7 @@ public class ExperimentConfig
             }
         }
 
+
         // Perform the Fisher-Yates algorithm for shuffling array elements in place, and shuffle all trials between firstTrial and firstTrial+blockLength 
         // (use same sample for each of the 3 arrays to keep order aligned across arrays)
         for (int i = 0; i < n; i++)
@@ -1911,9 +1913,11 @@ public class ExperimentConfig
                 if (trialMazes[trial] == "RestBreak")
                 {
                     if (nRequiredSwaps > 0) 
-                    { 
+                    {
+                        //Debug.Log("this happened");
                         SwapTrials(trial, preservedRestIndices[nSwaps]);
-                        uncheckedTrials[preservedRestIndices[nSwaps]] = checkedFlag; // make sure we dont swap this element again!
+                        //Debug.Log("seemed to go ok");
+                        uncheckedTrials[preservedRestIndices[nSwaps]-firstTrial] = checkedFlag; // make sure we dont swap this element again!
                         nSwaps++;
                     }
                 }
