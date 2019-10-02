@@ -36,7 +36,8 @@ public class ExitExperimentDurationScript : MonoBehaviour {
 
         if (totalExperimentTime > 0.0f)    // just make sure it has updated
         {
-            ExperimentDurationText.text = "Total time: " + (totalExperimentTime/60.0f).ToString("0.0") + " min";
+            //ExperimentDurationText.text = "Total time: " + (totalExperimentTime/60.0f).ToString("0.0") + " min";  
+            ExperimentDurationText.text = "Gesamtzeit: " + (totalExperimentTime / 60.0f).ToString("0.0") + " min";
         }
 
 

@@ -1074,7 +1074,8 @@ public class GameController : MonoBehaviour
                 break;
 
             case "wellDoneMessage":  // Note that this happens in an external script now
-                textMessage = "Well done!";
+                //textMessage = "Well done!";
+                textMessage = "Super gemacht!";
                 if (messageTimer.ElapsedSeconds() > displayMessageTime)
                 {
                     displayMessage = "noMessage"; // reset the message
@@ -1082,7 +1083,8 @@ public class GameController : MonoBehaviour
                 break;
 
             case "timeoutMessage":
-                textMessage = "Trial timed out!";
+                //textMessage = "Trial timed out!";
+                textMessage = "Zeit ist abgelaufen!";
                 if (messageTimer.ElapsedSeconds() > displayMessageTime)
                 {
                     displayMessage = "noMessage"; // reset the message
@@ -1090,7 +1092,8 @@ public class GameController : MonoBehaviour
                 break;
 
             case "restartTrialMessage":
-                textMessage = "Restarting trial";
+                //textMessage = "Restarting trial";
+                textMessage = "Beginne den Durchgang neu";
                 if (messageTimer.ElapsedSeconds() > displayMessageTime)
                 {
                     displayMessage = "noMessage"; // reset the message
@@ -1098,19 +1101,23 @@ public class GameController : MonoBehaviour
                 break;
 
             case "dataWritingError":
-                textMessage = "There was an error sending data to the web server. \n Please check your internet connection. \n If this message does not disappear, \nthen please return HIT and email hiplab@psy.ox.ac.uk";
+                //textMessage = "There was an error sending data to the web server. \n Please check your internet connection. \n If this message does not disappear, \nthen please return HIT and email hiplab@psy.ox.ac.uk";
+                textMessage = "Ein Fehler is aufgetreten beim senden deiner Daten zum Web Server.\n Bitte überprüfe deine Internetverbindung. \n Wenn diese Nachricht nicht verschwindet, informiere bitte den Studienleiter.";
                 break;
 
             case "framerateError":
-                textMessage = "The browser-dependent frame rate is insufficient for this HIT. \n Please exit, or try using Chrome/Firefox with no plugins. \n If this message does not disappear, \nthen please return HIT and email hiplab@psy.ox.ac.uk";
+                //textMessage = "The browser-dependent frame rate is insufficient for this HIT. \n Please exit, or try using Chrome/Firefox with no plugins. \n If this message does not disappear, \nthen please return HIT and email hiplab@psy.ox.ac.uk";
+                textMessage = "Die browserabhängige Framerate ist unzureichend für diesen HIT. \n Bitte verlasse die Seite oder versuche Chrome/Firefox ohne plugins zu benutzen. \n Wenn diese Nachricht nicht verschwindet, \n informiere bitte den Gruppenleiter. ";
                 break;
 
             case "notFullScreenError":
-                textMessage = "Please return the application to full-screen mode to continue.";
+                //textMessage = "Please return the application to full-screen mode to continue.";
+                textMessage = "Bitte kehre die Anwendung zum full-screen mode zurück, um fortzufahren.";
                 break;
 
             case "keepSearchingMessage":
-                textMessage = "Well done! \n There is one more martini to find.";
+                //textMessage = "Well done! \n There is one more martini to find.";
+                textMessage = "Super gemacht! Es gibt noch eine weitere Martini-Glas zu finden.";
                 if (messageTimer.ElapsedSeconds() > displayMessageTime)
                 {
                     displayMessage = "noMessage"; // reset the message

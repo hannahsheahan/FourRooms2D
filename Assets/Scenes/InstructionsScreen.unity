@@ -683,6 +683,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1631422234}
+  - {fileID: 1764869485}
   m_Father: {fileID: 1310396985}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1522,7 +1523,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1631422234
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1601,6 +1602,106 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1631422233}
+  m_CullTransparentMesh: 0
+--- !u!1 &1764869484
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1764869485}
+  - component: {fileID: 1764869487}
+  - component: {fileID: 1764869486}
+  m_Layer: 5
+  m_Name: TextGerman
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1764869485
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1764869484}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 678834817}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 580, y: 520}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1764869486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1764869484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 12
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 1
+    m_MaxSize: 40
+    m_Alignment: 0
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 1
+    m_LineSpacing: 1
+  m_Text: "Diese Version des Experimentes ist \xE4hnlich zu der die du gestern gesehen
+    hast. Der Unterschied zu gestern ist, dass der Computer heute manchmal dein Avatar
+    kontrollieren und einen Felsbrocken zum Hochheben ausw\xE4hlen wird. Du arbeitest
+    mit dem Computer zusammen und erh\xE4ltst Punkte daf\xFCr wie schnell du den Durchlauf
+    beendest. \r\rHier nochmal die Spielregeln:\r\n\n1.  Wir haben einige Gegenst\xE4nde
+    in einem Labyrinth hinterlassen. Sie sind unter Felsbrocken versteckt.\n\n2.  In
+    dem Labyrinth sind auch einige Felsbrocken, unter denen nichts versteckt ist.
+    Leider k\xF6nnen wir uns nicht mehr daran erinnern, unter welchen Felsbrocken
+    die Gegenst\xE4nde versteckt sind.\n\n3.  Sammle Punkte indem Du Felsbrocken umdrehst,
+    um versteckte Gegenst\xE4nde zu finden. \n\n4.  Benutze die Pfeiltasten, um durch
+    das Labyrinth zu navigieren und die Leertaste, um die Felsbrocken hochzuheben.
+    \n\n5.  Am Anfang jeden Durchgangs erscheint ein Gegenstand, um Dir zu zeigen
+    nach welchem Gegenstand Du suchen sollst.    \n\n6.  Es gibt immer zwei Gegenst\xE4nde
+    des gleichen Typs, die eingesammelt werden sollen (z.B. zwei Ananasse). Du musst
+    beide Ananasse einsammeln, um fortzufahren. \n\n7.  Warte auf das Piep-Zeichen
+    am Anfang jeden Durchgangs bevor Du losl\xE4ufst.\n\n8.  Versuche die Gegenst\xE4nde,
+    auf die Du hingewiesen wurdest, in jedem Durchgang so schnell wie m\xF6glich zu
+    finden und bevor die Zeit abl\xE4uft. \n\n9.  Bridges connect different parts
+    of the maze. It takes time to move between different parts of the maze, so choose
+    your bridges carefully. \n\n10.   Dir wird ein Bonus von 0.003 Euro f\xFCr jeden
+    Punkt deines finalen Scores gezahlt (das kann bis zu 10 Euro betragen, wenn Du
+    gut bist)\n\nViel Gl\xFCck!"
+--- !u!222 &1764869487
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1764869484}
   m_CullTransparentMesh: 0
 --- !u!1 &1791462784
 GameObject:

@@ -31,10 +31,12 @@ public class ControlStateMessageScript : MonoBehaviour
                 switch (controlState)
                 {
                     case GameController.CONTROL_HUMAN:
+                        //controlStateMessage = "[Your turn]";
                         controlStateMessage = "[Your turn]";
                         screenMessage.color = Color.green;
                         break;
                     case GameController.CONTROL_COMPUTER:
+                        //controlStateMessage = "[Computer turn]";
                         controlStateMessage = "[Computer turn]";
                         screenMessage.color = Color.red;
                         break;
