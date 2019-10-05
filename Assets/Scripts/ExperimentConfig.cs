@@ -135,8 +135,18 @@ public class ExperimentConfig
         //experimentVersion = "scannertask_cheese";   // be careful with adding extra practice trials between scan runs though (dont have extra practice)
         //experimentVersion = "scannertask_peanut";   // HRS used for training on day1, so do not use for testing in scanner
         //experimentVersion = "scannertask_banana";
-        experimentVersion = "scannertask_avocado";
+        //experimentVersion = "scannertask_avocado";
+
+        // These experiments are for the scanner:
+
         //experimentVersion = "mapping_practice";
+        //experimentVersion = "scannertask_all_pineapple-cheese-mushroom";
+        //experimentVersion = "scannertask_all_pineapple-mushroom-cheese";
+        //experimentVersion = "scannertask_all_cheese-pineapple-mushroom";
+        //experimentVersion = "scannertask_all_cheese-mushroom-pineapple";
+        //experimentVersion = "scannertask_all_mushroom-pineapple-cheese";
+        experimentVersion = "scannertask_all_mushroom-cheese-pineapple";
+
         // ------------------------------------------
 
         // Set these variables to define your experiment:
@@ -148,8 +158,21 @@ public class ExperimentConfig
                 practiceTrials = 8 + getReadyTrial;
                 totalTrials = 0 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
-                restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
+                restbreakDuration = 0.0f;                                          // Note that this time is now online up to the experimenter
 
+                break;
+
+            case "scannertask_all_pineapple-cheese-mushroom":
+            case "scannertask_all_pineapple-mushroom-cheese":
+            case "scannertask_all_cheese-pineapple-mushroom":
+            case "scannertask_all_cheese-mushroom-pineapple":
+            case "scannertask_all_mushroom-pineapple-cheese":
+            case "scannertask_all_mushroom-cheese-pineapple":
+                nDebreifQuestions = 0;
+                practiceTrials = 0 + getReadyTrial;
+                totalTrials = 96 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
+                restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
+                restbreakDuration = 0.0f;                                          // Note that this time is now online up to the experimenter               
                 break;
 
             case "scannertask_cheese":       // ---- The fMRI scanning task: 32 trial run A ----//
@@ -157,7 +180,7 @@ public class ExperimentConfig
                 practiceTrials = 0 + getReadyTrial;
                 totalTrials = 32 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
-                restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
+                restbreakDuration = 0.0f;                                          // Note that this time is now online up to the experimenter
                 break;
 
             case "scannertask_peanut":       // ---- The fMRI scanning task: 32 trial run B ----//
@@ -165,7 +188,7 @@ public class ExperimentConfig
                 practiceTrials = 0 + getReadyTrial;
                 totalTrials = 32 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
-                restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
+                restbreakDuration = 0.0f;                                          // Note that this time is now online up to the experimenter
                 break;
 
             case "scannertask_banana":       // ---- The fMRI scanning task: 32 trial run B ----//
@@ -173,7 +196,7 @@ public class ExperimentConfig
                 practiceTrials = 0 + getReadyTrial;
                 totalTrials = 32 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
-                restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
+                restbreakDuration = 0.0f;                                          // Note that this time is now online up to the experimenter
                 break;
 
             case "scannertask_avocado":       // ---- The fMRI scanning task: 32 trial run A ----//
@@ -181,7 +204,7 @@ public class ExperimentConfig
                 practiceTrials = 0 + getReadyTrial;
                 totalTrials = 32 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
-                restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
+                restbreakDuration = 0.0f;                                          // Note that this time is now online up to the experimenter
                 break;
 
             case "mturk2D_cheesewatermelon":       // ----Full 4 block learning experiment-----
@@ -327,9 +350,75 @@ public class ExperimentConfig
         // Define the full trial sequence
         switch (experimentVersion)
         {
+            //------------- 6 permutations of a full scan session ------------------//
+            case "scannertask_all_pineapple-cheese-mushroom":
+                // shuffled contexts for 2 runs
+                nextTrial = AddTwoScannerRuns(nextTrial, "pineapple", "avocado");
+                nextTrial = RestBreakHere(nextTrial);
+                // shuffled contexts for 2 runs
+                nextTrial = AddTwoScannerRuns(nextTrial, "cheese", "watermelon");
+                nextTrial = RestBreakHere(nextTrial);
+                // shuffled contexts for 2 runs
+                nextTrial = AddTwoScannerRuns(nextTrial, "mushroom", "banana");
+                break;
 
+            case "scannertask_all_pineapple-mushroom-cheese":
+                // shuffled contexts for 2 runs
+                nextTrial = AddTwoScannerRuns(nextTrial, "pineapple", "avocado");
+                nextTrial = RestBreakHere(nextTrial);
+                // shuffled contexts for 2 runs
+                nextTrial = AddTwoScannerRuns(nextTrial, "mushroom", "banana");
+                nextTrial = RestBreakHere(nextTrial);
+                // shuffled contexts for 2 runs
+                nextTrial = AddTwoScannerRuns(nextTrial, "cheese", "watermelon");
+                break;
+
+            case "scannertask_all_mushroom-cheese-pineapple":
+                // shuffled contexts for 2 runs
+                nextTrial = AddTwoScannerRuns(nextTrial, "mushroom", "banana");
+                nextTrial = RestBreakHere(nextTrial);
+                // shuffled contexts for 2 runs
+                nextTrial = AddTwoScannerRuns(nextTrial, "cheese", "watermelon");
+                nextTrial = RestBreakHere(nextTrial);
+                // shuffled contexts for 2 runs
+                nextTrial = AddTwoScannerRuns(nextTrial, "pineapple", "avocado");
+                break;
+
+            case "scannertask_all_mushroom-pineapple-cheese":
+                // shuffled contexts for 2 runs
+                nextTrial = AddTwoScannerRuns(nextTrial, "mushroom", "banana");
+                nextTrial = RestBreakHere(nextTrial);
+                // shuffled contexts for 2 runs
+                nextTrial = AddTwoScannerRuns(nextTrial, "pineapple", "avocado");
+                nextTrial = RestBreakHere(nextTrial);
+                // shuffled contexts for 2 runs
+                nextTrial = AddTwoScannerRuns(nextTrial, "cheese", "watermelon");
+                break;
+
+            case "scannertask_all_cheese-mushroom-pineapple":
+                // shuffled contexts for 2 runs
+                nextTrial = AddTwoScannerRuns(nextTrial, "cheese", "watermelon");
+                nextTrial = RestBreakHere(nextTrial);
+                // shuffled contexts for 2 runs
+                nextTrial = AddTwoScannerRuns(nextTrial, "mushroom", "banana");
+                nextTrial = RestBreakHere(nextTrial);
+                // shuffled contexts for 2 runs
+                nextTrial = AddTwoScannerRuns(nextTrial, "pineapple", "avocado");
+                break;
+
+            case "scannertask_all_cheese-pineapple-mushroom":
+                // shuffled contexts for 2 runs
+                nextTrial = AddTwoScannerRuns(nextTrial, "cheese", "watermelon");
+                nextTrial = RestBreakHere(nextTrial);
+                // shuffled contexts for 2 runs
+                nextTrial = AddTwoScannerRuns(nextTrial, "pineapple", "avocado");
+                nextTrial = RestBreakHere(nextTrial);
+                // shuffled contexts for 2 runs
+                nextTrial = AddTwoScannerRuns(nextTrial, "mushroom", "banana");
+                break;
+
+                //-------------------------------//
             case "scannertask_cheese":
-
                 // shuffled contexts for 2 runs
                 nextTrial = AddTwoScannerRuns(nextTrial, "cheese", "watermelon");
                 break;
@@ -422,8 +511,6 @@ public class ExperimentConfig
 
         //---- test context A2
         nextTrial = AddfMRITrainingBlock(nextTrial, contextB);
-        Debug.Log("firstTrial: " + firstTrial);
-        Debug.Log("nextTrial: " + nextTrial);
         // Reshuffle the order of the trials for these two contexts, keeping counterbalancing
         ReshuffleTrialOrder(firstTrial, nextTrial - firstTrial);
 
