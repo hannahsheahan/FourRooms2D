@@ -155,7 +155,7 @@ public class ExperimentConfig
                 practiceTrials = 2 + getReadyTrial;
                 totalTrials = 64 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
-                restbreakDuration = 20.0f;                                          // how long are the imposed rest breaks?
+                restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
                 transferCounterbalance = false;                                     // this does nothing
                 wackyColours = false;                                               
                 break;

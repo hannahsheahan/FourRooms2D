@@ -1103,7 +1103,7 @@ public class GameController : MonoBehaviour
 
             case "keepSearchingMessage":
                 //textMessage = "Well done! \n There is one more pineapple to find.";
-                textMessage = "Super gemacht! Es gibt noch eine weitere Martini-Glas zu finden. ";
+                textMessage = "Super gemacht! Es gibt noch eine weitere Ananas zu finden. ";
                 if (messageTimer.ElapsedSeconds() > displayMessageTime)
                 {
                     displayMessage = "noMessage"; // reset the message
