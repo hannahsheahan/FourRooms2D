@@ -278,6 +278,11 @@ public class GameController : MonoBehaviour
             }
         }
 
+        // A hotkey for quitting the experiment application 
+        if (Input.GetKey("escape"))
+        {
+            Application.Quit();
+        }
 
         UpdateText();
 
