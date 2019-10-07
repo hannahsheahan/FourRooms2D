@@ -218,7 +218,7 @@ public class ExperimentConfig
         totalTrials = totalTrials + nbreaks;
        
         // Timer variables (measured in seconds) - these can later be changed to be different per trial for jitter etc
-        dataRecordFrequency = 0.04f;
+        dataRecordFrequency = 0.06f;
         getReadyDuration = 5.0f;    // how long do we have to 'get ready' after the practice, before main experiment begins?
 
         // Note that when used, jitters ADD to these values - hence they are minimums
@@ -290,14 +290,11 @@ public class ExperimentConfig
         trialMazes[totalTrials - 1] = "Exit";
 
 
+        // Add in the practice trials in an open practice arena with no colour on floors
+        AddPracticeTrials();
+
         // Generate the trial randomisation/list that we want.   Note: Ensure this is aligned with the total number of trials
         int nextTrial = System.Array.IndexOf(trialMazes, null);
-
-        // Add in the practice trials
-        AddPracticeTrials(nextTrial, practiceTrials - 1);
-
-        // Find the next trial that hasnt been specified yet to start defining the rest of our trial sequence
-        nextTrial = System.Array.IndexOf(trialMazes, null);
 
         // Define the full trial sequence
         switch (experimentVersion)
