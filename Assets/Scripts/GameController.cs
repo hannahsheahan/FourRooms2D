@@ -766,6 +766,7 @@ public class GameController : MonoBehaviour
         showCanvasReward = false;
         controlStateIndex = 0;
         bouldersExplored = 0;
+        readyForSecondRun = false;
 
         for (int i = 0; i < scaleUpReward.Length; i++)
         {
