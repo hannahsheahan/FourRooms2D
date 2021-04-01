@@ -101,12 +101,12 @@ public class ExperimentConfig
     public float errorDwellTime;
     public float restbreakDuration;
     public float getReadyDuration;
-    public float hallwayFreezeTime;
+    public float[][] hallwayFreezeTime;      // jittered random per door per trial
     public float preFreezeTime;
     private float dataRecordFrequency;       // NOTE: this frequency is referred to in TrackingScript.cs for player data and here for state data
     public float oneSquareMoveTime;
     public float minTimeBetweenMoves;
-    public float blankTime;
+    public float[] blankTime;
     public float animationTime;
     public float preRewardAppearTime;
 
@@ -132,8 +132,9 @@ public class ExperimentConfig
         //experimentVersion = "mturk2D_cheesewine_wackycolours";  
         //experimentVersion = "mturk2D_peanutmartini_wackycolours";
         //experimentVersion = "micro2D_debug"; 
-        experimentVersion = "scannertask_cheese";   // be careful with adding extra practice trials between scan runs though (dont have extra practice)
-        //experimentVersion = "scannertask_peanut";
+        //experimentVersion = "scannertask_cheese";   // be careful with adding extra practice trials between scan runs though (dont have extra practice)
+        experimentVersion = "scannertask_mturk_peanut";
+
 
         // ------------------------------------------
 
@@ -149,14 +150,14 @@ public class ExperimentConfig
                 transferCounterbalance = false;                                     // this does nothing
                 break;
 
-            case "scannertask_peanut":       // ---- The fMRI scanning task: 32 trial run B ----//
+            case "scannertask_mturk_peanut":       // ---- The fMRI scanning task: 32 trial run B ----//
                 nDebreifQuestions = 0;
                 practiceTrials = 2 + getReadyTrial;
-                totalTrials = 32 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
+                totalTrials = 64 + setupAndCloseTrials + practiceTrials + nDebreifQuestions;        // accounts for the Persistent, StartScreen and Exit 'trials'
                 restFrequency = 16 + restbreakOffset;                               // Take a rest after this many normal trials
                 restbreakDuration = 30.0f;                                          // how long are the imposed rest breaks?
                 transferCounterbalance = false;                                     // this does nothing
-                wackyColours = true;                                                // peanut/martini fMRI task has diff coloured floors
+                wackyColours = false;                                               
                 break;
 
             case "mturk2D_cheesewine":       // ----Full 4 block learning experiment-----
@@ -222,7 +223,7 @@ public class ExperimentConfig
 
         // Note that when used, jitters ADD to these values - hence they are minimums
         //maxMovementTime        = 60.0f;   // changed to be a function of trial number. Time allowed to collect both rewards, incl. wait after hitting first one
-        preDisplayCueTime      = 4.0f;    //  Decode representation of room prior to cue here
+        preDisplayCueTime      = 3.0f;    //  Decode representation of room prior to cue here
         displayCueTime         = 2.0f;
         goCueDelay             = 1.0f;    //
         goalHitPauseTime       = 1.5f;    // This will also be the amount of time between computer vs human control handovers (+ minDwellAtReward + preRewardAppearTime)
@@ -231,15 +232,15 @@ public class ExperimentConfig
         preRewardAppearTime    = 0.3f;    
         displayMessageTime     = 1.5f;     
         errorDwellTime         = 1.5f;    // Note: should be at least as long as displayMessageTime
-        hallwayFreezeTime      = 4.0f;    // amount of time player is stuck in place with each hallway traversal
+        // hallwayFreezeTime      = 4.0f;    // amount of time player is stuck in place with each hallway traversal. This will now be exponential-jittered
         preFreezeTime          = 0.3f;    // should be about the same, maybe slightly longer than oneSquareMoveTime
-        blankTime              = 2.0f;    // Note: ***HRS should be jittered (blank screen time prior to trial starting)
+        //blankTime              = 2.0f;    // Note: ***HRS should be jittered (blank screen time prior to trial starting)
         animationTime          = 1.0f;    // how long the reward grows for when it appears (mainly for visuals)
         numberPresentsPerRoom  = 1;       //
 
        // physical movement times
-        oneSquareMoveTime = 0.4f;        // Time it will take player to move from one square to next (sec) for animation
-        minTimeBetweenMoves = 1.0f;      // How much time between each allowable move (from movement trigger) (sec) (must be >> than oneSquareMoveTime or position moves off board and path planned execution doesnt work - weird exception)
+        oneSquareMoveTime = 0.1f;        // Time it will take player to move from one square to next (sec) for animation
+        minTimeBetweenMoves = 0.25f;      // How much time between each allowable move (from movement trigger) (sec) (must be >> than oneSquareMoveTime or position moves off board and path planned execution doesnt work - weird exception)
 
         // These variables define the environment (are less likely to be played with)
         roomSize = 4;              // rooms are each 4x4 grids. If this changes, you will need to change this code
@@ -265,6 +266,8 @@ public class ExperimentConfig
         bridgeStates = new bool[totalTrials][];
         controlStateOrder = new string[totalTrials][];
         computerAgentCorrect = new bool[totalTrials];
+        hallwayFreezeTime = new float[totalTrials][];
+        blankTime = new float[totalTrials];
 
         // make space for the debriefing questions and answers at the end
         debriefQuestions = new QuestionData[totalTrials];
@@ -307,7 +310,7 @@ public class ExperimentConfig
 
                 break;
 
-            case "scannertask_peanut":
+            case "scannertask_mturk_peanut":
 
                 //---- test context B1
                 nextTrial = AddfMRITrainingBlock(nextTrial, "peanut");
@@ -315,6 +318,15 @@ public class ExperimentConfig
 
                 //---- test context B2
                 nextTrial = AddfMRITrainingBlock(nextTrial, "martini");
+                nextTrial = RestBreakHere(nextTrial);
+
+                //---- test context B1
+                nextTrial = AddfMRITrainingBlock(nextTrial, "peanut");
+                nextTrial = RestBreakHere(nextTrial);
+
+                //---- test context B2
+                nextTrial = AddfMRITrainingBlock(nextTrial, "martini");
+
                 break;
 
             case "mturk2D_cheesewine":       // ----Full 4 block learning experiment-----
@@ -406,14 +418,14 @@ public class ExperimentConfig
             if (trial % 2 == 0)
             {
                 controlType[0] = "Human";
-                controlType[1] = "Computer";
-                SetDoubleRewardTrial(trial, trialInBlock, "pineapple", "blue", "red", "yellow", contextSide, controlType, controlCorrect, freeForageFLAG);
+                controlType[1] = "Human";
+                SetDoubleRewardTrial(trial, trialInBlock, "pineapple", "blue", "red", "blue", contextSide, controlType, controlCorrect, freeForageFLAG);
             }
             else
             {
-                controlType[0] = "Computer";
+                controlType[0] = "Human";
                 controlType[1] = "Human";
-                SetDoubleRewardTrial(trial, trialInBlock, "pineapple", "red", "green", "blue", contextSide, controlType, controlCorrect, freeForageFLAG);
+                SetDoubleRewardTrial(trial, trialInBlock, "pineapple", "red", "green", "yellow", contextSide, controlType, controlCorrect, freeForageFLAG);
             }
             trialMazes[trial] = "Practice";   // reset the maze for a practice trial
         }
@@ -1130,11 +1142,11 @@ public class ExperimentConfig
             if (i < blockLength / 2) 
             {
                 controlType[0] = "Human";
-                controlType[1] = "Computer";
+                controlType[1] = "Human";
             }
             else 
             {
-                controlType[0] = "Computer";
+                controlType[0] = "Human";
                 controlType[1] = "Human";
             }
             // Mark whether the computer control moves the agent to the correct or incorrect boulder
@@ -1426,6 +1438,7 @@ public class ExperimentConfig
 
         bool collisionInSpawnLocations = true;
         int iterationCounter = 0;
+        int nrooms = 4;
         bridgeStates[trial] = new bool[4];                  // there are 4 bridges
 
         // Check that we've inputted a valid trial number
@@ -1449,6 +1462,12 @@ public class ExperimentConfig
                 trialMazes[trial] = "PrePostForage_" + rewardTypes[trial];
                 freeForage[trial] = true;
                 maxMovementTime[trial] = 120.0f;       // 2 mins to collect all rewards on freeforaging trials
+                blankTime[trial] = ExponentialJitter(4f, 3f, 8f);
+                hallwayFreezeTime[trial] = new float[4];
+                for (int i = 0; i < nrooms; i++)
+                {
+                    hallwayFreezeTime[trial][i] = ExponentialJitter(3.5f, 2.5f, 8f);   // jitter times: mean, min, max, 
+                }
 
                 // select random locations in rooms 1 and 2 for the two rewards (one in each)
                 star1Rooms[trial] = "";
@@ -1536,7 +1555,14 @@ public class ExperimentConfig
                     trialMazes[trial] = "FourRooms_" + rewardTypes[trial];
                 }
                 freeForage[trial] = false;
-                maxMovementTime[trial] = 60.0f;        // 1 min to collect just the 2 rewards on covariance trials ***HRS changed from 60 on 4/06/2019
+                maxMovementTime[trial] = 40.0f;        // 1 min to collect just the 2 rewards on covariance trials ***HRS changed from 60 on 4/06/2019
+                blankTime[trial] = ExponentialJitter(4f, 3f, 8f);
+                hallwayFreezeTime[trial] = new float[4]; 
+                for (int i=0; i < nrooms; i++)
+                {
+                    hallwayFreezeTime[trial][i] = ExponentialJitter(3.5f, 2.5f, 8f);   // jitter times: mean, min, max, 
+                }
+
 
                 // select random locations in rooms 1 and 2 for the two rewards (one in each)
                 star1Rooms[trial] = rewardRoom1;
@@ -1784,6 +1810,16 @@ public class ExperimentConfig
             maxMovementTime[k + firstTrial] = maxMovementTime[i + firstTrial];
             maxMovementTime[i + firstTrial] = tempMoveTime;
 
+            // ITI times
+            float tempblankTime = blankTime[k + firstTrial];
+            blankTime[k + firstTrial] = blankTime[i + firstTrial];
+            blankTime[i + firstTrial] = tempblankTime;
+
+            // hallwayfreeze times
+            float[] tempFreezeTimes = hallwayFreezeTime[k + firstTrial];
+            hallwayFreezeTime[k + firstTrial] = hallwayFreezeTime[i + firstTrial];
+            hallwayFreezeTime[i + firstTrial] = tempFreezeTimes;
+
             // free forage flag
             bool tempForage = freeForage[k + firstTrial];
             freeForage[k + firstTrial] = freeForage[i + firstTrial];
@@ -1893,10 +1929,38 @@ public class ExperimentConfig
 
     // ********************************************************************** //
 
-    public float JitterTime(float time)
+    public float ExponentialJitter(float mean, float min, float max)
     {
-        // jitter uniform-randomly from the min value, to 50% higher than the min value
-        return time + (0.5f*time)* (float)rand.NextDouble();
+        // sample a jittered time from a truncated exponential with mean = 1/lamba, where lamba is the rate of exponential.
+        // use the inverse transform sampling method
+        // Inputs: mean - desired mean time for the distribution the sample is jittered from ( in final output coordinates )
+        //         min  - lower limit on output value
+        //         max  - upper limit on output value
+         
+        float rate;
+        float y;
+        float sample = max-min;
+
+        // adopt default values if range not specified appropriately
+        if (max <= min) 
+        {
+            Debug.Log("ERROR: Problem specifying range of values for jitterin times. Max <= min. Using default values.");
+            min = 1f;   // take some default values
+            max = 8f;
+        }
+
+        rate = 1f / (mean-min);           // later we will shift the distribution so all values are greater than min, so need to remap the mean too
+
+        // throw out all values above max and resample
+        while (sample >= max-min) 
+        {
+            y = (float)rand.NextDouble();     // uniform random sample in x
+            sample = (-1f/rate) * (float)Math.Log(1f - y);   // un-truncated exponential sample
+        }
+
+        // remap our sampled value so that our exponential lies in the appropriate new range
+        sample += min;
+        return sample;
     }
 
     // ********************************************************************** //
